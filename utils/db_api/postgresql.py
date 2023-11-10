@@ -13,11 +13,21 @@ class Database:
 
     async def create(self):
         self.pool = await asyncpg.create_pool(
-            user=config.DB_USER,
-            password=config.DB_PASS,
-            host=config.DB_HOST,
-            database=config.DB_NAME
+            user='gen_user',
+            password="Akmaljon2001",
+            host="176.57.214.12",
+            database="default_db"
         )
+        # !/usr/bin/python
+
+    # import psycopg2
+    #
+    # conn = psycopg2.connect(
+    #     host="176.57.214.12",
+    #     database="default_db",
+    #     user="gen_user",
+    #     password="Akmaljon2001"
+    # )
 
     async def execute(self, command, *args,
                       fetch: bool = False,
