@@ -40,12 +40,12 @@ async def reys(call:CallbackQuery,state:FSMContext):
 @dp.callback_query_handler(text='ortga',state=Reys_andijon.tuman)
 async def andi_jon(call:CallbackQuery,state:FSMContext):
     await call.message.answer("Qaysi viloyatdan yo'lovchi kerak ? ",reply_markup=tax_resy_vil)
-    await state.reset_state()
+    await state.finish()
 #     2 -  BEKOR QILISH
 @dp.callback_query_handler(text_contains='atmen',state=Reys_andijon.tuman)
 async def haydovchi(call:CallbackQuery,state: FSMContext):
     await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-    await state.reset_state()
+    await state.finish()
 @dp.callback_query_handler(state=Reys_andijon.tuman)
 async def reys_tuman(call:CallbackQuery,state:FSMContext):
     await state.update_data(
@@ -62,7 +62,7 @@ async def andi_jon(call:CallbackQuery,state:FSMContext):
 @dp.callback_query_handler(text_contains='atmen',state=Reys_andijon.viloyatga)
 async def haydovchi(call:CallbackQuery,state: FSMContext):
     await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-    await state.reset_state()
+    await state.finish()
 
 
 @dp.callback_query_handler(state=Reys_andijon.viloyatga)
@@ -148,7 +148,7 @@ async def andi_jon(call:CallbackQuery,state:FSMContext):
 @dp.callback_query_handler(text_contains='atmen',state=Reys_andijon.tumaniga)
 async def haydovchi(call:CallbackQuery,state: FSMContext):
     await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-    await state.reset_state()
+    await state.finish()
 
 @dp.callback_query_handler(state=Reys_andijon.tumaniga)
 async def reys_tumaniga(call:CallbackQuery,state:FSMContext):
@@ -166,7 +166,7 @@ async def andi_jon(call:CallbackQuery,state:FSMContext):
 @dp.callback_query_handler(text_contains='atmen',state=Reys_andijon.kuni)
 async def haydovchi(call:CallbackQuery,state: FSMContext):
     await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-    await state.reset_state()
+    await state.finish()
 
 @dp.message_handler(state=Reys_andijon.kuni)
 async def reys_kuni(message:Message,state:FSMContext):
@@ -186,7 +186,7 @@ async def haydovchi(call:CallbackQuery,state: FSMContext):
     await call.message.answer("Salom yo'lovchi\n"
                               "Sizga kerakli hizmat turini belgilang ?",
                               reply_markup=umumiy_menu)
-    await state.reset_state()
+    await state.finish()
 
 
 @dp.callback_query_handler(state=Reys_andijon.soat)
@@ -207,7 +207,7 @@ async def andi_jon(call:CallbackQuery,state:FSMContext):
 @dp.callback_query_handler(text_contains='atmen',state=Reys_andijon.phone)
 async def haydovchi(call:CallbackQuery,state: FSMContext):
     await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-    await state.reset_state()
+    await state.finish()
 
 @dp.message_handler(content_types=['contact','text'],state=Reys_andijon.phone)
 async def reys_loc(message:Message,state:FSMContext):
@@ -235,7 +235,7 @@ async def andi_jon(call:CallbackQuery,state:FSMContext):
 @dp.callback_query_handler(text_contains='atmen',state=Reys_andijon.qanday_moshina)
 async def haydovchi(call:CallbackQuery,state: FSMContext):
     await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-    await state.reset_state()
+    await state.finish()
 
 @dp.message_handler(state=Reys_andijon.qanday_moshina)
 async def reys_qanday_avto(message:Message,state:FSMContext):
@@ -327,7 +327,7 @@ async def y_n(call:CallbackQuery, state:FSMContext):
 @dp.callback_query_handler(text='nott', state=Reys_andijon.tasdiqlash)
 async def y_n(call:CallbackQuery, state:FSMContext):
     await call.message.answer("Ma'lumotlarni tog'rilab qaytadan kiriting", reply_markup=umumiy_menu)
-    await state.reset_state()
+    await state.finish()
 @dp.callback_query_handler(text='add_information', state=Reys_andijon.tasdiqlash)
 async def y_n(call:CallbackQuery, state:FSMContext):
     await call.message.answer("Yo'l haqqi uchun qancha olasiz ? :   ")

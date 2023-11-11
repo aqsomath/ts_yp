@@ -18,7 +18,7 @@ env.read_env()
 #
 # # .env fayl ichidan quyidagilarni o'qiymiz
 BOT_TOKEN = str(os.environ.get("BOT_TOKEN"))  # Bot token
-ADMINS = list(os.environ.get("ADMINS"))  # adminlar ro'yxati
+ADMINS = str(os.environ.get("ADMINS"))  # adminlar ro'yxati
 DB_USER = str(os.environ.get("DB_USER"))
 DB_HOST = str(os.environ.get("DB_HOST"))
 DB_NAME = str(os.environ.get("DB_NAME"))
