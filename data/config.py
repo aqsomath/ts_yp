@@ -18,16 +18,9 @@ env.read_env()
 #
 # # .env fayl ichidan quyidagilarni o'qiymiz
 BOT_TOKEN = str(os.environ.get("BOT_TOKEN"))  # Bot token
-ADMINS = str(os.environ.get("ADMINS"))  # adminlar ro'yxati
+ADMINS = list(os.environ.get("ADMINS"))  # adminlar ro'yxati
 DB_USER = str(os.environ.get("DB_USER"))
 DB_HOST = str(os.environ.get("DB_HOST"))
 DB_NAME = str(os.environ.get("DB_NAME"))
 DB_PASS = str(os.environ.get("DB_PASS"))
 
-
-# ADMINS=6063101077
-# BOT_TOKEN=6611229682:AAHwP_b2FEdQbnWLgIT5WCKAwM-o5gx0uyE
-# DB_USER=postgres
-# DB_PASS=aqso
-# DB_HOST=localhost
-# DB_NAME=yolovchi_bot
