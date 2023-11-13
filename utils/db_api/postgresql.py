@@ -173,19 +173,21 @@ class Database:
         sql = "SELECT * FROM Users"
         return await self.execute(sql, fetch=True)
 
-
     async def select_taxi_orders(self):
         sql = "SELECT tayyor_taxi_full, telegram_id FROM Orders"
+        return await self.execute(sql, fetch=True)
+
+    async def select_pochta_haydovchi(self):
+        sql = "SELECT tayyor_pochta_mashina_full, telegram_id FROM Orders"
         return await self.execute(sql, fetch=True)
 
     async def select_yuk_avto_orders(self):
         sql = "SELECT tayyor_yuk_haydovchisi_full, telegram_id FROM Orders"
         return await self.execute(sql, fetch=True)
 
-    async def select_sayohatchi_haydovchi_orders(self):
-        sql = "SELECT tayyor_taxi_full, telegram_id FROM Orders"
+    async def select_sayohatchi_mashina(self):
+        sql = "SELECT tayyor_sayohatchi_full_mashina, telegram_id FROM Orders"
         return await self.execute(sql, fetch=True)
-
     async def select_tayyor_taxi(self):
         sql = "SELECT region,tayyor_taxi,tayyor_taxi_full,viloyatga,tumanga FROM Orders"
         return await self.execute(sql, fetch=True)
@@ -249,3 +251,22 @@ class Database:
         await self.execute("DROP TABLE Users", execute=True)
     async def drop_orders(self):
         await self.execute("DROP TABLE Orders", execute=True)
+
+    async def create_table_driver(self):
+        sql = """
+           CREATE TABLE IF NOT EXISTS Driver (
+           id SERIAL PRIMARY KEY,
+           region TEXT NULL,
+           tuman TEXT NULL,
+           telegram_id BIGINT NULL
+          );
+           """
+        await self.execute(sql, execute=True)
+
+    async def add_driver(self,region,tuman, telegram_id):
+        sql = "INSERT INTO driver (region,tuman,telegram_id) VALUES($1,$2,$3) returning *"
+        return await self.execute(sql, region,tuman,telegram_id, fetchrow=True)
+
+
+    async def drop_driver(self):
+        await self.execute("DROP TABLE Driver", execute=True)

@@ -1,8 +1,6 @@
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, Message
 
-from handlers.users.edit_district.haydovchimisiz import Ulugnor, Andijonshaxar, Asaka, Baliqchi, Boston, \
-    Buloqboshi, Izboskan, Jalaquduq, Xojabod, Qorgontepa, Marhamat, Oltinkol, Paxtabod, Shaxrixon, Xonabod
 from keyboards.default.location import phone_number
 from keyboards.inline.haydovchi_reys.haydovchi_reys_tugmalar import  tax_resy_vil, reys_ortgaa
 from keyboards.inline.haydovchi_reys.haydovchi_sayohatchi_reys import taxi_sayohat_callback, tax_say_vil

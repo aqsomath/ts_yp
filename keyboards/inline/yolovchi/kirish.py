@@ -11,21 +11,13 @@ kirish.insert(InlineKeyboardButton(text="Yo'lovchimisiz", callback_data=kirish_c
 
 menu = {
     "Yo'lovchi reys belgilash":'texikerak',
-    "Haydovchi reys belgilash":'yolovchikerak',
     "Tayyor taksi":'tayyortaksi',
-    "Tayyor yo'lovchi": 'tayyoryolovchi',
     "Yuk yuborish kerak":'yukyuborishkerak',
-    "Yuk kerak":'yukkerak',
     "Tayyor yuk mashinasi": "tayyoryukmashinasi",
-    "Tayyor yuk": "tayyoryuk",
     "Pochta yuborish kerak":'pochtayuborishkerak',
-    "Pochta kerak":'pochtakerak',
     "Tayyor pochta mashinasi":"tayyorpochtamashinasi",
-    "Tayyor pochta": "tayyorpochta",
     "Sayohatga mashina kerak":'sayohatgamashina',
-    "Sayohatchilar kerak":'sayohatgayolovchi',
     "Tayyor sayohatga mashina":'tayyorsayohatgamashina',
-    "Tayyor sayohatchi":"tayyorsayohatchi",
     "Mening buyurtmalarim":"meningbuyurtmalarim",
     "Admin bilan bog'lanish":"adminbilanboglanish",
 }
