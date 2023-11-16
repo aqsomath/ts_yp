@@ -9,8 +9,12 @@ from utils.set_bot_commands import set_default_commands
 async def on_startup(dispatcher):
     # Birlamchi komandalar (/star va /help)
     await db.create()
-
+    # await db.drop_driver()
+    # await db.drop_driver_info()
+    # await db.drop_orders()
+    # await db.drop_users()
     await db.create_table_users()
+    await db.create_table_driver_info()
     await db.create_table_driver()
     await db.create_table_orders()
     await set_default_commands(dispatcher)

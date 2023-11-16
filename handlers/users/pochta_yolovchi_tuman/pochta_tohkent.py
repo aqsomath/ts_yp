@@ -1,8 +1,6 @@
+import aiogram
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, Message
-
-from handlers.users.edit_district.toshjent_edit import Bekobod, Bostonliq, Boka, Chinoz, Ohangaron, Oqqorgon, Parkent, \
-    Piskent, QuyiChirchiq, OrtaChirchiq, Yangiyol, YuqoriChirchiq, Zangiota
 from keyboards.default.location import orqaga_qaytish, phone_number, phone_ortga, lokatsiya, keyingisi
 from keyboards.inline.pochta_yuborish.pochta_yuborish_tugmalari import pochta_callback, pochta_viloyatlar
 from keyboards.inline.yolovchi.andtuman import andijon_yol
@@ -338,15 +336,28 @@ async def y_n(call:CallbackQuery, state:FSMContext):
         tayyor_sayohatchi_full=None,
         tayyor_sayohatchi_mashina=None,
         tayyor_sayohatchi_full_mashina=None)
-    print("qo'shildi")
-    order = await db.select_tayyor_pochta()
-    print(order)
+    drivers = await db.select_all_driver()
+    drivers_info = await db.select_all_driver_info()
+    for i in drivers:
+        if i[3] == 'ok':
+            for k in drivers_info:
+                if k[2] == tuman and i[4] == k[3]:
+                    markup = aiogram.types.InlineKeyboardMarkup()
+                    markup.insert(
+                        aiogram.types.InlineKeyboardButton(text="Qabul qilish",
+                                                           callback_data='rgrdf54sf54df5'))
+                    await bot.send_message(text=m, chat_id=k[3], reply_markup=markup)
     await call.message.answer("Sizning buyurtmangiz tumaningiz haydovchilariga yuborildi.\n"
-                              "Ularning bog'lanishini kuting !\n",reply_markup=umumiy_menu
+                              "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
                               )
+    await state.reset_state(with_data=False)
 
 
-    await state.finish()
+@dp.callback_query_handler(text="rgrdf54sf54df5")
+async def qabul_qilish(call: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    msg = data.get("msg")
+    await bot.send_message(text=msg, chat_id=call.from_user.id)
 @dp.callback_query_handler(text='add_information', state=Pochta_toshkent.tasdiqlash)
 async def y_n(call:CallbackQuery, state:FSMContext):
     await call.message.answer("Pochta haqida ma'lumot kiriting :  ? ")
@@ -415,12 +426,28 @@ async def oxirgi(call:CallbackQuery,state:FSMContext):
         tayyor_sayohatchi_mashina=None,
         tayyor_sayohatchi_full_mashina=None)
 
-    print("qo'shildi")
+    drivers = await db.select_all_driver()
+    drivers_info = await db.select_all_driver_info()
+    for i in drivers:
+        if i[3] == 'ok':
+            for k in drivers_info:
+                if k[2] == tuman and i[4] == k[3]:
+                    markup = aiogram.types.InlineKeyboardMarkup()
+                    markup.insert(
+                        aiogram.types.InlineKeyboardButton(text="Qabul qilish",
+                                                           callback_data='sd4csd87fs6sd54f5'))
+                    await bot.send_message(text=m, chat_id=k[3], reply_markup=markup)
     await call.message.answer("Sizning buyurtmangiz tumaningiz haydovchilariga yuborildi.\n"
                               "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
                               )
+    await state.reset_state(with_data=False)
 
-    await state.finish()
+
+@dp.callback_query_handler(text="sd4csd87fs6sd54f5")
+async def qabul_qilish(call: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    msg = data.get("msg_full")
+    await bot.send_message(text=msg, chat_id=call.from_user.id)
 
 
 @dp.callback_query_handler(text='UnConfirm', state=Pochta_toshkent.end)

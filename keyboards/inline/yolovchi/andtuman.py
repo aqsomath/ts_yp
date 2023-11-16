@@ -2,7 +2,12 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from keyboards.inline.yolovchi.callback_data import andijon_callback
 
-
+x=["Ulug'nor","Andijon shahar",
+   "Asaka","Baliqchi","Bo'ston",
+   "Buloqbosh","Izboskan","Jalaquduq",
+   "Xoʻjaobod","Qoʻrgʻontepa","Marhamat",
+   "Oltinkoʻl","Paxtaobod","Shahrixon","Xonabod"
+   ]
 an = {
     "✅ Ulug'nor":"ulugnor",
     "✅ Andijon shahar":"shaxar",

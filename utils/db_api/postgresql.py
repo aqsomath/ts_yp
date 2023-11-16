@@ -48,6 +48,9 @@ class Database:
                     result = await connection.execute(command, *args)
             return result
 
+
+    #  USERS TABLE
+
     async def create_table_users(self):
         sql = """
         CREATE TABLE IF NOT EXISTS Users (
@@ -168,75 +171,66 @@ class Database:
     async def add_user(self, full_name, username, telegram_id):
         sql = "INSERT INTO users (full_name, username, telegram_id) VALUES($1, $2, $3) returning *"
         return await self.execute(sql, full_name, username, telegram_id, fetchrow=True)
-
+    async def select_user(self, **kwargs):
+        sql = "SELECT * FROM Users WHERE "
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return await self.execute(sql, *parameters, fetchrow=True)
     async def select_all_users(self):
         sql = "SELECT * FROM Users"
         return await self.execute(sql, fetch=True)
+    async def delete_users(self):
+        await self.execute("DELETE FROM Users WHERE TRUE", execute=True)
+    async def drop_users(self):
+        await self.execute("DROP TABLE Users", execute=True)
+    async def count_users(self):
+        sql = "SELECT COUNT(*) FROM Users"
+        return await self.execute(sql, fetchval=True)
+
+
 
     async def select_taxi_orders(self):
         sql = "SELECT tayyor_taxi_full, telegram_id FROM Orders"
         return await self.execute(sql, fetch=True)
-
     async def select_pochta_haydovchi(self):
         sql = "SELECT tayyor_pochta_mashina_full, telegram_id FROM Orders"
         return await self.execute(sql, fetch=True)
-
     async def select_yuk_avto_orders(self):
         sql = "SELECT tayyor_yuk_haydovchisi_full, telegram_id FROM Orders"
         return await self.execute(sql, fetch=True)
-
     async def select_sayohatchi_mashina(self):
         sql = "SELECT tayyor_sayohatchi_full_mashina, telegram_id FROM Orders"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_taxi(self):
         sql = "SELECT region,tayyor_taxi,tayyor_taxi_full,viloyatga,tumanga FROM Orders"
         return await self.execute(sql, fetch=True)
-
     async def select_tayyor_sayohatchi(self):
         sql = "SELECT region,tayyor_sayohatchi,tayyor_sayohatchi_full,viloyatga FROM Orders"
         return await self.execute(sql, fetch=True)
-
     async def select_tayyor_sayohatchi_mashina(self):
         sql = "SELECT region,tayyor_sayohatchi_mashina,tayyor_sayohatchi_full_mashina,viloyatga FROM Orders"
         return await self.execute(sql, fetch=True)
-
     async def select_tayyor_pochta_mashina(self):
         sql = "SELECT region,tayyor_pochta_mashina,tayyor_pochta_mashina_full,viloyatga,tumanga FROM Orders"
         return await self.execute(sql, fetch=True)
-
     async def select_tayyor_pochta(self):
             sql = "SELECT region,tayyor_pochta,tayyor_pochta_full,viloyatga,tumanga FROM Orders"
             return await self.execute(sql, fetch=True)
-
     async def select_tayyor_yuk(self):
         sql = "SELECT region,tayyor_yuk,tayyor_yuk_full,viloyatga,tumanga FROM Orders"
         return await self.execute(sql, fetch=True)
-
     async def select_tayyor_yolovchi(self):
         sql = "SELECT region,tayyor_yolovchi,tayyor_yolovchi_full,viloyatga,tumanga FROM Orders"
         return await self.execute(sql, fetch=True)
-
     async def select_tayyor_yuk_haydovchi(self):
         sql = "SELECT region,tayyor_yuk_haydovchisi,tayyor_yuk_haydovchisi_full,viloyatga,tumanga FROM Orders"
         return await self.execute(sql, fetch=True)
-
-    async def select_user(self, **kwargs):
-        sql = "SELECT * FROM Users WHERE "
-        sql, parameters = self.format_args(sql, parameters=kwargs)
-        return await self.execute(sql, *parameters, fetchrow=True)
     async def select_order(self, **kwargs):
         sql = "SELECT * FROM Orders WHERE "
         sql, parameters = self.format_args(sql, parameters=kwargs)
         return await self.execute(sql, *parameters, fetchrow=True)
-    async def count_users(self):
-        sql = "SELECT COUNT(*) FROM Users"
-        return await self.execute(sql, fetchval=True)
-
     async def count_orders(self):
         sql = "SELECT COUNT(*) FROM Orders"
         return await self.execute(sql, fetchval=True)
-
-
     async def update_user_tayyor_taxi(self, tayyor_taxi, telegram_id):
         sql = "UPDATE Users SET tayyor_taxi=$1 WHERE telegram_id=$2"
         return await self.execute(sql, tayyor_taxi, telegram_id, execute=True)
@@ -244,29 +238,61 @@ class Database:
         sql = "UPDATE Users SET region=$1 WHERE telegram_id=$2"
         return await self.execute(sql, region, telegram_id, execute=True)
 
-    async def delete_users(self):
-        await self.execute("DELETE FROM Users WHERE TRUE", execute=True)
-
-    async def drop_users(self):
-        await self.execute("DROP TABLE Users", execute=True)
     async def drop_orders(self):
         await self.execute("DROP TABLE Orders", execute=True)
+
+
+
 
     async def create_table_driver(self):
         sql = """
            CREATE TABLE IF NOT EXISTS Driver (
            id SERIAL PRIMARY KEY,
-           region TEXT NULL,
+           tashiman_odam TEXT NULL,
+           tashiman_yuk TEXT NULL,
+           tashiman_pochta TEXT NULL,
+           telegram_id BIGINT NULL
+          );
+           """
+        await self.execute(sql, execute=True)
+
+    async def add_driver(self, tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id):
+        sql = "INSERT INTO driver (tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id) VALUES($1, $2, $3, $4) returning *"
+        return await self.execute(sql, tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id, fetchrow=True)
+
+    async def select_all_driver(self):
+        sql = "SELECT * FROM Driver"
+        return await self.execute(sql, fetch=True)
+
+    async def delete_driver(self, **kwargs):
+        sql = "DELETE FROM Driver WHERE "
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return await self.execute(sql, *parameters, fetchrow=True)
+
+    async def drop_driver(self):
+        await self.execute("DROP TABLE Driver", execute=True)
+    async def create_table_driver_info(self):
+        sql = """
+           CREATE TABLE IF NOT EXISTS Info (
+           id SERIAL PRIMARY KEY,
+           viloyat TEXT NULL,
            tuman TEXT NULL,
            telegram_id BIGINT NULL
           );
            """
         await self.execute(sql, execute=True)
 
-    async def add_driver(self,region,tuman, telegram_id):
-        sql = "INSERT INTO driver (region,tuman,telegram_id) VALUES($1,$2,$3) returning *"
-        return await self.execute(sql, region,tuman,telegram_id, fetchrow=True)
+    async def add_driver_info(self, viloyat, tuman, telegram_id):
+        sql = "INSERT INTO info (viloyat, tuman, telegram_id) VALUES($1, $2, $3) returning *"
+        return await self.execute(sql, viloyat, tuman, telegram_id, fetchrow=True)
 
+    async def select_all_driver_info(self):
+        sql = "SELECT * FROM Info"
+        return await self.execute(sql, fetch=True)
+    async def drop_driver_info(self):
+        await self.execute("DROP TABLE Info", execute=True)
 
-    async def drop_driver(self):
-        await self.execute("DROP TABLE Driver", execute=True)
+    async def delete_driver_info(self, **kwargs):
+        sql = "DELETE FROM Info WHERE "
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return await self.execute(sql, *parameters, fetchrow=True)
