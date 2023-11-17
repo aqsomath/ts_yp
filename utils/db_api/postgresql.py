@@ -251,14 +251,15 @@ class Database:
            tashiman_odam TEXT NULL,
            tashiman_yuk TEXT NULL,
            tashiman_pochta TEXT NULL,
-           telegram_id BIGINT NULL
+           telegram_id BIGINT NULL,
+           sayohatchi_tashiman TEXT NULL
           );
            """
         await self.execute(sql, execute=True)
 
-    async def add_driver(self, tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id):
-        sql = "INSERT INTO driver (tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id) VALUES($1, $2, $3, $4) returning *"
-        return await self.execute(sql, tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id, fetchrow=True)
+    async def add_driver(self, tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id,sayohatchi_tashiman):
+        sql = "INSERT INTO driver (tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id,sayohatchi_tashiman) VALUES($1, $2, $3, $4,$5) returning *"
+        return await self.execute(sql, tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id,sayohatchi_tashiman, fetchrow=True)
 
     async def select_all_driver(self):
         sql = "SELECT * FROM Driver"

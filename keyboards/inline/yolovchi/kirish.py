@@ -20,6 +20,8 @@ menu = {
     "Tayyor sayohatga mashina":'tayyorsayohatgamashina',
     "Mening buyurtmalarim":"meningbuyurtmalarim",
     "Admin bilan bog'lanish":"adminbilanboglanish",
+    "Haydovchi bo'lib davom etish": "haydovchibolibdavometish"
+
 }
 umumiy_menu = InlineKeyboardMarkup(row_width=2)
 for key,value in menu.items():
