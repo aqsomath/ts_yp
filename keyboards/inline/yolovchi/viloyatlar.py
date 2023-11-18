@@ -15,7 +15,8 @@ viloyat = {
     "Xorazm":"azmm",
     "Navoiy":"voyy",
     "Jizzax":"zzax",
-    "Samarqand":"marqa"
+    "Samarqand":"marqa",
+    "Ortga":"nazad",
 }
 viloyatlar = InlineKeyboardMarkup(row_width=2)
 for key,value in viloyat.items():

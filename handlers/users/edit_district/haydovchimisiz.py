@@ -1,4 +1,3 @@
-import aiogram.types
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 
 from keyboards.inline.yolovchi.andtuman import andijon_old
@@ -176,6 +175,27 @@ async def edit(call:CallbackQuery):
 async def select_hudud(call:CallbackQuery):
     await call.message.answer("Siz qaysi viloyat haydovchisisiz ?", reply_markup=viloyatlar)
 
+@dp.callback_query_handler(viloyatlar_callback.filter(item_name='nazad'))
+async def nazad(call:CallbackQuery):
+    driver = {
+        "Haydovchi reys belgilash": 'yolovchikerak',
+        "Tayyor yo'lovchi": 'tayyoryolovchi',
+        "Yuk kerak": 'yukkerak',
+        "Tayyor yuk": "tayyoryuk",
+        "Pochta kerak": 'pochtakerak',
+        "Tayyor pochta": "tayyorpochta",
+        "Sayohatchilar kerak": 'sayohatgayolovchi',
+        "Tayyor sayohatchi": "tayyorsayohatchi",
+        "Mening buyurtmalarim": "meningbuyurtmalarim",
+        "Admin bilan bog'lanish": "adminbilanboglanish",
+        "Filtrlash": "filtrlash_1",
+        "Viloyatlarni filtrlash": "viloyalarnifiltrlash",
+        "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+    }
+    markup = InlineKeyboardMarkup(row_width=2)
+    for key, value in driver.items():
+        markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+    await call.message.answer("Sizga kerakli bo'limni tanlang",reply_markup=markup)
 
 
 x=["Ulug'nor","Andijon shahar",
@@ -210,12 +230,149 @@ async def andijontuman(call:CallbackQuery):
                               "\n\n❌ - chiqqan holat"
                               "\n\n✅- kirgan holat ")
     await call.message.answer("Andijon tumanlari", reply_markup=andijon_old)
+
+@dp.callback_query_handler(andijon_callback.filter(item_name='qaytamiz'))
+async def qaytish_ortga(call:CallbackQuery):
+    await call.message.answer("Siz qaysi viloyat haydovchisisiz ?", reply_markup=viloyatlar)
+@dp.callback_query_handler(andijon_callback.filter(item_name='glavmenu'))
+async def qaytish_ortga(call:CallbackQuery):
+    driver = {
+        "Haydovchi reys belgilash": 'yolovchikerak',
+        "Tayyor yo'lovchi": 'tayyoryolovchi',
+        "Yuk kerak": 'yukkerak',
+        "Tayyor yuk": "tayyoryuk",
+        "Pochta kerak": 'pochtakerak',
+        "Tayyor pochta": "tayyorpochta",
+        "Sayohatchilar kerak": 'sayohatgayolovchi',
+        "Tayyor sayohatchi": "tayyorsayohatchi",
+        "Mening buyurtmalarim": "meningbuyurtmalarim",
+        "Admin bilan bog'lanish": "adminbilanboglanish",
+        "Filtrlash": "filtrlash_1",
+        "Viloyatlarni filtrlash": "viloyalarnifiltrlash",
+        "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+
+    }
+    markup = InlineKeyboardMarkup(row_width=2)
+    for key, value in driver.items():
+        markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+    await call.message.answer("Sizga kerakli xizmat turini tanlang ?", reply_markup=markup)
+@dp.callback_query_handler(andijon_callback.filter(item_name='Xahh'))
+async def hammasini_rad_qilish(call:CallbackQuery):
+    andijon_old['inline_keyboard'][0][0]['text'] = "❌ Ulug'nor"
+    andijon_old['inline_keyboard'][0][0]['callback_data'] = "course:ulug"
+    await db.delete_driver_info(tuman="ulug'nor", telegram_id=call.from_user.id)
+    await db.delete_driver_info(tuman="andijon shaxar", telegram_id=call.from_user.id)
+    andijon_old['inline_keyboard'][0][1]['text'] = "❌ Andijon shahar"
+    andijon_old['inline_keyboard'][0][1]['callback_data'] = "course:shahar"
+    await db.delete_driver_info(tuman="asaka", telegram_id=call.from_user.id)
+    andijon_old['inline_keyboard'][0][2]['text'] = "❌ Asaka"
+    andijon_old['inline_keyboard'][0][2]['callback_data'] = "course:asak"
+    await db.delete_driver_info(tuman="baliqchi", telegram_id=call.from_user.id)
+    andijon_old['inline_keyboard'][1][0]['text'] = "❌ Baliqchi"
+    andijon_old['inline_keyboard'][1][0]['callback_data'] = "course:baliq"
+    await db.delete_driver_info(tuman="bo'ston", telegram_id=call.from_user.id)
+    andijon_old['inline_keyboard'][1][1]['text'] = "❌ Bo'ston"
+    andijon_old['inline_keyboard'][1][1]['callback_data'] = "course:boston"
+    await db.delete_driver_info(tuman="buloqboshi", telegram_id=call.from_user.id)
+    andijon_old['inline_keyboard'][1][2]['text'] = "❌ Buloqboshi"
+    andijon_old['inline_keyboard'][1][2]['callback_data'] = "course:buloq"
+    await db.delete_driver_info(tuman="izboskan", telegram_id=call.from_user.id)
+    andijon_old['inline_keyboard'][2][0]['text'] = "❌ Izboskan"
+    andijon_old['inline_keyboard'][2][0]['callback_data'] = "course:izbos"
+    await db.delete_driver_info(tuman="jalaquduq", telegram_id=call.from_user.id)
+    andijon_old['inline_keyboard'][2][1]['text'] = "❌ Jalaquduq"
+    andijon_old['inline_keyboard'][2][1]['callback_data'] = "course:jala"
+    await db.delete_driver_info(tuman="xo'jabod", telegram_id=call.from_user.id)
+    andijon_old['inline_keyboard'][2][2]['text'] = "❌ Xo'jabod"
+    andijon_old['inline_keyboard'][2][2]['callback_data'] = "course:xoja"
+    await db.delete_driver_info(tuman="qo'rg'ontepa", telegram_id=call.from_user.id)
+    andijon_old['inline_keyboard'][3][0]['text'] = "❌ Qo'rg'ontepa"
+    andijon_old['inline_keyboard'][3][0]['callback_data'] = "course:qorgon"
+    await db.delete_driver_info(tuman="marhamat", telegram_id=call.from_user.id)
+    andijon_old['inline_keyboard'][3][1]['text'] = "❌ Marhamat"
+    andijon_old['inline_keyboard'][3][1]['callback_data'] = "course:marham"
+    await db.delete_driver_info(tuman="oltinko'l", telegram_id=call.from_user.id)
+    andijon_old['inline_keyboard'][3][2]['text'] = "❌ Oltinko'l"
+    andijon_old['inline_keyboard'][3][2]['callback_data'] = "course:oltin"
+    await db.delete_driver_info(tuman="paxtaobod", telegram_id=call.from_user.id)
+    andijon_old['inline_keyboard'][4][0]['text'] = "❌ Paxtaobod"
+    andijon_old['inline_keyboard'][4][0]['callback_data'] = "course:paxta"
+    await db.delete_driver_info(tuman="shaxrixon", telegram_id=call.from_user.id)
+    andijon_old['inline_keyboard'][4][1]['text'] = "❌ Shaxrixon"
+    andijon_old['inline_keyboard'][4][1]['callback_data'] = "course:shaxri"
+    await db.delete_driver_info(tuman="xonabod", telegram_id=call.from_user.id)
+    andijon_old['inline_keyboard'][4][2]['text'] = "❌ Xonabod"
+    andijon_old['inline_keyboard'][4][2]['callback_data'] = "course:xona"
+    andijon_old['inline_keyboard'][5][0]['text'] = "Hammasini belgilash"
+    andijon_old['inline_keyboard'][5][0]['callback_data'] = "course:lkajslj"
+    await call.message.edit_reply_markup(andijon_old)
+
+
+
+
+
+@dp.callback_query_handler(andijon_callback.filter(item_name='lkajslj'))
+async def hammasini_belgilash(call:CallbackQuery):
+    andijon_old['inline_keyboard'][5][0]['text'] = "Hammasini rad etish"
+    andijon_old['inline_keyboard'][5][0]['callback_data'] = "course:Xahh"
+    andijon_old['inline_keyboard'][0][0]['text'] = "✅ Ulug'nor"
+    andijon_old['inline_keyboard'][0][0]['callback_data'] = "course:ulugnor"
+    andijon_old['inline_keyboard'][0][1]['text'] = "✅ Andijon shahar"
+    andijon_old['inline_keyboard'][0][1]['callback_data'] = "course:shaxar"
+    andijon_old['inline_keyboard'][0][2]['text'] = "✅ Asaka"
+    andijon_old['inline_keyboard'][0][2]['callback_data'] = "course:asaka"
+    andijon_old['inline_keyboard'][1][0]['text'] = "✅ Baliqchi"
+    andijon_old['inline_keyboard'][1][0]['callback_data'] = "course:baliqchi"
+    andijon_old['inline_keyboard'][1][1]['text'] = "✅ Bo'ston"
+    andijon_old['inline_keyboard'][1][1]['callback_data'] = "course:boz"
+    andijon_old['inline_keyboard'][1][2]['text'] = "✅ Buloqboshi"
+    andijon_old['inline_keyboard'][1][2]['callback_data'] = "course:buloqboshi"
+    andijon_old['inline_keyboard'][2][0]['text'] = "✅ Izboskan"
+    andijon_old['inline_keyboard'][2][0]['callback_data'] = "course:izboskan"
+    andijon_old['inline_keyboard'][2][1]['text'] = "✅ Jalaquduq"
+    andijon_old['inline_keyboard'][2][1]['callback_data'] = "course:jalaquduq"
+    andijon_old['inline_keyboard'][2][2]['text'] = "✅ Xo'jabod"
+    andijon_old['inline_keyboard'][2][2]['callback_data'] = "course:xojabod"
+    andijon_old['inline_keyboard'][3][0]['text'] = "✅ Qo'rg'ontepa"
+    andijon_old['inline_keyboard'][3][0]['callback_data'] = "course:qorgontepa"
+    andijon_old['inline_keyboard'][3][1]['text'] = "✅ Marhamat"
+    andijon_old['inline_keyboard'][3][1]['callback_data'] = "course:marhamat"
+    andijon_old['inline_keyboard'][3][2]['text'] = "✅ Oltinko'l"
+    andijon_old['inline_keyboard'][3][2]['callback_data'] = "course:oltinkol"
+    andijon_old['inline_keyboard'][4][0]['text'] = "✅ Paxtaobod"
+    andijon_old['inline_keyboard'][4][0]['callback_data'] = "course:paxtaobod"
+    andijon_old['inline_keyboard'][4][1]['text'] = "✅ Shaxrixon"
+    andijon_old['inline_keyboard'][4][1]['callback_data'] = "course:shaxrixon"
+    andijon_old['inline_keyboard'][4][2]['text'] = "✅ Xonabod"
+    andijon_old['inline_keyboard'][4][2]['callback_data'] = "course:xonabod"
+    await db.add_driver_info(viloyat="Andijon", tuman="ulug'nor", telegram_id=call.from_user.id)
+    await db.add_driver_info(viloyat="Andijon", tuman="andijon shaxar", telegram_id=call.from_user.id)
+    await db.add_driver_info(viloyat="Andijon", tuman="asaka", telegram_id=call.from_user.id)
+    await db.add_driver_info(viloyat="Andijon", tuman="paxtaobod", telegram_id=call.from_user.id)
+    await db.add_driver_info(viloyat="Andijon", tuman="shaxrixon", telegram_id=call.from_user.id)
+    await db.add_driver_info(viloyat="Andijon", tuman="marhamat", telegram_id=call.from_user.id)
+    await db.add_driver_info(viloyat="Andijon", tuman="xonabod", telegram_id=call.from_user.id)
+    await db.add_driver_info(viloyat="Andijon", tuman="oltinko'l", telegram_id=call.from_user.id)
+    await db.add_driver_info(viloyat="Andijon", tuman="baliqchi", telegram_id=call.from_user.id)
+    await db.add_driver_info(viloyat="Andijon", tuman="bo'ston", telegram_id=call.from_user.id)
+    await db.add_driver_info(viloyat="Andijon", tuman="buloqboshi", telegram_id=call.from_user.id)
+    await db.add_driver_info(viloyat="Andijon", tuman="izboskan", telegram_id=call.from_user.id)
+    await db.add_driver_info(viloyat="Andijon", tuman="jalaquduq", telegram_id=call.from_user.id)
+    await db.add_driver_info(viloyat="Andijon", tuman="xo'jabod", telegram_id=call.from_user.id)
+    await db.add_driver_info(viloyat="Andijon", tuman="qo'rg'ontepa", telegram_id=call.from_user.id)
+    await call.message.edit_reply_markup(andijon_old)
+
 @dp.callback_query_handler(andijon_callback.filter(item_name='ulugnor'))
 async def edit(call:CallbackQuery):
     andijon_old['inline_keyboard'][0][0]['text'] = "❌ Ulug'nor"
     andijon_old['inline_keyboard'][0][0]['callback_data'] = "course:ulug"
+
     await db.delete_driver_info(tuman="ulug'nor", telegram_id=call.from_user.id)
     await call.message.edit_reply_markup(andijon_old)
+
+
+
+
 @dp.callback_query_handler(andijon_callback.filter(item_name='ulug'))
 async def edit(call:CallbackQuery):
     andijon_old['inline_keyboard'][0][0]['text'] = "✅ Ulug'nor"

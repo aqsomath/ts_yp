@@ -24,7 +24,12 @@ an = {
     "✅ Paxtaobod":"paxtaobod",
     "✅ Shahrixon":"shaxrixon",
     "✅ Xonabod":"xonabod",
+    "Hammasini rad etish":"Xahh",
+    "Bosh menu": "glavmenu",
+    "Ortga":"qaytamiz",
+
 }
+
 andijon_old = InlineKeyboardMarkup(row_width=3)
 for key,value in an.items():
     andijon_old.insert(InlineKeyboardButton(text=key, callback_data=andijon_callback.new(item_name=value)))

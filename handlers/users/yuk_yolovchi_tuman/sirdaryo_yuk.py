@@ -444,7 +444,7 @@ async def oxirgi(call:CallbackQuery,state:FSMContext):
     drivers = await db.select_all_driver()
     drivers_info = await db.select_all_driver_info()
     for i in drivers:
-        if i[1] == 'ok':
+        if i[2] == 'ok':
             for k in drivers_info:
                 if k[2] == tuman and i[4] == k[3]:
                     markup = aiogram.types.InlineKeyboardMarkup()
