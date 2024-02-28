@@ -24,23 +24,25 @@ for key,value in qashqadaryo.items():
 
 
 qashqadaryo_y = {
-"Dehqonobod":"dehqonobod",
-"Kasbi":"kasbi",
-"Kitob":"kitob",
-"Koson":"koson",
-"Koʻkdala":"kokdala",
-"Mirishkor":"mirishkor",
-"Muborak":"muborak",
-"Nishon":"nishon",
-"Qamashi":"qamashi" ,
-"Qarshi":"qarshi",
-"Yakkabogʻ" :"yakkabog",
-"Gʻuzor":"guzor",
-"Shahrisabz":"shahrisabz",
-"Chiroqchi":"chiroqchi",
+"Qarshi shahar":"qarshi shahar",
+"Shahrisabz shahar":"shahrisabz shahar",
+"Dehqonobod":"dehqonobod tumani",
+"Kasbi":"kasbi tumani",
+"Kitob":"kitob tumani",
+"Koson":"koson tumani",
+"Koʻkdala":"kokdala tumani",
+"Mirishkor":"mirishkor tumani",
+"Muborak":"muborak tumani",
+"Nishon":"nishon tumani",
+"Qamashi":"qamashi tumani" ,
+"Yakkabogʻ" :"yakkabog tumani",
+"Gʻuzor":"guzor tumani",
+"Shahrisabz tuman":"shahrisabz tumani",
+"Qarshi tuman":"qarshi tuman",
+"Chiroqchi":"chiroqchi tumani",
 
 }
-qashqadaryo_yol = InlineKeyboardMarkup(row_width=4)
+qashqadaryo_yol = InlineKeyboardMarkup(row_width=2)
 for key,value in qashqadaryo_y.items():
     qashqadaryo_yol.insert(InlineKeyboardButton(text=key, callback_data=value))
 qashqadaryo_yol.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
@@ -142,3 +144,30 @@ for key,value in qashqadaryo_yuk1.items():
     qashqadaryo_yuuk_mashina.insert(InlineKeyboardButton(text=key, callback_data=value))
 qashqadaryo_yuuk_mashina.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
 qashqadaryo_yuuk_mashina.insert(InlineKeyboardButton(text='ortga',callback_data='ortga'))
+
+
+
+qashqadaryo_uchun_pochta = {
+    "Dehqonobod":"dehqonobod",
+    "Kasbi":"kasbi",
+    "Kitob":"kitob",
+    "Koson":"koson",
+    "Koʻkdala":"kokdala",
+    "Mirishkor":"mirishkor",
+    "Muborak":"muborak",
+    "Nishon":"nishon",
+    "Qamashi":"qamashi" ,
+    "Qarshi":"qarshi",
+    "Yakkabogʻ" :"yakkabog",
+    "Gʻuzor":"guzor",
+    "Shahrisabz":"shahrisabz",
+    "Chiroqchi":"chiroqchi",
+    "Boshqa viloyat": "boshqaviloyat",
+
+    "Bosh menu": "glavmenu",
+    "Ortga": "qaytamiz",
+}
+qashqadaryo_pochta_uchun = InlineKeyboardMarkup(row_width=4)
+for key,value in qashqadaryo_uchun_pochta.items():
+    qashqadaryo_pochta_uchun.insert(InlineKeyboardButton(text=key, callback_data=value))
+

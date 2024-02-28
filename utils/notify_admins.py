@@ -6,7 +6,6 @@ from data.config import ADMINS
 
 
 async def on_startup_notify(dp: Dispatcher):
-    # for admin in ADMINS:
      try:
             print("Ishga tushdim ..")
 

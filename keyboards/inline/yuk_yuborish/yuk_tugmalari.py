@@ -10,6 +10,7 @@ viloyat = {
     "Farg'ona":"333",
     "Buxoro":"4444",
     "Toshkent":"5555",
+    "Toshkent shahar":"kent shahar",
     "Sirdaryo":"6666",
     "Surxondaryo":"7777",
     "Qashqadaryo":"8888",
@@ -17,11 +18,15 @@ viloyat = {
     "Navoiy":"101010",
     "Jizzax":"121212",
     "Samarqand":"131313",
+    "Qoraqalpog'iston":"qoraqalpoq",
+    "Ortga": "Ortga",
+    "Bosh menu": "Bosh menu",
+
 }
 
 
 for i,m in viloyat.items():
-    yuk_viloyatlar.insert(InlineKeyboardButton(text=i,callback_data=yuk_callback.new(item_name=m)))
+    yuk_viloyatlar.insert(InlineKeyboardButton(text=i,callback_data=m))
 
 
 

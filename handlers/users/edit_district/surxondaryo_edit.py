@@ -1,279 +1,361 @@
-from aiogram.types import CallbackQuery
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters.state import StatesGroup, State
+from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 
+from handlers.users.edit_district.sozlamalar import SozlamalarStates
 from keyboards.inline.yolovchi.callback_data import viloyatlar_callback,surxon_callback
+from keyboards.inline.yolovchi.kirish import umumiy_menu_1
 from keyboards.inline.yolovchi.surtuman import surxondaryo_tuman
+from keyboards.inline.yolovchi.viloyatlar import viloyatlar
 from loader import dp, db
 
-Angor={*()}
-Bandixon={*()}
-Boysun={*()}
-Denov={*()}
-Jarqorgon={*()}
-Qiziriq={*()}
-Qumqorgon={*()}
-Muzrabod={*()}
-Oltinsoy={*()}
-Sariosiyo={*()}
-Sherobod={*()}
-Shorchi={*()}
-Termiz={*()}
-Uzun={*()}
 
-@dp.callback_query_handler(viloyatlar_callback.filter(item_name='xonn'))
+class SurxondaryoStatesGroup(StatesGroup):
+    surxondaryo=State()
+
+@dp.callback_query_handler(viloyatlar_callback.filter(item_name='xonn'),state=SozlamalarStates.viloyat_filter)
 async def surxontuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="angor", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="bandixon", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="boysun", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="denov", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="jarqorgon", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="qiziriq", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="qumqorgon", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="muzrabod", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="oltinsoy", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="sariosiyo", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="sherobod", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="shorchi", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="termiz", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="uzun", telegram_id=call.from_user.id)
-    await call.message.answer("Surxondaryo tumanlari", reply_markup=surxondaryo_tuman)
-
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='angor'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.delete_driver_info(tuman="angor", telegram_id=call.from_user.id)
-    surxondaryo_tuman['inline_keyboard'][0][0]['text'] = "❌ Angor"
-    surxondaryo_tuman['inline_keyboard'][0][0]['callback_data'] = "course:ango"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='ango'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="angor", telegram_id=call.from_user.id)
-    surxondaryo_tuman['inline_keyboard'][0][0]['text'] = "✅ Angor"
-    surxondaryo_tuman['inline_keyboard'][0][0]['callback_data'] = "course:angor"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='bandixon'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.delete_driver_info(tuman="bandixon", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][0][1]['text'] = "❌ Bandixon"
-    surxondaryo_tuman['inline_keyboard'][0][1]['callback_data'] = "course:bandi"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='bandi'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="bandixon", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][0][1]['text'] = "✅ Bandixon"
-    surxondaryo_tuman['inline_keyboard'][0][1]['callback_data'] = "course:bandixon"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='boysun'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.delete_driver_info(tuman="boysun", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][0][2]['text'] = "❌ Boysun"
-    surxondaryo_tuman['inline_keyboard'][0][2]['callback_data'] = "course:boysu"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='boysu'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="boysun", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][0][2]['text'] = "✅ Boysun"
-    surxondaryo_tuman['inline_keyboard'][0][2]['callback_data'] = "course:boysun"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='denov'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.delete_driver_info(tuman="denov", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][0][3]['text'] = "❌ Denov"
-    surxondaryo_tuman['inline_keyboard'][0][3]['callback_data'] = "course:denoo"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='denoo'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="denov", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][0][3]['text'] = "✅ Denov"
-    surxondaryo_tuman['inline_keyboard'][0][3]['callback_data'] = "course:denov"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='jarqorgon'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.delete_driver_info(tuman="jarqorgon", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][1][0]['text'] = "❌ Jarqo'rg'on"
-    surxondaryo_tuman['inline_keyboard'][1][0]['callback_data'] = "course:jaar"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='jaar'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="jarqorgon", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][1][0]['text'] = "✅ Jarqo'rg'on"
-    surxondaryo_tuman['inline_keyboard'][1][0]['callback_data'] = "course:jarqorgon"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='qiziriq'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.delete_driver_info(tuman="qiziriq", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][1][1]['text'] = "❌ Qiziriq"
-    surxondaryo_tuman['inline_keyboard'][1][1]['callback_data'] = "course:qizir"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='qizir'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="qiziriq", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][1][1]['text'] = "✅ Qiziriq"
-    surxondaryo_tuman['inline_keyboard'][1][1]['callback_data'] = "course:qiziriq"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='qumqorgon'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.delete_driver_info(tuman="qumqorgon", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][1][2]['text'] = "❌ Qumqo'rg'on"
-    surxondaryo_tuman['inline_keyboard'][1][2]['callback_data'] = "course:qumqor"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='qumqor'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="qumqorgon", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][1][2]['text'] = "✅ Qumqo'rg'on"
-    surxondaryo_tuman['inline_keyboard'][1][2]['callback_data'] = "course:qumqorgon"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='muzrabod'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.delete_driver_info(tuman="muzrabod", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][1][3]['text'] = "❌ Muzrabod"
-    surxondaryo_tuman['inline_keyboard'][1][3]['callback_data'] = "course:muzra"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='muzra'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="muzrabod", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][1][3]['text'] = "✅ Muzrabod"
-    surxondaryo_tuman['inline_keyboard'][1][3]['callback_data'] = "course:muzrabod"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='oltinsoy'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.delete_driver_info(tuman="oltinsoy", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][2][0]['text'] = "❌ Oltinsoy"
-    surxondaryo_tuman['inline_keyboard'][2][0]['callback_data'] = "course:oltinso"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='oltinso'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="oltinsoy", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][2][0]['text'] = "✅ Oltinsoy"
-    surxondaryo_tuman['inline_keyboard'][2][0]['callback_data'] = "course:oltinsoy"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='sariosiyo'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.delete_driver_info(tuman="sariosiyo", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][2][1]['text'] = "❌ Sariosiyo"
-    surxondaryo_tuman['inline_keyboard'][2][1]['callback_data'] = "course:sari"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='sari'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="sariosiyo", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][2][1]['text'] = "✅ Sariosiyo"
-    surxondaryo_tuman['inline_keyboard'][2][1]['callback_data'] = "course:sariosiyo"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='sherobod'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.delete_driver_info(tuman="sherobod", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][2][2]['text'] = "❌ Sherobod"
-    surxondaryo_tuman['inline_keyboard'][2][2]['callback_data'] = "course:shero"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='shero'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="sherobod", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][2][2]['text'] = "✅ Sherobod"
-    surxondaryo_tuman['inline_keyboard'][2][2]['callback_data'] = "course:sherobod"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='shorchi'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.delete_driver_info(tuman="shorchi", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][2][3]['text'] = "❌ Sho'rchi"
-    surxondaryo_tuman['inline_keyboard'][2][3]['callback_data'] = "course:shroc"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='shroc'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="shorchi", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][2][3]['text'] = "✅ Sho'rchi"
-    surxondaryo_tuman['inline_keyboard'][2][3]['callback_data'] = "course:shorchi"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='termiz'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.delete_driver_info(tuman="termiz", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][3][0]['text'] = "❌ Termiz"
-    surxondaryo_tuman['inline_keyboard'][3][0]['callback_data'] = "course:termi"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='termi'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="termiz", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][3][0]['text'] = "✅ Termiz"
-    surxondaryo_tuman['inline_keyboard'][3][0]['callback_data'] = "course:termiz"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='uzun'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.delete_driver_info(tuman="uzun", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][3][1]['text'] = "❌ Uzun"
-    surxondaryo_tuman['inline_keyboard'][3][1]['callback_data'] = "course:uzu"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
-
-@dp.callback_query_handler(surxon_callback.filter(item_name='uzu'))
-async def toshkenttuman(call:CallbackQuery):
-    await db.add_driver_info(viloyat="Surxondaryo", tuman="uzun", telegram_id=call.from_user.id)
-
-    surxondaryo_tuman['inline_keyboard'][3][1]['text'] = "✅ Uzun"
-    surxondaryo_tuman['inline_keyboard'][3][1]['callback_data'] = "course:uzun"
-    await call.message.edit_reply_markup(surxondaryo_tuman)
+    
+
+        jamii = await db.select_all_driver_info()
+        list = []
+        for i in jamii:
+            if i[3] == call.from_user.id:
+                list.append(i[2])
+        surxondaryo = {}
+        if "termiz shahar" in list:
+            surxondaryo["✅Termiz shahar"] = "termiz shahar"
+        else:
+            surxondaryo["❌Termiz shahar"] = "termiz shahar"
+        if "angor tumani" in list:
+            surxondaryo["✅Angor"] = "angor tumani"
+        else:
+            surxondaryo["❌Angor"] = "angor tumani"
+        if "boysun tumani" in list:
+            surxondaryo["✅Boysun"] = "boysun tumani"
+        else:
+            surxondaryo["❌Boysun"] = "boysun tumani"
+        if "denov tumani" in list:
+            surxondaryo["✅Denov"] = 'denov tumani'
+        else:
+            surxondaryo["❌Denov"] = 'denov tumani'
+        if "jarqorgon tumani" in list:
+            surxondaryo["✅Jarqoʻrgʻon"] = "jarqorgon tumani"
+        else:
+            surxondaryo["❌Jarqoʻrgʻon"] = 'jarqorgon tumani'
+
+        if "qiziriq tumani" in list:
+            surxondaryo["✅Qiziriq"] = "qiziriq tumani"
+        else:
+            surxondaryo["❌Qiziriq"] = "qiziriq tumani"
+        if "qumqorgon tumani" in list:
+            surxondaryo["✅Qumqoʻrgʻon"] = "qumqorgon tumani"
+        else:
+            surxondaryo["❌Qumqoʻrgʻon"] = 'qumqorgon tumani'
+        if "muzrabod tumani" in list:
+            surxondaryo["✅Muzrabod"] = "muzrabod tumani"
+        else:
+            surxondaryo["❌Muzrabod"] = "muzrabod tumani"
+        if "oltinsoy tumani" in list:
+            surxondaryo["✅Oltinsoy"] = "oltinsoy tumani"
+        else:
+            surxondaryo["❌Oltinsoy"] = "oltinsoy tumani"
+        if "sariosiyo tumani" in list:
+            surxondaryo["✅Sariosiyo"] = "sariosiyo tumani"
+        else:
+            surxondaryo["❌Sariosiyo"] = "sariosiyo tumani"
+        if "sherobod tumani" in list:
+            surxondaryo["✅Sherobod"] = "sherobod tumani"
+        else:
+            surxondaryo["❌Sherobod"] = "sherobod tumani"
+        if "shorchi tumani" in list:
+            surxondaryo["✅Shoʻrchi"] = "shorchi tumani"
+        else:
+            surxondaryo["❌Shoʻrchi"] = "shorchi tumani"
+        if "termiz tumani" in list:
+            surxondaryo["✅Termiz tuman"] = "termiz tumani"
+        else:
+            surxondaryo["❌Termiz tuman"] = "termiz tumani"
+        if "uzun tumani" in list:
+            surxondaryo["✅Uzun"] = "uzun tumani"
+        else:
+            surxondaryo["❌Uzun"] = "uzun tumani"
+        shaxsiy_surxondaryo = InlineKeyboardMarkup(row_width=3)
+        for key, value in surxondaryo.items():
+            shaxsiy_surxondaryo.insert(InlineKeyboardButton(text=key, callback_data=value))
+        shaxsiy_surxondaryo.insert(InlineKeyboardButton(text="Hammasini rad etish", callback_data="hammasiniradetish"))
+        shaxsiy_surxondaryo.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
+        shaxsiy_surxondaryo.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
+        await call.message.answer("Hurmatli haydovchi siz Surxondaryoning barcha tumanlaridan mijozlarni qabul qilasiz.\n"
+                                  "Sziga keraksiz hududlardan chiqib keting.\n\n"
+                                  "❌ - chiqqan holat\n\n✅- kirgan holat ", reply_markup=shaxsiy_surxondaryo)
+
+        await SurxondaryoStatesGroup.surxondaryo.set()
+        await call.message.delete()
+
+
+@dp.callback_query_handler(state=SurxondaryoStatesGroup.surxondaryo)
+async def surxondaryo_state(call:CallbackQuery,state:FSMContext):
+        if call.data == "hammasiniradetish":
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="angor tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="bandixon tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="boysun tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="denov tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="jarqorgon tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="qiziriq tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="qumqorgon tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="muzrabod tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="oltinsoy tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="sariosiyo tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="sherobod tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="shorchi tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="termiz tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="termiz shahar", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Surxondaryo", tuman="uzun tumani", telegram_id=call.from_user.id)
+            jamii = await db.select_all_driver_info()
+            list = []
+            for i in jamii:
+                if i[3] == call.from_user.id:
+                    list.append(i[2])
+            surxondaryo = {}
+            if "termiz shahar" in list:
+                surxondaryo["✅Termiz shahar"] = "termiz shahar"
+            else:
+                surxondaryo["❌Termiz shahar"] = "termiz shahar"
+            if "angor tumani" in list:
+                surxondaryo["✅Angor"] = "angor tumani"
+            else:
+                surxondaryo["❌Angor"] = "angor tumani"
+            if "boysun tumani" in list:
+                surxondaryo["✅Boysun"] = "boysun tumani"
+            else:
+                surxondaryo["❌Boysun"] = "boysun tumani"
+            if "denov tumani" in list:
+                surxondaryo["✅Denov"] = 'denov tumani'
+            else:
+                surxondaryo["❌Denov"] = 'denov tumani'
+            if "jarqorgon tumani" in list:
+                surxondaryo["✅Jarqoʻrgʻon"] = "jarqorgon tumani"
+            else:
+                surxondaryo["❌Jarqoʻrgʻon"] = 'jarqorgon tumani'
+
+            if "qiziriq tumani" in list:
+                surxondaryo["✅Qiziriq"] = "qiziriq tumani"
+            else:
+                surxondaryo["❌Qiziriq"] = "qiziriq tumani"
+            if "qumqorgon tumani" in list:
+                surxondaryo["✅Qumqoʻrgʻon"] = "qumqorgon tumani"
+            else:
+                surxondaryo["❌Qumqoʻrgʻon"] = 'qumqorgon tumani'
+            if "muzrabod tumani" in list:
+                surxondaryo["✅Muzrabod"] = "muzrabod tumani"
+            else:
+                surxondaryo["❌Muzrabod"] = "muzrabod tumani"
+            if "oltinsoy tumani" in list:
+                surxondaryo["✅Oltinsoy"] = "oltinsoy tumani"
+            else:
+                surxondaryo["❌Oltinsoy"] = "oltinsoy tumani"
+            if "sariosiyo tumani" in list:
+                surxondaryo["✅Sariosiyo"] = "sariosiyo tumani"
+            else:
+                surxondaryo["❌Sariosiyo"] = "sariosiyo tumani"
+            if "sherobod tumani" in list:
+                surxondaryo["✅Sherobod"] = "sherobod tumani"
+            else:
+                surxondaryo["❌Sherobod"] = "sherobod tumani"
+            if "shorchi tumani" in list:
+                surxondaryo["✅Shoʻrchi"] = "shorchi tumani"
+            else:
+                surxondaryo["❌Shoʻrchi"] = "shorchi tumani"
+            if "termiz tumani" in list:
+                surxondaryo["✅Termiz tuman"] = "termiz tumani"
+            else:
+                surxondaryo["❌Termiz tuman"] = "termiz tumani"
+            if "uzun tumani" in list:
+                surxondaryo["✅Uzun"] = "uzun tumani"
+            else:
+                surxondaryo["❌Uzun"] = "uzun tumani"
+            shaxsiy_surxondaryo = InlineKeyboardMarkup(row_width=3)
+            for key, value in surxondaryo.items():
+                shaxsiy_surxondaryo.insert(InlineKeyboardButton(text=key, callback_data=value))
+            shaxsiy_surxondaryo.insert(
+                InlineKeyboardButton(text="Hammasini belgilash", callback_data="hammasinibelgilash"))
+            shaxsiy_surxondaryo.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
+            shaxsiy_surxondaryo.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
+            await call.message.edit_reply_markup(shaxsiy_surxondaryo)
+        if call.data == "hammasinibelgilash":
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="angor tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="bandixon tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="boysun tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="denov tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="jarqorgon tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="qiziriq tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="qumqorgon tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="muzrabod tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="oltinsoy tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="sariosiyo tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="sherobod tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="shorchi tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="termiz tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="termiz shahar", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Surxondaryo", tuman="uzun tumani", telegram_id=call.from_user.id)
+            jamii = await db.select_all_driver_info()
+            list = []
+            for i in jamii:
+                if i[3] == call.from_user.id:
+                    list.append(i[2])
+            surxondaryo = {}
+            if "termiz shahar" in list:
+                surxondaryo["✅Termiz shahar"] = "termiz shahar"
+            else:
+                surxondaryo["❌Termiz shahar"] = "termiz shahar"
+            if "angor tumani" in list:
+                surxondaryo["✅Angor"] = "angor tumani"
+            else:
+                surxondaryo["❌Angor"] = "angor tumani"
+            if "boysun tumani" in list:
+                surxondaryo["✅Boysun"] = "boysun tumani"
+            else:
+                surxondaryo["❌Boysun"] = "boysun tumani"
+            if "denov tumani" in list:
+                surxondaryo["✅Denov"] = 'denov tumani'
+            else:
+                surxondaryo["❌Denov"] = 'denov tumani'
+            if "jarqorgon tumani" in list:
+                surxondaryo["✅Jarqoʻrgʻon"] = "jarqorgon tumani"
+            else:
+                surxondaryo["❌Jarqoʻrgʻon"] = 'jarqorgon tumani'
+
+            if "qiziriq tumani" in list:
+                surxondaryo["✅Qiziriq"] = "qiziriq tumani"
+            else:
+                surxondaryo["❌Qiziriq"] = "qiziriq tumani"
+            if "qumqorgon tumani" in list:
+                surxondaryo["✅Qumqoʻrgʻon"] = "qumqorgon tumani"
+            else:
+                surxondaryo["❌Qumqoʻrgʻon"] = 'qumqorgon tumani'
+            if "muzrabod tumani" in list:
+                surxondaryo["✅Muzrabod"] = "muzrabod tumani"
+            else:
+                surxondaryo["❌Muzrabod"] = "muzrabod tumani"
+            if "oltinsoy tumani" in list:
+                surxondaryo["✅Oltinsoy"] = "oltinsoy tumani"
+            else:
+                surxondaryo["❌Oltinsoy"] = "oltinsoy tumani"
+            if "sariosiyo tumani" in list:
+                surxondaryo["✅Sariosiyo"] = "sariosiyo tumani"
+            else:
+                surxondaryo["❌Sariosiyo"] = "sariosiyo tumani"
+            if "sherobod tumani" in list:
+                surxondaryo["✅Sherobod"] = "sherobod tumani"
+            else:
+                surxondaryo["❌Sherobod"] = "sherobod tumani"
+            if "shorchi tumani" in list:
+                surxondaryo["✅Shoʻrchi"] = "shorchi tumani"
+            else:
+                surxondaryo["❌Shoʻrchi"] = "shorchi tumani"
+            if "termiz tumani" in list:
+                surxondaryo["✅Termiz tuman"] = "termiz tumani"
+            else:
+                surxondaryo["❌Termiz tuman"] = "termiz tumani"
+            if "uzun tumani" in list:
+                surxondaryo["✅Uzun"] = "uzun tumani"
+            else:
+                surxondaryo["❌Uzun"] = "uzun tumani"
+            shaxsiy_surxondaryo = InlineKeyboardMarkup(row_width=3)
+            for key, value in surxondaryo.items():
+                shaxsiy_surxondaryo.insert(InlineKeyboardButton(text=key, callback_data=value))
+            shaxsiy_surxondaryo.insert(
+                InlineKeyboardButton(text="Hammasini rad etish", callback_data="hammasiniradetish"))
+            shaxsiy_surxondaryo.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
+            shaxsiy_surxondaryo.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
+            await call.message.edit_reply_markup(shaxsiy_surxondaryo)
+        if call.data == "qaytish":
+            await call.message.answer("Siz qaysi viloyat haydovchisisiz ?", reply_markup=viloyatlar)
+            await SozlamalarStates.viloyat_filter.set()
+            await call.message.delete()
+
+        if call.data == "boshmenu":
+            await call.message.answer("Sizga kerakli xizmat turini tanlang !!!", reply_markup=umumiy_menu_1)
+            await call.message.delete()
+            await state.finish()
+        list_1 = []
+        jami = await db.select_all_driver_info()
+        for i in jami:
+            if i[3] == call.from_user.id:
+                list_1.append(i[2])
+        if call.data in list_1:
+            await db.delete_driver_info(telegram_id=call.from_user.id, tuman=call.data)
+        else:
+            await db.add_driver_info(viloyat="Farg'ona", telegram_id=call.from_user.id, tuman=call.data)
+        jamii = await db.select_all_driver_info()
+        list = []
+        for i in jamii:
+            if i[3] == call.from_user.id:
+                list.append(i[2])
+        surxondaryo = {}
+        if "termiz shahar" in list:
+            surxondaryo["✅Termiz shahar"] = "termiz shahar"
+        else:
+            surxondaryo["❌Termiz shahar"] = "termiz shahar"
+        if "angor tumani" in list:
+            surxondaryo["✅Angor"] = "angor tumani"
+        else:
+            surxondaryo["❌Angor"] = "angor tumani"
+        if "boysun tumani" in list:
+            surxondaryo["✅Boysun"] = "boysun tumani"
+        else:
+            surxondaryo["❌Boysun"] = "boysun tumani"
+        if "denov tumani" in list:
+            surxondaryo["✅Denov"] = 'denov tumani'
+        else:
+            surxondaryo["❌Denov"] = 'denov tumani'
+        if "jarqorgon tumani" in list:
+            surxondaryo["✅Jarqoʻrgʻon"] = "jarqorgon tumani"
+        else:
+            surxondaryo["❌Jarqoʻrgʻon"] = 'jarqorgon tumani'
+        if "qiziriq tumani" in list:
+            surxondaryo["✅Qiziriq"] = "qiziriq tumani"
+        else:
+            surxondaryo["❌Qiziriq"] = "qiziriq tumani"
+        if "qumqorgon tumani" in list:
+            surxondaryo["✅Qumqoʻrgʻon"] = "qumqorgon tumani"
+        else:
+            surxondaryo["❌Qumqoʻrgʻon"] = 'qumqorgon tumani'
+        if "muzrabod tumani" in list:
+            surxondaryo["✅Muzrabod"] = "muzrabod tumani"
+        else:
+            surxondaryo["❌Muzrabod"] = "muzrabod tumani"
+        if "oltinsoy tumani" in list:
+            surxondaryo["✅Oltinsoy"] = "oltinsoy tumani"
+        else:
+            surxondaryo["❌Oltinsoy"] = "oltinsoy tumani"
+        if "sariosiyo tumani" in list:
+            surxondaryo["✅Sariosiyo"] = "sariosiyo tumani"
+        else:
+            surxondaryo["❌Sariosiyo"] = "sariosiyo tumani"
+        if "sherobod tumani" in list:
+            surxondaryo["✅Sherobod"] = "sherobod tumani"
+        else:
+            surxondaryo["❌Sherobod"] = "sherobod tumani"
+        if "shorchi tumani" in list:
+            surxondaryo["✅Shoʻrchi"] = "shorchi tumani"
+        else:
+            surxondaryo["❌Shoʻrchi"] = "shorchi tumani"
+        if "termiz tumani" in list:
+            surxondaryo["✅Termiz tuman"] = "termiz tumani"
+        else:
+            surxondaryo["❌Termiz tuman"] = "termiz tumani"
+        if "uzun tumani" in list:
+            surxondaryo["✅Uzun"] = "uzun tumani"
+        else:
+            surxondaryo["❌Uzun"] = "uzun tumani"
+        shaxsiy_surxondaryo = InlineKeyboardMarkup(row_width=3)
+        for key, value in surxondaryo.items():
+            shaxsiy_surxondaryo.insert(InlineKeyboardButton(text=key, callback_data=value))
+        shaxsiy_surxondaryo.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
+        shaxsiy_surxondaryo.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
+        for key, value in surxondaryo.items():
+            if call.data == value:
+                await call.message.edit_reply_markup(shaxsiy_surxondaryo)
+                await SurxondaryoStatesGroup.surxondaryo.set()

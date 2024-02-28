@@ -22,21 +22,22 @@ for key, value in jizzax.items():
 
 
 jizzax_y = {
-"Arnasoy" :"arnasoy",
-"Baxmal" :"baxmal",
-"Doʻstlik" :"do'stlik",
-"Forish" :"forish",
-"Gʻallaorol" :"g'allarol",
-"Sharof Rashidov ":"sharof rashidov",
-'Mirzachoʻl' :'mirzachol',
-"Paxtakor" :"paxtakor",
-"Yangiobod" :"yangi obod",
-'Zomin' :"zomin",
-'Zafarobod' :"zafarobod",
-'Zarbdor' :"zarbdor",
+"Jizzax shahar" :"jizzax shahar",
+"Arnasoy" :"arnasoy tumani",
+"Baxmal" :"baxmal tumani",
+"Doʻstlik" :"do'stlik tumani",
+"Forish" :"forish tumani",
+"Gʻallaorol" :"g'allarol tumani",
+"Sharof Rashidov ":"sharof rashidov tumani",
+'Mirzachoʻl' :'mirzachol tumani',
+"Paxtakor" :"paxtakor tumani",
+"Yangiobod" :"yangi obod tumani",
+'Zomin' :"zomin tumani",
+'Zafarobod' :"zafarobod tumani",
+'Zarbdor' :"zarbdor tumani",
 
 }
-jizzax_yol = InlineKeyboardMarkup(row_width=4)
+jizzax_yol = InlineKeyboardMarkup(row_width=2)
 for key, value in jizzax_y.items():
     jizzax_yol.insert(InlineKeyboardButton(text=key, callback_data=value))
 jizzax_yol.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
@@ -129,3 +130,27 @@ for key, value in jizzax_ydcsdas1.items():
     jizzax_yuuk_mashina.insert(InlineKeyboardButton(text=key, callback_data=value))
 jizzax_yuuk_mashina.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
 jizzax_yuuk_mashina.insert(InlineKeyboardButton(text='ortga',callback_data='ortga'))
+
+
+
+izzax_pov = {
+    "Arnasoy" :"arnasoy",
+    "Baxmal" :"baxmal",
+    "Doʻstlik" :"do'stlik",
+    "Forish" :"forish",
+    "Gʻallaorol" :"g'allarol",
+    "Sharof Rashidov":"sharof rashidov",
+    'Mirzachoʻl' :'mirzachol',
+    "Paxtakor" :"paxtakor",
+    "Yangiobod" :"yangi obod",
+    'Zomin' :"zomin",
+    'Zafarobod' :"zafarobod",
+    'Zarbdor' :"zarbdor",
+    "Boshqa viloyat": "boshqaviloyat",
+
+    "Bosh menu": "glavmenu",
+    "Ortga": "qaytamiz",
+}
+jizzax_pochta_uchun = InlineKeyboardMarkup(row_width=4)
+for key, value in izzax_pov.items():
+    jizzax_pochta_uchun.insert(InlineKeyboardButton(text=key, callback_data=value))

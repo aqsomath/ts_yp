@@ -16,6 +16,8 @@ viloyat = {
     "Navoiy":"voyy",
     "Jizzax":"zzax",
     "Samarqand":"marqa",
+    "Toshkent shahar":"kent shahar",
+    "Qoraqalpog'iston":"qoraqalpoq",
     "Ortga":"nazad",
 }
 viloyatlar = InlineKeyboardMarkup(row_width=2)
@@ -23,7 +25,7 @@ for key,value in viloyat.items():
     viloyatlar.insert(InlineKeyboardButton(text=key, callback_data=viloyatlar_callback.new(item_name=value)))
 
 
-
+vili_callback=CallbackData("vili","item_name")
 viloyat = {
     "Andijon":"andijon",
     "Namangan":"namangan",
@@ -37,13 +39,15 @@ viloyat = {
     "Navoiy":"navoiy",
     "Jizzax":"jizzax",
     "Samarqand":"samarqand",
+    "Toshkent shahar":"kent shahar",
+    "Qoraqalpog'iston":"qoraqalpoq",
 }
 
 viloyatlar_yol = InlineKeyboardMarkup(row_width=2)
 for key,value in viloyat.items():
     viloyatlar_yol.insert(InlineKeyboardButton(text=key, callback_data=value))
 
-viloyatlar_yol.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
+viloyatlar_yol.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='Bosh menu'))
 viloyatlar_yol.insert(InlineKeyboardButton(text='ortga',callback_data='ortga'))
 
 
@@ -54,6 +58,7 @@ viloyat_x = {
     "Farg'ona":"kdjhaigdakhdksa",
     "Buxoro":"allaskalkdaslkjd",
     "Toshkent":"euywiudhkns",
+    "Toshkent shahar":"kent shahar",
     "Sirdaryo":"jweytfugdiahjash",
     "Surxondaryo":"qdwqwdqwsasxa",
     "Qashqadaryo":"asasdsadasd",
@@ -61,6 +66,9 @@ viloyat_x = {
     "Navoiy":"fghgfjghjgfh",
     "Jizzax":"reggfvdvdvcx",
     "Samarqand":"tyhjyjghfh",
+    "Qoraqalpog'iston":"qoraqalpoq",
+    "Ortga":"homeback",
+    "Buyurtmani bekor qilish":"atmen",
 }
 
 viloyatlar_yol_x = InlineKeyboardMarkup(row_width=2)

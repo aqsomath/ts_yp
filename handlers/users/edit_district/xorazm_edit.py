@@ -1,224 +1,339 @@
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters.state import StatesGroup, State
+
+from handlers.users.edit_district.sozlamalar import SozlamalarStates
+from keyboards.inline.yolovchi.kirish import umumiy_menu_1
+from keyboards.inline.yolovchi.viloyatlar import viloyatlar
 from loader import dp, db
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from keyboards.inline.yolovchi.callback_data import  viloyatlar_callback,xorazm_callback
 from keyboards.inline.yolovchi.xorazmtuman import xorazm_tumanlari
-Bogot={*()}
-Gurlan={*()}
-Xonqa={*()}
-Hazorasp={*()}
-Xiva={*()}
-Qoshkopir={*()}
-Shovot={*()}
-Urganch={*()}
-Yangiariq={*()}
-Yangibozor={*()}
-Tupproqqala={*()}
-@dp.callback_query_handler(viloyatlar_callback.filter(item_name='azmm'))
+
+
+
+class XorazmStatesGroup(StatesGroup):
+    xorazm=State()
+@dp.callback_query_handler(viloyatlar_callback.filter(item_name='azmm'),state=SozlamalarStates.viloyat_filter)
 async def xorazm_edit(call: CallbackQuery):
-    await db.add_driver_info(viloyat="Toshkent", tuman="bog'ot", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Toshkent", tuman="gurlan", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Toshkent", tuman="xonqa", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Toshkent", tuman="hazorasp", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Toshkent", tuman="xiva", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Toshkent", tuman="qoshko'prik", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Toshkent", tuman="shovot", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Toshkent", tuman="urganch", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Toshkent", tuman="yangiariq", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Toshkent", tuman="yangibozor", telegram_id=call.from_user.id)
-    await db.add_driver_info(viloyat="Toshkent", tuman="tuproqqal'a", telegram_id=call.from_user.id)
 
-    await call.message.answer("Xorazm viloyati tumanlari ", reply_markup=xorazm_tumanlari)
+        jamii = await db.select_all_driver_info()
+        list = []
+        for i in jamii:
+            if i[3] == call.from_user.id:
+                list.append(i[2])
+        xorazm = {}
+        if "urganch shahar" in list:
+            xorazm["✅Urganch shahar"] = "urganch shahar"
+        else:
+            xorazm["❌Urganch shahar"] = "urganch shahar"
+        if "bog'ot tumani" in list:
+            xorazm["✅Bogʻot"] = "bog'ot tumani"
+        else:
+            xorazm["❌Bogʻot"] = "bog'ot tumani"
+        if "gurlan tumani" in list:
+            xorazm["✅Gurlan"] = "gurlan tumani"
+        else:
+            xorazm["❌Gurlan"] = "gurlan tumani"
+        if "xonqa tumani" in list:
+            xorazm["✅Xonqa"] = "xonqa tumani"
+        else:
+            xorazm["❌Xonqa"] = "xonqa tumani"
+        if "hazorasp tumani" in list:
+            xorazm["✅Hazorasp"] = 'hazorasp tumani'
+        else:
+            xorazm["❌Hazorasp"] = 'hazorasp tumani'
+        if "xiva tumani" in list:
+            xorazm["✅Xiva"] = 'xiva tumani'
+        else:
+            xorazm["❌Xiva"] = 'xiva tumani'
+        if "xiva shahar" in list:
+            xorazm["✅Xiva shahar"] = 'xiva shahar'
+        else:
+            xorazm["❌Xiva shahar"] = 'xiva shahar'
+        if "qoshko'prik tumani" in list:
+            xorazm["✅Qoʻshkoʻpir"] = "qoshko'prik tumani"
+        else:
+            xorazm["❌Qoʻshkoʻpir"] = "qoshko'prik tumani"
+        if "shovot tumani" in list:
+            xorazm["✅Shovot"] = "shovot tumani"
+        else:
+            xorazm["❌Shovot"] = 'shovot tumani'
+        if "urganch tumani" in list:
+            xorazm["✅Urganch tuman"] = "urganch tumani"
+        else:
+            xorazm["❌Urganch tuman"] = "urganch tumani"
+        if "yangiariq tumani" in list:
+            xorazm["✅Yangiariq"] = "yangiariq tumani"
+        else:
+            xorazm["❌Yangiariq"] = 'yangiariq tumani'
+        if "yangibozor tumani" in list:
+            xorazm["✅Yangibozor"] = "yangibozor tumani"
+        else:
+            xorazm["❌Yangibozor"] = "yangibozor tumani"
+        if "tuproqqal'a tumani" in list:
+            xorazm["✅Tupproqqalʼa"] = "tuproqqal'a tumani"
+        else:
+            xorazm["❌Tupproqqalʼa"] = "tuproqqal'a tumani"
+
+        shaxsiy_xorazm = InlineKeyboardMarkup(row_width=3)
+        for key, value in xorazm.items():
+            shaxsiy_xorazm.insert(InlineKeyboardButton(text=key, callback_data=value))
+        shaxsiy_xorazm.insert(InlineKeyboardButton(text="Hammasini rad etish", callback_data="hammasiniradetish"))
+        shaxsiy_xorazm.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
+        shaxsiy_xorazm.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
+        await call.message.answer("Hurmatli haydovchi siz Xorazmning barcha tumanlaridan mijozlarni qabul qilasiz.\n"
+                                  "Sziga keraksiz hududlardan chiqib keting.\n\n"
+                                  "❌ - chiqqan holat\n\n✅- kirgan holat ", reply_markup=shaxsiy_xorazm)
+
+        await XorazmStatesGroup.xorazm.set()
+        await call.message.delete()
+@dp.callback_query_handler(state=XorazmStatesGroup.xorazm)
+async def xorazm_state(call:CallbackQuery,state:FSMContext):
+        if call.data == "hammasiniradetish":
+            await db.delete_driver_info(viloyat="Xorazm", tuman="bog'ot tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Xorazm", tuman="gurlan tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Xorazm", tuman="xonqa tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Xorazm", tuman="hazorasp tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Xorazm", tuman="xiva tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Xorazm", tuman="xiva shahar", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Xorazm", tuman="qoshko'prik tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Xorazm", tuman="shovot tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Xorazm", tuman="urganch tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Xorazm", tuman="urganch shahar", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Xorazm", tuman="yangiariq tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Xorazm", tuman="yangibozor tumani", telegram_id=call.from_user.id)
+            await db.delete_driver_info(viloyat="Xorazm", tuman="tuproqqal'a tumani", telegram_id=call.from_user.id)
+            jamii = await db.select_all_driver_info()
+            list = []
+            for i in jamii:
+                if i[3] == call.from_user.id:
+                    list.append(i[2])
+            xorazm = {}
+            if "urganch shahar" in list:
+                xorazm["✅Urganch shahar"] = "urganch shahar"
+            else:
+                xorazm["❌Urganch shahar"] = "urganch shahar"
+            if "bog'ot tumani" in list:
+                xorazm["✅Bogʻot"] = "bog'ot tumani"
+            else:
+                xorazm["❌Bogʻot"] = "bog'ot tumani"
+            if "gurlan tumani" in list:
+                xorazm["✅Gurlan"] = "gurlan tumani"
+            else:
+                xorazm["❌Gurlan"] = "gurlan tumani"
+            if "xonqa tumani" in list:
+                xorazm["✅Xonqa"] = "xonqa tumani"
+            else:
+                xorazm["❌Xonqa"] = "xonqa tumani"
+            if "hazorasp tumani" in list:
+                xorazm["✅Hazorasp"] = 'hazorasp tumani'
+            else:
+                xorazm["❌Hazorasp"] = 'hazorasp tumani'
+            if "xiva tumani" in list:
+                xorazm["✅Xiva"] = 'xiva tumani'
+            else:
+                xorazm["❌Xiva"] = 'xiva tumani'
+            if "xiva shahar" in list:
+                xorazm["✅Xiva shahar"] = 'xiva shahar'
+            else:
+                xorazm["❌Xiva shahar"] = 'xiva shahar'
+            if "qoshko'prik tumani" in list:
+                xorazm["✅Qoʻshkoʻpir"] = "qoshko'prik tumani"
+            else:
+                xorazm["❌Qoʻshkoʻpir"] = "qoshko'prik tumani"
+            if "shovot tumani" in list:
+                xorazm["✅Shovot"] = "shovot tumani"
+            else:
+                xorazm["❌Shovot"] = 'shovot tumani'
+            if "urganch tumani" in list:
+                xorazm["✅Urganch tuman"] = "urganch tumani"
+            else:
+                xorazm["❌Urganch tuman"] = "urganch tumani"
+            if "yangiariq tumani" in list:
+                xorazm["✅Yangiariq"] = "yangiariq tumani"
+            else:
+                xorazm["❌Yangiariq"] = 'yangiariq tumani'
+            if "yangibozor tumani" in list:
+                xorazm["✅Yangibozor"] = "yangibozor tumani"
+            else:
+                xorazm["❌Yangibozor"] = "yangibozor tumani"
+            if "tuproqqal'a tumani" in list:
+                xorazm["✅Tupproqqalʼa"] = "tuproqqal'a tumani"
+            else:
+                xorazm["❌Tupproqqalʼa"] = "tuproqqal'a tumani"
+
+            shaxsiy_xorazm = InlineKeyboardMarkup(row_width=3)
+            for key, value in xorazm.items():
+                shaxsiy_xorazm.insert(InlineKeyboardButton(text=key, callback_data=value))
+            shaxsiy_xorazm.insert(InlineKeyboardButton(text="Hammasini belgilash", callback_data="hammasinibelgilash"))
+            shaxsiy_xorazm.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
+            shaxsiy_xorazm.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
+            await call.message.edit_reply_markup(shaxsiy_xorazm)
+        if call.data == "hammasinibelgilash":
+            await db.add_driver_info(viloyat="Xorazm", tuman="bog'ot tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Xorazm", tuman="gurlan tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Xorazm", tuman="xonqa tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Xorazm", tuman="hazorasp tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Xorazm", tuman="xiva tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Xorazm", tuman="xiva shahar", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Xorazm", tuman="qoshko'prik tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Xorazm", tuman="shovot tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Xorazm", tuman="urganch tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Xorazm", tuman="urganch shahar", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Xorazm", tuman="yangiariq tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Xorazm", tuman="yangibozor tumani", telegram_id=call.from_user.id)
+            await db.add_driver_info(viloyat="Xorazm", tuman="tuproqqal'a tumani", telegram_id=call.from_user.id)
+            jamii = await db.select_all_driver_info()
+            list = []
+            for i in jamii:
+                if i[3] == call.from_user.id:
+                    list.append(i[2])
+            xorazm = {}
+            if "urganch shahar" in list:
+                xorazm["✅Urganch shahar"] = "urganch shahar"
+            else:
+                xorazm["❌Urganch shahar"] = "urganch shahar"
+            if "bog'ot tumani" in list:
+                xorazm["✅Bogʻot"] = "bog'ot tumani"
+            else:
+                xorazm["❌Bogʻot"] = "bog'ot tumani"
+            if "gurlan tumani" in list:
+                xorazm["✅Gurlan"] = "gurlan tumani"
+            else:
+                xorazm["❌Gurlan"] = "gurlan tumani"
+            if "xonqa tumani" in list:
+                xorazm["✅Xonqa"] = "xonqa tumani"
+            else:
+                xorazm["❌Xonqa"] = "xonqa tumani"
+            if "hazorasp tumani" in list:
+                xorazm["✅Hazorasp"] = 'hazorasp tumani'
+            else:
+                xorazm["❌Hazorasp"] = 'hazorasp tumani'
+            if "xiva tumani" in list:
+                xorazm["✅Xiva"] = 'xiva tumani'
+            else:
+                xorazm["❌Xiva"] = 'xiva tumani'
+            if "xiva shahar" in list:
+                xorazm["✅Xiva shahar"] = 'xiva shahar'
+            else:
+                xorazm["❌Xiva shahar"] = 'xiva shahar'
+            if "qoshko'prik tumani" in list:
+                xorazm["✅Qoʻshkoʻpir"] = "qoshko'prik tumani"
+            else:
+                xorazm["❌Qoʻshkoʻpir"] = "qoshko'prik tumani"
+            if "shovot tumani" in list:
+                xorazm["✅Shovot"] = "shovot tumani"
+            else:
+                xorazm["❌Shovot"] = 'shovot tumani'
+            if "urganch tumani" in list:
+                xorazm["✅Urganch tuman"] = "urganch tumani"
+            else:
+                xorazm["❌Urganch tuman"] = "urganch tumani"
+            if "yangiariq tumani" in list:
+                xorazm["✅Yangiariq"] = "yangiariq tumani"
+            else:
+                xorazm["❌Yangiariq"] = 'yangiariq tumani'
+            if "yangibozor tumani" in list:
+                xorazm["✅Yangibozor"] = "yangibozor tumani"
+            else:
+                xorazm["❌Yangibozor"] = "yangibozor tumani"
+            if "tuproqqal'a tumani" in list:
+                xorazm["✅Tupproqqalʼa"] = "tuproqqal'a tumani"
+            else:
+                xorazm["❌Tupproqqalʼa"] = "tuproqqal'a tumani"
+
+            shaxsiy_xorazm = InlineKeyboardMarkup(row_width=3)
+            for key, value in xorazm.items():
+                shaxsiy_xorazm.insert(InlineKeyboardButton(text=key, callback_data=value))
+            shaxsiy_xorazm.insert(InlineKeyboardButton(text="Hammasini rad etish", callback_data="hammasiniradetish"))
+            shaxsiy_xorazm.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
+            shaxsiy_xorazm.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
+            await call.message.edit_reply_markup(shaxsiy_xorazm)
 
 
-@dp.callback_query_handler(xorazm_callback.filter(item_name='bogot'))
-async def chortoq(call: CallbackQuery):
-    await db.delete_driver_info(tuman="bog'ot", telegram_id=call.from_user.id)
+        if call.data == "qaytish":
+            await call.message.answer("Siz qaysi viloyat haydovchisisiz ?", reply_markup=viloyatlar)
+            await SozlamalarStates.viloyat_filter.set()
+            await call.message.delete()
 
-    xorazm_tumanlari['inline_keyboard'][0][0]['text'] = "❌ Bog'ot"
-    xorazm_tumanlari['inline_keyboard'][0][0]['callback_data'] = "course:bogo"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
+        if call.data == "boshmenu":
+            await call.message.answer("Sizga kerakli xizmat turini tanlang !!!", reply_markup=umumiy_menu_1)
+            await call.message.delete()
+            await state.finish()
+        list_1 = []
+        jami = await db.select_all_driver_info()
+        for i in jami:
+            if i[3] == call.from_user.id:
+                list_1.append(i[2])
+        if call.data in list_1:
+            await db.delete_driver_info(telegram_id=call.from_user.id, tuman=call.data)
+        else:
+            await db.add_driver_info(viloyat="Farg'ona", telegram_id=call.from_user.id, tuman=call.data)
+        jamii = await db.select_all_driver_info()
+        list = []
+        for i in jamii:
+            if i[3] == call.from_user.id:
+                list.append(i[2])
+        xorazm = {}
+        if "urganch shahar" in list:
+            xorazm["✅Urganch shahar"] = "urganch shahar"
+        else:
+            xorazm["❌Urganch shahar"] = "urganch shahar"
+        if "bog'ot tumani" in list:
+            xorazm["✅Bogʻot"] = "bog'ot tumani"
+        else:
+            xorazm["❌Bogʻot"] = "bog'ot tumani"
+        if "gurlan tumani" in list:
+            xorazm["✅Gurlan"] = "gurlan tumani"
+        else:
+            xorazm["❌Gurlan"] = "gurlan tumani"
+        if "xonqa tumani" in list:
+            xorazm["✅Xonqa"] = "xonqa tumani"
+        else:
+            xorazm["❌Xonqa"] = "xonqa tumani"
+        if "hazorasp tumani" in list:
+            xorazm["✅Hazorasp"] = 'hazorasp tumani'
+        else:
+            xorazm["❌Hazorasp"] = 'hazorasp tumani'
+        if "xiva tumani" in list:
+            xorazm["✅Xiva"] = 'xiva tumani'
+        else:
+            xorazm["❌Xiva"] = 'xiva tumani'
+        if "xiva shahar" in list:
+            xorazm["✅Xiva shahar"] = 'xiva shahar'
+        else:
+            xorazm["❌Xiva shahar"] = 'xiva shahar'
+        if "qoshko'prik tumani" in list:
+            xorazm["✅Qoʻshkoʻpir"] = "qoshko'prik tumani"
+        else:
+            xorazm["❌Qoʻshkoʻpir"] = "qoshko'prik tumani"
+        if "shovot tumani" in list:
+            xorazm["✅Shovot"] = "shovot tumani"
+        else:
+            xorazm["❌Shovot"] = 'shovot tumani'
+        if "urganch tumani" in list:
+            xorazm["✅Urganch tuman"] = "urganch tumani"
+        else:
+            xorazm["❌Urganch tuman"] = "urganch tumani"
+        if "yangiariq tumani" in list:
+            xorazm["✅Yangiariq"] = "yangiariq tumani"
+        else:
+            xorazm["❌Yangiariq"] = 'yangiariq tumani'
+        if "yangibozor tumani" in list:
+            xorazm["✅Yangibozor"] = "yangibozor tumani"
+        else:
+            xorazm["❌Yangibozor"] = "yangibozor tumani"
+        if "tuproqqal'a tumani" in list:
+            xorazm["✅Tupproqqalʼa"] = "tuproqqal'a tumani"
+        else:
+            xorazm["❌Tupproqqalʼa"] = "tuproqqal'a tumani"
+        shaxsiy_xorazm = InlineKeyboardMarkup(row_width=3)
+        for key, value in xorazm.items():
+            shaxsiy_xorazm.insert(InlineKeyboardButton(text=key, callback_data=value))
+        shaxsiy_xorazm.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
+        shaxsiy_xorazm.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
 
-@dp.callback_query_handler(xorazm_callback.filter(item_name='bogo'))
-async def chortoq(call: CallbackQuery):
-    await db.add_driver_info(viloyat="Toshkent", tuman="bog'ot", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][0][0]['text'] = "✅ Bog'ot"
-    xorazm_tumanlari['inline_keyboard'][0][0]['callback_data'] = "course:bogot"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='gurlan'))
-async def chortoq(call: CallbackQuery):
-    await db.delete_driver_info(tuman="gurlan", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][0][1]['text'] = "❌ Gurlan"
-    xorazm_tumanlari['inline_keyboard'][0][1]['callback_data'] = "course:gurla"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='gurla'))
-async def chortoq(call: CallbackQuery):
-    await db.add_driver_info(viloyat="Toshkent", tuman="gurlan", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][0][1]['text'] = "✅ Gurlan"
-    xorazm_tumanlari['inline_keyboard'][0][1]['callback_data'] = "course:gurlan"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='xonqa'))
-async def chortoq(call: CallbackQuery):
-    await db.delete_driver_info(tuman="xonqa", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][0][2]['text'] = "❌ Xonqa"
-    xorazm_tumanlari['inline_keyboard'][0][2]['callback_data'] = "course:xonqaa"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='xonqaa'))
-async def chortoq(call: CallbackQuery):
-    await db.add_driver_info(viloyat="Toshkent", tuman="xonqa", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][0][2]['text'] = "✅ Xonqa"
-    xorazm_tumanlari['inline_keyboard'][0][2]['callback_data'] = "course:xonqa"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='hazorasp'))
-async def chortoq(call: CallbackQuery):
-    await db.delete_driver_info(tuman="hazorasp", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][0][3]['text'] = "❌ Hazorasp"
-    xorazm_tumanlari['inline_keyboard'][0][3]['callback_data'] = "course:hazor"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='hazor'))
-async def chortoq(call: CallbackQuery):
-    await db.add_driver_info(viloyat="Toshkent", tuman="hazorasp", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][0][3]['text'] = "✅ Hazorasp"
-    xorazm_tumanlari['inline_keyboard'][0][3]['callback_data'] = "course:hazorasp"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='xiva'))
-async def chortoq(call: CallbackQuery):
-    await db.delete_driver_info(tuman="xiva", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][1][0]['text'] = "❌ Xiva"
-    xorazm_tumanlari['inline_keyboard'][1][0]['callback_data'] = "course:xivaa"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='xivaa'))
-async def chortoq(call: CallbackQuery):
-    await db.add_driver_info(viloyat="Toshkent", tuman="xiva", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][1][0]['text'] = "✅ Xiva"
-    xorazm_tumanlari['inline_keyboard'][1][0]['callback_data'] = "course:Xiva"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='qoshkoprik'))
-async def chortoq(call: CallbackQuery):
-    await db.delete_driver_info(tuman="qoshko'prik", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][1][1]['text'] = "❌ Qoshko'prik"
-    xorazm_tumanlari['inline_keyboard'][1][1]['callback_data'] = "course:qoshkop"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='qoshkop'))
-async def chortoq(call: CallbackQuery):
-    await db.add_driver_info(viloyat="Toshkent", tuman="qoshko'prik", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][1][1]['text'] = "✅ Qoshko'prik"
-    xorazm_tumanlari['inline_keyboard'][1][1]['callback_data'] = "course:qoshkoprik"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='shovot'))
-async def chortoq(call: CallbackQuery):
-    await db.delete_driver_info(tuman="shovot", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][1][2]['text'] = "❌ Shovot"
-    xorazm_tumanlari['inline_keyboard'][1][2]['callback_data'] = "course:shovi"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='shovi'))
-async def chortoq(call: CallbackQuery):
-    await db.add_driver_info(viloyat="Toshkent", tuman="shovot", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][1][2]['text'] = "✅ Shovot"
-    xorazm_tumanlari['inline_keyboard'][1][2]['callback_data'] = "course:shovot"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='urganch'))
-async def chortoq(call: CallbackQuery):
-    await db.delete_driver_info(tuman="urganch", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][1][3]['text'] = "❌ Urganch"
-    xorazm_tumanlari['inline_keyboard'][1][3]['callback_data'] = "course:urgan"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='urgan'))
-async def chortoq(call: CallbackQuery):
-    await db.add_driver_info(viloyat="Toshkent", tuman="urganch", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][1][3]['text'] = "✅ Urganch"
-    xorazm_tumanlari['inline_keyboard'][1][3]['callback_data'] = "course:urganch"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='yangiariq'))
-async def chortoq(call: CallbackQuery):
-    await db.delete_driver_info(tuman="yangiariq", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][2][0]['text'] = "❌ Yangi ariq"
-    xorazm_tumanlari['inline_keyboard'][2][0]['callback_data'] = "course:yariq"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='yariq'))
-async def chortoq(call: CallbackQuery):
-    await db.add_driver_info(viloyat="Toshkent", tuman="yangiariq", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][2][0]['text'] = "✅ Yangi ariq"
-    xorazm_tumanlari['inline_keyboard'][2][0]['callback_data'] = "course:yangiariq"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='yangibozor'))
-async def chortoq(call: CallbackQuery):
-    await db.delete_driver_info(tuman="yangibozor", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][2][1]['text'] = "❌ Yangi bozor"
-    xorazm_tumanlari['inline_keyboard'][2][1]['callback_data'] = "course:bozor"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='bozor'))
-async def chortoq(call: CallbackQuery):
-    await db.add_driver_info(viloyat="Toshkent", tuman="yangibozor", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][2][1]['text'] = "✅ Yangi bozor"
-    xorazm_tumanlari['inline_keyboard'][2][1]['callback_data'] = "course:yangibozor"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='tuproqqala'))
-async def chortoq(call: CallbackQuery):
-    await db.delete_driver_info(tuman="tuproqqal'a", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][2][2]['text'] = "❌ Tuproqqal'a"
-    xorazm_tumanlari['inline_keyboard'][2][2]['callback_data'] = "course:qala"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
-
-@dp.callback_query_handler(xorazm_callback.filter(item_name='qala'))
-async def chortoq(call: CallbackQuery):
-    await db.add_driver_info(viloyat="Toshkent", tuman="tuproqqal'a", telegram_id=call.from_user.id)
-
-    xorazm_tumanlari['inline_keyboard'][2][2]['text'] = "✅ Tuproqqal'a"
-    xorazm_tumanlari['inline_keyboard'][2][2]['callback_data'] = "course:tuproqqala"
-    await call.message.edit_reply_markup(xorazm_tumanlari)
+        for key, value in xorazm.items():
+            if call.data == value:
+                await call.message.edit_reply_markup(shaxsiy_xorazm)
+                await XorazmStatesGroup.xorazm.set()

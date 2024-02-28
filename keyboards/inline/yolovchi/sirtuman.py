@@ -20,14 +20,18 @@ for key,value in sirdaryo.items():
 
 
 sirdaryo_y = {
-"Oqoltin" :"oqoltin",
-"Boyovut" :"boyovut" ,
-"Guliston" :"guliston",
-"Xovos" : "xovos",
-"Mirzaobod" : "mirzaobod",
-"Sardoba" :"sardoba",
-"Sayxunobod" :"sayxunobod",
-"Sirdaryo" :"sirdaryo shaxri",
+"Sirdaryo shahar" :"sirdaryo shahar",
+"Sirdaryo tuman" :"sirdaryo tumani",
+"Guliston shahar" :"guliston shahar",
+"Yangiyer shahar" :"yangiyer shahar",
+"Shirin shahar" :"shirin shahar",
+"Oqoltin" :"oqoltin tumani",
+"Boyovut" :"boyovut tumani" ,
+"Guliston" :"guliston tumani",
+"Xovos" : "xovos tumani",
+"Mirzaobod" : "mirzaobod tumani",
+"Sardoba" :"sardoba tumani",
+"Sayxunobod" :"sayxunobod tumani",
 
 }
 
@@ -47,7 +51,7 @@ sirdaryo_yx = {
 "Mirzaobod" : "x_mirzaobod",
 "Sardoba" :"x_sardoba",
 "Sayxunobod" :"x_sayxunobod",
-"Sirdaryo" :"x_sirdaryo shaxri",
+"Sirdaryo shaxar" :"x_sirdaryo shaxri",
 
 }
 
@@ -118,3 +122,25 @@ for key,value in sirdaryo_y1ax1.items():
     sirdaryo_yuuk_mashina.insert(InlineKeyboardButton(text=key, callback_data=value))
 sirdaryo_yuuk_mashina.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
 sirdaryo_yuuk_mashina.insert(InlineKeyboardButton(text='ortga',callback_data='ortga'))
+
+
+sirdaryo_pochta_uchun_1 = {
+    "Oqoltin" :"oqoltin",
+    "Boyovut" :"boyovut" ,
+    "Guliston" :"guliston",
+    "Xovos" : "xovos",
+    "Mirzaobod" : "mirzaobod",
+    "Sardoba" :"sardoba",
+    "Sayxunobod" :"sayxunobod",
+    "Sirdaryo" :"sirdaryo shaxri",
+    "Boshqa viloyat": "boshqaviloyat",
+
+    "Bosh menu": "glavmenu",
+    "Ortga": "qaytamiz",
+}
+
+
+sirdaryo_pochta_uchun = InlineKeyboardMarkup(row_width=4)
+for key,value in sirdaryo_pochta_uchun_1.items():
+    sirdaryo_pochta_uchun.insert(InlineKeyboardButton(text=key, callback_data=value))
+

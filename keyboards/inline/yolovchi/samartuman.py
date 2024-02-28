@@ -24,22 +24,24 @@ for key, value in samarqaand.items():
 
 
 samarqaand_y = {
-'Bulungʻur' :"bulungur",
-'Ishtixon' :"ishtixon",
-'Jomboy' :"jomboy",
-'Kattaqoʻrgʻon' :"kattaqorgon",
-'Qoʻshrabot' :"qoshrabot",
-'Narpay' :"narpay",
-'Nurobod' :"nurobod",
-'Oqdaryo' :"oqdaryo",
-'Paxtachi' :"paxtachi",
-'Payariq' :"payariq",
-'Pastdargʻom' :"pastdargom",
-'Samarqand' :"samarqand shahar",
-'Toyloq' :"toyloq",
+'Samarqand shaxar' :"samarqand shahar",
+'Kattaqoʻrgʻon shahar' :"kattaqorgon shahar",
+'Bulungʻur' :"bulungur tumani",
+'Ishtixon' :"ishtixon tumani",
+'Jomboy' :"jomboy tumani",
+'Kattaqoʻrgʻon tuman' :"kattaqorgon tumani",
+'Qoʻshrabot' :"qoshrabot tumani",
+'Narpay' :"narpay tumani",
+'Nurobod' :"nurobod tumani",
+'Oqdaryo' :"oqdaryo tumani",
+'Paxtachi' :"paxtachi tumani",
+'Payariq' :"payariq tumani",
+'Pastdargʻom' :"pastdargom tumani",
+'Samarqand tuman' :"samarqand tumani",
+'Toyloq' :"toyloq tumani",
 
 }
-samarqand_yol = InlineKeyboardMarkup(row_width=4)
+samarqand_yol = InlineKeyboardMarkup(row_width=2)
 for key, value in samarqaand_y.items():
     samarqand_yol.insert(InlineKeyboardButton(text=key, callback_data=value))
 samarqand_yol.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
@@ -137,3 +139,30 @@ for key, value in samarqaand_yasasa1.items():
     samarqand_yuuk_mashina.insert(InlineKeyboardButton(text=key, callback_data=value))
 samarqand_yuuk_mashina.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
 samarqand_yuuk_mashina.insert(InlineKeyboardButton(text='ortga',callback_data='ortga'))
+
+
+
+
+samarqaand_sd = {
+    'Bulungʻur' :"bulungur",
+    'Ishtixon' :"ishtixon",
+    'Jomboy' :"jomboy",
+    'Kattaqoʻrgʻon' :"kattaqorgon",
+    'Qoʻshrabot' :"qoshrabot",
+    'Narpay' :"narpay",
+    'Nurobod' :"nurobod",
+    'Oqdaryo' :"oqdaryo",
+    'Paxtachi' :"paxtachi",
+    'Payariq' :"payariq",
+    'Pastdargʻom' :"pastdargom",
+    'Samarqand' :"samarqand shahar",
+    'Toyloq' :"toyloq",
+    "Boshqa viloyat": "boshqaviloyat",
+
+    "Bosh menu": "glavmenu",
+    "Ortga": "qaytamiz",
+
+}
+samarqaand_pochta_uchun = InlineKeyboardMarkup(row_width=4)
+for key, value in samarqaand_sd.items():
+    samarqaand_pochta_uchun.insert(InlineKeyboardButton(text=key, callback_data=value))

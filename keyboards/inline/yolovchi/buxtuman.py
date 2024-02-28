@@ -18,26 +18,28 @@ buxoro = {
 
 buxoro_viloyati_tumanlari = InlineKeyboardMarkup(row_width=4)
 for key,value in buxoro.items():
-    buxoro_viloyati_tumanlari.insert(InlineKeyboardButton(text=key, callback_data=buxoro_callback.new(item_name=value)))
+    buxoro_viloyati_tumanlari.insert(InlineKeyboardButton(text=key, callback_data=value))
 
 
 
 buxoro_y = {
-"Olot" :"olot",
-"Buxoro" :"buxoro shaxar",
-"Gʻijduvon" :"g'ijduvon",
-"Jondor" :"jondor",
-"Kogon" :"kogon",
-"Qorakoʻl" :"qorako'l",
-"Qorovulbozor" : "qorovulbozor",
-"Peshku" :"peshku",
-"Romitan" :"romitan",
-"Shofirkon" :"shofirkon",
-"Vobkent" :"vobkent",
+"Buxoro shahri" :"buxoro shaxar",
+"Buxoro tuman" :"buxoro tuman",
+"Kogon shahar" :"kogon shahar",
+"Kogon tuman" :"kogon tuman",
+"Olot" :"olot tuman",
+"Gʻijduvon" :"g'ijduvon tuman",
+"Jondor" :"jondor tuman",
+"Qorakoʻl" :"qorako'l tuman",
+"Qorovulbozor" : "qorovulbozor tuman",
+"Peshku" :"peshku tuman",
+"Romitan" :"romitan tuman",
+"Shofirkon" :"shofirkon tuman",
+"Vobkent" :"vobkent tuman",
 
 }
 
-buxoro_yol = InlineKeyboardMarkup(row_width=4)
+buxoro_yol = InlineKeyboardMarkup(row_width=2)
 for key,value in buxoro_y.items():
     buxoro_yol.insert(InlineKeyboardButton(text=key, callback_data=value))
 buxoro_yol.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
@@ -46,7 +48,7 @@ buxoro_yol.insert(InlineKeyboardButton(text='ortga',callback_data='ortga'))
 
 buxoro_yz = {
 "Olot" :"x_olot",
-"Buxoro" :"x_buxoro shaxar",
+"Buxoro shaxar" :"x_buxoro shaxar",
 "Gʻijduvon" :"x_g'ijduvon",
 "Jondor" :"x_jondor",
 "Kogon" :"x_kogon",
@@ -131,3 +133,47 @@ for key,value in buxoro_aasa1.items():
     buxoro_yuuk_mashina.insert(InlineKeyboardButton(text=key, callback_data=value))
 buxoro_yuuk_mashina.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
 buxoro_yuuk_mashina.insert(InlineKeyboardButton(text='ortga',callback_data='ortga'))
+
+
+
+
+navi_poch = {
+    "Konimex" :"konimex",
+    "Karmana" :"karmana",
+    "Qiziltepa" :"qiziltepa",
+    "Xatirchi" :"xatirchi",
+    "Navbahor" :"navbahor",
+    "Nurota" :"nurota",
+    "Tomdi" :"tomdi",
+    "Uchquduq" :"uchquduq",
+    "Boshqa viloyat": "boshqaviloyat",
+
+    "Bosh menu": "glavmenu",
+    "Ortga": "qaytamiz",
+}
+
+navoiy_pochta_uchun = InlineKeyboardMarkup(row_width=4)
+for key,value in navi_poch.items():
+    navoiy_pochta_uchun.insert(InlineKeyboardButton(text=key, callback_data=value))
+
+buxoro_okdo = {
+    "Olot" :"olot",
+    "Buxoro" :"buxoro shaxar",
+    "Gʻijduvon" :"g'ijduvon",
+    "Jondor" :"jondor",
+    "Kogon" :"kogon",
+    "Qorakoʻl" :"qorako'l",
+    "Qorovulbozor" : "qorovulbozor",
+    "Peshku" :"peshku",
+    "Romitan" :"romitan",
+    "Shofirkon" :"shofirkon",
+    "Vobkent" :"vobkent",
+    "Boshqa viloyat": "boshqaviloyat",
+
+    "Bosh menu": "glavmenu",
+    "Ortga": "qaytamiz",
+}
+
+buxoro_pochta_uchun = InlineKeyboardMarkup(row_width=4)
+for key,value in buxoro_okdo.items():
+    buxoro_pochta_uchun.insert(InlineKeyboardButton(text=key, callback_data=value))

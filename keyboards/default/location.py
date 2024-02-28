@@ -19,7 +19,7 @@ phone_number = ReplyKeyboardMarkup(
                             KeyboardButton(text="Kontak yuborish", request_contact=True),
                         ],
                     ],
-                    resize_keyboard=True
+                    resize_keyboard=True,one_time_keyboard=True
 )
 
 orqaga_qaytish= InlineKeyboardMarkup(row_width=2)

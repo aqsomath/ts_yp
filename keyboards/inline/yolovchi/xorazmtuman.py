@@ -20,19 +20,21 @@ for key,value in xorazm.items():
     xorazm_tumanlari.insert(InlineKeyboardButton(text=key, callback_data=xorazm_callback.new(item_name=value)))
 
 
-xorazm_yol = InlineKeyboardMarkup(row_width=4)
+xorazm_yol = InlineKeyboardMarkup(row_width=2)
 xorazm_y = {
-"Bogʻot" :"bog'ot",
-"Gurlan" :"gurlan",
-"Xonqa" :"xonqa",
-"Hazorasp" :"hazorasp",
-"Xiva" :"xiva",
-"Qoʻshkoʻpir" :"qoshko'prik",
-"Shovot" :"shovot",
-"Urganch" :"urganch",
-"Yangiariq" :"yangiariq",
-"Yangibozor" :"yangibozor",
-"Tupproqqalʼa" :"tuproqqal'a",
+"Xiva shahar" :"xiva shahar",
+"Urganch shahar" :"urganch shahar",
+"Bogʻot" :"bog'ot tumani",
+"Gurlan" :"gurlan tumani",
+"Xonqa" :"xonqa tumani",
+"Hazorasp" :"hazorasp tumani",
+"Xiva" :"xiva tumani",
+"Qoʻshkoʻpir" :"qoshko'prik tumani",
+"Shovot" :"shovot tumani",
+"Urganch" :"urganch tumani",
+"Yangiariq" :"yangiariq tumani",
+"Yangibozor" :"yangibozor tumani",
+"Tupproqqalʼa" :"tuproqqal'a tumani",
 
 }
 for key,value in xorazm_y.items():
@@ -121,3 +123,26 @@ for key,value in xorazm_yuk1.items():
     xorazm_yuuk_mashina.insert(InlineKeyboardButton(text=key, callback_data=value))
 xorazm_yuuk_mashina.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
 xorazm_yuuk_mashina.insert(InlineKeyboardButton(text='ortga',callback_data='ortga'))
+
+
+
+xorazm_pochta_uchun = InlineKeyboardMarkup(row_width=4)
+xorazm_po = {
+    "Bogʻot" :"bog'ot",
+    "Gurlan" :"gurlan",
+    "Xonqa" :"xonqa",
+    "Hazorasp" :"hazorasp",
+    "Xiva" :"xiva",
+    "Qoʻshkoʻpir" :"qoshko'prik",
+    "Shovot" :"shovot",
+    "Urganch" :"urganch",
+    "Yangiariq" :"yangiariq",
+    "Yangibozor" :"yangibozor",
+    "Tupproqqalʼa" :"tuproqqal'a",
+    "Boshqa viloyat": "boshqaviloyat",
+
+    "Bosh menu": "glavmenu",
+    "Ortga": "qaytamiz",
+}
+for key,value in xorazm_po.items():
+    xorazm_pochta_uchun.insert(InlineKeyboardButton(text=key, callback_data=value))

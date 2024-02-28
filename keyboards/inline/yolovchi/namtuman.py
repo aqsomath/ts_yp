@@ -24,23 +24,23 @@ for key,value in namangan_tumanlari.items():
 
 
 namangan_y = {
-    "Chortoq":"chortoq",
-    "Chust ":"chust",
-    "Kosonsoy ":"kosonsoy",
-    "Mingbuloq":"mingbuloq",
-    "Namangan ":"namangan shaxar",
-    "Norin":"norin",
-    "Pop ":"pop",
-    "To'raqo'rg'on":"toraqo'rg'on",
-    "Uchqo'rg'on":"uchqo'rgo'n",
-    "Uychi":"uychi",
-    "Yangiqo'rg'on":"yangi qo'rg'on",
-    "Davlatobod ":"davlatobod",
-    "Yangi Namangan":"yangi namangan",
+    "Namangan shahar": "namangan shahar",
+    "Namangan tuman": "namangan tumani",
+    "Chortoq":"chortoq tumani",
+    "Chust ":"chust tumani",
+    "Kosonsoy ":"kosonsoy tumani",
+    "Mingbuloq":"mingbuloq tumani",
+    "Norin":"norin tumani",
+    "Pop ":"pop tumani",
+    "To'raqo'rg'on":"toraqo'rg'on tumani",
+    "Uchqo'rg'on":"uchqo'rgo'n tumani",
+    "Uychi":"uychi tumani",
+    "Yangiqo'rg'on":"yangi qo'rg'on tumani",
+    "Yangi Namangan":"yangi namangan tumani",
 
 }
 
-namangan_yol = InlineKeyboardMarkup(row_width=4)
+namangan_yol = InlineKeyboardMarkup(row_width=2)
 for key,value in namangan_y.items():
     namangan_yol.insert(InlineKeyboardButton(text=key, callback_data=value))
 
@@ -155,3 +155,29 @@ for key,value in namangan_mashina.items():
 
 namangan_yuuk_mashina.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
 namangan_yuuk_mashina.insert(InlineKeyboardButton(text='ortga',callback_data='ortga'))
+
+
+namangan_tumanlari_pochta = {
+    "Chortoq":"chortoq",
+    "Chust ":"chust",
+    "Kosonsoy ":"kosonsoy",
+    "Mingbuloq":"mingbuloq",
+    "Namangan ":"namangan shaxar",
+    "Norin":"norin",
+    "Pop ":"pop",
+    "To'raqo'rg'on":"toraqorgon",
+    "Uchqo'rg'on":"uchqorgon",
+    "Uychi":"uychi",
+    "Yangiqo'rg'on":"yangi qorgon",
+    "Davlatobod ":"davlatobod",
+    "Yangi Namangan":"yangi namangan",
+    "Boshqa viloyat": "boshqaviloyat",
+
+    "Bosh menu": "glavmenu",
+    "Ortga": "qaytamiz",
+}
+
+namangan_pochta_uchun = InlineKeyboardMarkup(row_width=4)
+for key,value in namangan_tumanlari_pochta.items():
+    namangan_pochta_uchun.insert(InlineKeyboardButton(text=key, callback_data=value))
+

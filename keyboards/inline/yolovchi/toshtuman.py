@@ -25,24 +25,33 @@ for key,value in toshkent.items():
 
 
 toshkent_y = {
-    "Bekobod":"bekobod",
-    "Boʻstonliq":"bostonliq",
-    "Boʻka":"boka",
-    "Chinoz":"chinoz",
-    "Qibray":"qibray",
-    "Ohangaron":"ohangaron",
-    "Oqqoʻrgʻon":"oqqorgon",
-    "Parkent":"parkent",
-    "Piskent":"piskent",
-    "Quyi Chirchiq":"quyichirchiq",
-    "Oʻrta Chirchiq":"ortachirchiq",
-    "Yangiyoʻl":"yangiyol",
-    "Yuqori Chirchiq":"yuqorichirchiq",
-    "Zangiota":"zangiota",
+    "Toshkent tuman":"toshkent tuman",
+    "Angren shahar":"angren shahar",
+    "Bekobod shahar":"bekobod shahar",
+    "Nurafshon shahar":"nurafshon shahar",
+    "Omaliq shahar":"olmaliq shahar",
+    "Ohangaron shahar":"ohangaron shahar",
+    "Chirchiq shahar":"chirchiq shahar",
+    "Yangiyo'l shahar":"yangiyo'l shahar",
+    "Bekobod":"bekobod tumani",
+    "Boʻstonliq":"bostonliq tumani",
+    "Boʻka":"boka tumani",
+    "Chinoz":"chinoz tumani",
+    "Qibray":"qibray tumani",
+    "Ohangaron":"ohangaron tumani",
+    "Oqqoʻrgʻon":"oqqorgon tumani",
+    "Parkent":"parkent tumani",
+    "Piskent":"piskent tumani",
+    "Quyi Chirchiq":"quyichirchiq tumani",
+    "Oʻrta Chirchiq":"ortachirchiq tumani",
+    "Yangiyoʻl":"yangiyol tumani",
+    "Yuqori Chirchiq":"yuqorichirchiq tumani",
+    "Zangiota":"zangiota tumani",
+    "Qo'yliq":"qoyliq",
 
 }
 
-toshkent_yol = InlineKeyboardMarkup(row_width=4)
+toshkent_yol = InlineKeyboardMarkup(row_width=2)
 for key,value in toshkent_y.items():
     toshkent_yol.insert(InlineKeyboardButton(text=key, callback_data=value))
 toshkent_yol.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
@@ -150,3 +159,30 @@ for key,value in toshkent_yaz12.items():
     toshkent_yuuk_mashina.insert(InlineKeyboardButton(text=key, callback_data=value))
 toshkent_yuuk_mashina.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
 toshkent_yuuk_mashina.insert(InlineKeyboardButton(text='ortga',callback_data='ortga'))
+
+
+toshkent_poop = {
+    "Bekobod": "bekobod",
+    "Boʻstonliq": "bostonliq",
+    "Boʻka": "boka",
+    "Chinoz": "chinoz",
+    "Qibray": "qibray",
+    "Ohangaron": "ohangaron",
+    "Oqqoʻrgʻon": "oqqorgon",
+    "Parkent": "parkent",
+    "Piskent": "piskent",
+    "Quyi Chirchiq": "quyichirchiq",
+    "Oʻrta Chirchiq": "ortachirchiq",
+    "Yangiyoʻl": "yangiyol",
+    "Yuqori Chirchiq": "yuqorichirchiq",
+    "Zangiota": "zangiota",
+    "Boshqa viloyat": "boshqaviloyat",
+
+    "Bosh menu": "glavmenu",
+    "Ortga": "qaytamiz",
+}
+
+toshkent_pochta_uchun = InlineKeyboardMarkup(row_width=4)
+for key,value in toshkent_poop.items():
+    toshkent_pochta_uchun.insert(InlineKeyboardButton(text=key, callback_data=value))
+

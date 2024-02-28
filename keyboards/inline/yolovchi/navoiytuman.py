@@ -17,17 +17,19 @@ for key,value in navoiy.items():
     navoiy_tumanlari.insert(InlineKeyboardButton(text=key, callback_data=navoiy_callback.new(item_name=value)))
 
 navoiy_y = {
-"Konimex" :"konimex",
-"Karmana" :"karmana",
-"Qiziltepa" :"qiziltepa",
-"Xatirchi" :"xatirchi",
-"Navbahor" :"navbahor",
-"Nurota" :"nurota",
-"Tomdi" :"tomdi",
-"Uchquduq" :"uchquduq",
+"Navoiy shahar" :"navoiy shahar",
+"Zarafshon shahar" :"zarafshon shahar",
+"Konimex" :"konimex tumani",
+"Karmana" :"karmana tumani",
+"Qiziltepa" :"qiziltepa tumani",
+"Xatirchi" :"xatirchi tumani",
+"Navbahor" :"navbahor tumani",
+"Nurota" :"nurota tumani",
+"Tomdi" :"tomdi tumani",
+"Uchquduq" :"uchquduq tumani",
 
 }
-navoiy_yol = InlineKeyboardMarkup(row_width=4)
+navoiy_yol = InlineKeyboardMarkup(row_width=2)
 for key,value in navoiy_y.items():
     navoiy_yol.insert(InlineKeyboardButton(text=key, callback_data=value))
 navoiy_yol.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
@@ -103,3 +105,19 @@ for key,value in navoiy_yuk1.items():
     navoiy_yuuk_mashina.insert(InlineKeyboardButton(text=key, callback_data=value))
 navoiy_yuuk_mashina.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
 navoiy_yuuk_mashina.insert(InlineKeyboardButton(text='ortga',callback_data='ortga'))
+
+
+
+navoiy_djhcks = {
+"✅ Konimex" :"konimex",
+"✅ Karmana" :"karmana",
+"✅ Qiziltepa" :"qiziltepa",
+"✅ Xatirchi" :"xatirchi",
+"✅ Navbahor" :"navbahor",
+"✅ Nurota" :"nurota",
+"✅ Tomdi" :"tomdi",
+"✅ Uchquduq" :"uchquduq"
+}
+navoiy_pochta_uchun = InlineKeyboardMarkup(row_width=4)
+for key,value in navoiy_djhcks.items():
+    navoiy_pochta_uchun.insert(InlineKeyboardButton(text=key, callback_data=navoiy_callback.new(item_name=value)))

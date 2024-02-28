@@ -9,6 +9,7 @@ viloyat = {
     "Farg'ona":"tri",
     "Buxoro":"chitiri",
     "Toshkent":"pyat",
+    "Toshkent shahar":"kent shahar",
     "Sirdaryo":"shest",
     "Surxondaryo":"sem",
     "Qashqadaryo":"vosem",
@@ -16,6 +17,9 @@ viloyat = {
     "Navoiy":"desit",
     "Jizzax":"adinatsat",
     "Samarqand":"dvinatsad",
+    "Qoraqalpog'iston":"qoraqalpoq",
+    "Ortga":"Ortga",
+    "Bosh menu":"Bosh menu",
 }
 tax_tayin_vil = InlineKeyboardMarkup(row_width=2)
 for key,value in viloyat.items():

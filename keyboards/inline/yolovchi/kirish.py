@@ -3,7 +3,7 @@ from aiogram.types import InlineKeyboardMarkup,InlineKeyboardButton
 from keyboards.inline.yolovchi.callback_data import kirish_callback, menu_callback
 
 kirish = InlineKeyboardMarkup(row_width=2)
-kirish.insert(InlineKeyboardButton(text="Haydovchimisiz", callback_data=kirish_callback.new(item_name='haydovchi')))
+kirish.insert(InlineKeyboardButton(text="Haydovchimisiz", callback_data=kirish_callback.new(item_name='haydovchi6656')))
 kirish.insert(InlineKeyboardButton(text="Yo'lovchimisiz", callback_data=kirish_callback.new(item_name='yolovchi')))
 
 
@@ -27,7 +27,24 @@ umumiy_menu = InlineKeyboardMarkup(row_width=2)
 for key,value in menu.items():
     umumiy_menu.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
 
+driver = {
+        "Haydovchi reys belgilash": 'yolovchikerak',
+        "Tayyor yo'lovchi": 'tayyoryolovchi',
+        "Yuk kerak": 'yukkerak',
+        "Tayyor yuk": "tayyoryuk",
+        "Pochta kerak": 'pochtakerak',
+        "Tayyor pochta": "tayyorpochta",
+        "Sayohatchilar kerak": 'sayohatgayolovchi',
+        "Tayyor sayohatchi": "tayyorsayohatchi",
+        "Mening buyurtmalarim": "meningbuyurtmalarim",
+        "Admin bilan bog'lanish": "adminbilanboglanish",
+        "Sozlamalar": "nastroyki",
+        "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
 
+    }
+umumiy_menu_1 = InlineKeyboardMarkup(row_width=2)
+for key, value in driver.items():
+    umumiy_menu_1.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
 
 necha_kishisizlar = InlineKeyboardMarkup(
    inline_keyboard =[
@@ -77,3 +94,5 @@ qanday_avto.insert(InlineKeyboardButton(text="Farqi yo'q", callback_data="Farqi 
 tasdiq_oxir = InlineKeyboardMarkup(row_width=2)
 tasdiq_oxir.insert(InlineKeyboardButton(text="Xa", callback_data="Confirm"))
 tasdiq_oxir.insert(InlineKeyboardButton(text="Yo'q", callback_data="UnConfirm"))
+tasdiq_oxir.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
+tasdiq_oxir.insert(InlineKeyboardButton(text="Bosh menu", callback_data="glavmenu"))

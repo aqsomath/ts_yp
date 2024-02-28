@@ -1,9 +1,10 @@
-import aiogram
+import aiogram.types
 from aiogram.dispatcher import FSMContext
-from aiogram.types import CallbackQuery, Message
-from keyboards.default.location import  phone_number, phone_ortga, lokatsiya, keyingisi
-from keyboards.inline.pochta_yuborish.pochta_yuborish_tugmalari import pochta_callback, pochta_viloyatlar
-from keyboards.inline.yolovchi.andtuman import andijon_yol
+from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
+from keyboards.default.location import lokatsiya, phone_number
+from keyboards.inline.haydovchi_reys.haydovchi_reys_tugmalar import reys_ortgaa
+from keyboards.inline.pochta_yuborish.pochta_yuborish_tugmalari import pochta_viloyatlar
+from keyboards.inline.yolovchi.andtuman import andijon_yol, qoraqalpogiston_yol, tosh_shsha
 from keyboards.inline.yolovchi.buxtuman import buxoro_yol
 from keyboards.inline.yolovchi.fartuman import fargona_yol
 from keyboards.inline.yolovchi.jizztuman import jizzax_yol
@@ -16,177 +17,515 @@ from keyboards.inline.yolovchi.sirtuman import sirdaryo_yol
 from keyboards.inline.yolovchi.soat import time
 from keyboards.inline.yolovchi.surtuman import surxondaryo_yol
 from keyboards.inline.yolovchi.toshtuman import toshkent_yol
-from keyboards.inline.yolovchi.viloyatlar import viloyatlar_yol_x
 from keyboards.inline.yolovchi.xa_yoq import yes_not
 from keyboards.inline.yolovchi.xorazmtuman import xorazm_yol
-from keyboards.inline.yuk_yuborish.yuk_tugmalari import andijon_yuk
+from keyboards.inline.yolovchi.viloyatlar import viloyatlar_yol_x
 from loader import dp, bot, db
 from states.yolovchi_pochta_statet import Pochta_andijon
 from utils.misc import show_on_gmaps
 
-@dp.callback_query_handler(pochta_callback.filter(item_name='111'),state=None)
-async def andi_jon(call:CallbackQuery,state:FSMContext):
-    await state.update_data(
-        {
-            "viloyat":"Andijon"
-        }
-    )
-    await call.message.answer("Qaysi tumanidan pochta yuborasiz ? ",reply_markup=andijon_yuk)
-    await Pochta_andijon.tuman.set()
-@dp.callback_query_handler(text='ortga',state=Pochta_andijon.tuman)
-async def andi_jon(call:CallbackQuery,state:FSMContext):
-    await call.message.answer("Qaysi viloyatdan pochta yubormoqchisiz ? ",reply_markup=pochta_viloyatlar)
-    await state.finish()
+#  1 - ORTGA
+@dp.callback_query_handler(state=Pochta_andijon.asosiy,text="Ortga")
+async def haydovchi(call:CallbackQuery,state: FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
+@dp.callback_query_handler(state=Pochta_andijon.asosiy,text="Bosh menu")
+async def haydovchi(call:CallbackQuery,state: FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
+
+@dp.callback_query_handler(state=Pochta_andijon.asosiy)
+async def andijon(call: CallbackQuery, state: FSMContext):
+        
+            if call.data=='9999':
+                await state.update_data({"viloyat": "Xorazm"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=xorazm_yol)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+            if call.data=='111':
+                await state.update_data({"viloyat": "Andijon"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=andijon_yol)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+            if call.data=='222':
+                await state.update_data({"viloyat": "Namangan"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=namangan_yol)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+            if call.data=='333':
+                await state.update_data({"viloyat": "Farg'ona"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=fargona_yol)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+            if call.data=='4444':
+                await state.update_data({"viloyat": "Buxoro"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=buxoro_yol)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+            if call.data=='5555':
+                await state.update_data({"viloyat": "Toshkent"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=toshkent_yol)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+            if call.data=='kent shahar':
+                await state.update_data({"viloyat": "Toshkent shahar"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=tosh_shsha)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+            if call.data=='6666':
+                await state.update_data({"viloyat": "Sirdaryo"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=sirdaryo_yol)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+            if call.data=='7777':
+                await state.update_data({"viloyat": "Surxondaryo"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=surxondaryo_yol)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+            if call.data=='8888':
+                await state.update_data({"viloyat": "Qashqadaryo"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=qashqadaryo_yol)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+            if call.data=='9999':
+                await state.update_data({"viloyat": "Xorazm"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=xorazm_yol)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+            if call.data=='101010':
+                await state.update_data({"viloyat": "Navoiy"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=navoiy_yol)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+            if call.data=='121212':
+                await state.update_data({"viloyat": "Jizzax"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=jizzax_yol)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+            if call.data=='131313':
+                await state.update_data({"viloyat": "Samarqand"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=samarqand_yol)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+            if call.data=='qoraqalpoq':
+                await state.update_data({"viloyat": "Qoraqalpog'iston"})
+                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=qoraqalpogiston_yol)
+                await call.message.delete()
+                await Pochta_andijon.tuman.set()
+           
+
+@dp.callback_query_handler(text='ortga', state=Pochta_andijon.tuman)
+async def andi_jon(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Qaysi viloyatdan pochta yuborasiz ? ", reply_markup=pochta_viloyatlar)
+        await Pochta_andijon.asosiy.set()
+        await call.message.delete()
+
 #     2 -  BEKOR QILISH
-@dp.callback_query_handler(text_contains='atmen',state=Pochta_andijon.tuman)
-async def haydovchi(call:CallbackQuery,state: FSMContext):
-    await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-    await state.finish()
+@dp.callback_query_handler(text_contains='atmen', state=Pochta_andijon.tuman)
+async def haydovchi(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
+
+
 @dp.callback_query_handler(state=Pochta_andijon.tuman)
-async def tuman(call:CallbackQuery,state:FSMContext):
-    await state.update_data(
-        {
-            "tuman":call.data
-        }
-    )
-    print(call.data)
-    await call.message.answer("Qaysi viloyatga pochta yubormoqchisiz ? ", reply_markup=viloyatlar_yol_x)
-    await Pochta_andijon.viloyatga.set()
-@dp.callback_query_handler(text='ortga',state=Pochta_andijon.viloyatga)
-async def tumaniga(call:CallbackQuery,state:FSMContext):
-    await call.message.answer("Qaysi tumanidan pochta yuborasiz ? ", reply_markup=andijon_yuk)### --->> MANA SHU O'ZGARISHI KERAK
-    await Pochta_andijon.tuman.set()
-@dp.callback_query_handler(text_contains='atmen',state=Pochta_andijon.viloyatga)
-async def haydovchi(call:CallbackQuery,state: FSMContext):
-    await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-    await state.finish()
+async def reys_tuman(call: CallbackQuery, state: FSMContext):
+    
+        await state.update_data(
+            {
+                "tuman": call.data
+            }
+        )
+        await call.message.answer("Qaysi viloyatga pochta yuborasiz ? ", reply_markup=viloyatlar_yol_x)
+        await call.message.delete()
+        await Pochta_andijon.viloyatga.set()
+
+
+@dp.callback_query_handler(text='homeback', state=Pochta_andijon.viloyatga)
+async def andi_jon(call: CallbackQuery, state: FSMContext):
+    
+        data = await state.get_data()
+        viloyat = data.get("viloyat")
+        if viloyat == "Andijon":
+            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=andijon_yol)
+        if viloyat == "Namangan":
+            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=namangan_yol)
+        if viloyat == "Farg'ona":
+            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=fargona_yol)
+        if viloyat == "Buxoro":
+            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=buxoro_yol)
+        if viloyat == "Toshkent":
+            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=toshkent_yol)
+        if viloyat == "Toshkent shahar":
+            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=tosh_shsha)
+        if viloyat == "Sirdaryo":
+            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=sirdaryo_yol)
+        if viloyat == "Surxondaryo":
+            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=surxondaryo_yol)
+        if viloyat == "Qashqadaryo":
+            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=qashqadaryo_yol)
+        if viloyat == "Xorazm":
+            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=xorazm_yol)
+        if viloyat == "Navoiy":
+            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=navoiy_yol)
+        if viloyat == "Jizzax":
+            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=jizzax_yol)
+        if viloyat == "Samarqand":
+            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=samarqand_yol)
+        if viloyat == "Qoraqalpog'iston":
+            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=qoraqalpogiston_yol)
+        await call.message.delete()
+        await Pochta_andijon.tuman.set()
+
+
+@dp.callback_query_handler(text_contains='atmen', state=Pochta_andijon.viloyatga)
+async def haydovchi(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
+
 
 @dp.callback_query_handler(state=Pochta_andijon.viloyatga)
-async def viloyatga(call:CallbackQuery,state:FSMContext):
-    data = call.data
-    if data == 'sjduuwgfuwgdkgjda':
-        await state.update_data(
-            {"viloyatiga": "Andijon"}
-        )
-        await call.message.answer("Qaysi tumaniga borasiz", reply_markup=andijon_yol)
-    if data == "kdjhaigdakhdksa":
-        await state.update_data(
-            {"viloyatiga": "Farg'ona"}
-        )
-        await call.message.answer("Qaysi tumaniga borasiz", reply_markup=fargona_yol)
-    if data == "akilwyiwefsdjksd":
-        await state.update_data(
-            {"viloyatiga": "Namangan"}
-        )
-        await call.message.answer("Qaysi tumaniga borasiz", reply_markup=namangan_yol)
+async def reys_viloyatga(call: CallbackQuery, state: FSMContext):
+    
 
-    if data == "allaskalkdaslkjd":
-        await state.update_data(
-            {"viloyatiga": "Buxoro"}
-        )
-        await call.message.answer("Qaysi tumaniga borasiz", reply_markup=buxoro_yol)
+        data = call.data
+        print(data)
+        if data == 'qoraqalpoq':
+            await state.update_data(
+                {"viloyatiga": "Qoraqalpog'iston"}
+            )
+            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=qoraqalpogiston_yol)
 
-    if data == "euywiudhkns":
-        await state.update_data(
-            {"viloyatiga": "Toshkent"}
-        )
-        await call.message.answer("Qaysi tumaniga borasiz", reply_markup=toshkent_yol)
+        if data == 'sjduuwgfuwgdkgjda':
+            await state.update_data(
+                {"viloyatiga": "Andijon"}
+            )
+            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=andijon_yol)
+        if data == 'kent shahar':
+            await state.update_data(
+                {"viloyatiga": "Toshkent shahar"}
+            )
+            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=tosh_shsha)
+        if data == "kdjhaigdakhdksa":
+            await state.update_data(
+                {"viloyatiga": "Farg'ona"}
+            )
+            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=fargona_yol)
+        if data == "akilwyiwefsdjksd":
+            await state.update_data(
+                {"viloyatiga": "Namangan"}
+            )
+            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=namangan_yol)
+        if data == "allaskalkdaslkjd":
+            await state.update_data(
+                {"viloyatiga": "Buxoro"}
+            )
+            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=buxoro_yol)
+        if data == "euywiudhkns":
+            await state.update_data(
+                {"viloyatiga": "Toshkent"}
+            )
+            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=toshkent_yol)
+        if data == "jweytfugdiahjash":
+            await state.update_data(
+                {"viloyatiga": "Sirdaryo"}
+            )
+            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=sirdaryo_yol)
+        if data == "qdwqwdqwsasxa":
+            await state.update_data(
+                {"viloyatiga": "Surxondaryo"}
+            )
+            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=surxondaryo_yol)
+        if data == "asasdsadasd":
+            await state.update_data(
+                {"viloyatiga": "Qashqadaryo"}
+            )
+            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=qashqadaryo_yol)
+        if data == "dfdsfdsgfdsfgfd":
+            await state.update_data(
+                {"viloyatiga": "Xorazm"}
+            )
+            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=xorazm_yol)
+        if data == "fghgfjghjgfh":
+            await state.update_data(
+                {"viloyatiga": "Navoiy"}
+            )
+            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=navoiy_yol)
+        if data == "reggfvdvdvcx":
+            await state.update_data(
+                {"viloyatiga": "Jizzax"}
+            )
+            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=jizzax_yol)
+        if data == "tyhjyjghfh":
+            await state.update_data(
+                {"viloyatiga": "Samarqand"}
 
-    if data == "jweytfugdiahjash":
-        await state.update_data(
-            {"viloyatiga": "Sirdaryo"}
-        )
-        await call.message.answer("Qaysi tumaniga borasiz", reply_markup=sirdaryo_yol)
+            )
+            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=samarqand_yol)
+        await state.update_data({"baza": data})
+        await call.message.delete()
+        await Pochta_andijon.tumaniga.set()
+@dp.callback_query_handler(text='ortga', state=Pochta_andijon.tumaniga)
+async def andi_jon(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Qaysi viloyatga pochta yuborasiz ? ", reply_markup=viloyatlar_yol_x)
+        await call.message.delete()
+        await Pochta_andijon.viloyatga.set()
 
-    if data == "qdwqwdqwsasxa":
-        await state.update_data(
-            {"viloyatiga": "Surxondaryo"}
-        )
-        await call.message.answer("Qaysi tumaniga borasiz", reply_markup=surxondaryo_yol)
 
-    if data == "asasdsadasd":
-        await state.update_data(
-            {"viloyatiga": "Qashqadaryo"}
-        )
-        await call.message.answer("Qaysi tumaniga borasiz", reply_markup=qashqadaryo_yol)
+@dp.callback_query_handler(text_contains='atmen', state=Pochta_andijon.tumaniga)
+async def haydovchi(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
 
-    if data == "dfdsfdsgfdsfgfd":
-        await state.update_data(
-            {"viloyatiga": "Xorazm"}
-        )
-        await call.message.answer("Qaysi tumaniga borasiz", reply_markup=xorazm_yol)
-
-    if data == "fghgfjghjgfh":
-        await state.update_data(
-            {"viloyatiga": "Navoiy"}
-        )
-        await call.message.answer("Qaysi tumaniga borasiz", reply_markup=navoiy_yol)
-
-    if data == "reggfvdvdvcx":
-        await state.update_data(
-            {"viloyatiga": "Jizzax"}
-        )
-        await call.message.answer("Qaysi tumaniga borasiz", reply_markup=jizzax_yol)
-
-    if data == "tyhjyjghfh":
-        await state.update_data(
-            {"viloyatiga": "Samarqand"}
-
-        )
-        await call.message.answer("Qaysi tumaniga borasiz", reply_markup=samarqand_yol)
-    await state.update_data({"baza": data})
-    await Pochta_andijon.tumaniga.set()
-
-@dp.callback_query_handler(text='ortga',state=Pochta_andijon.tumaniga)
-async def tumaniga(call:CallbackQuery,state:FSMContext):
-    await call.message.answer("Qaysi viloyatga pochta yubormoqchisiz ? ", reply_markup=viloyatlar_yol_x)
-    await Pochta_andijon.viloyatga.set()
-@dp.callback_query_handler(text_contains='atmen',state=Pochta_andijon.tumaniga)
-async def haydovchi(call:CallbackQuery,state: FSMContext):
-    await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-    await state.finish()
 
 @dp.callback_query_handler(state=Pochta_andijon.tumaniga)
-async def tumaniga(call:CallbackQuery,state:FSMContext):
-    await state.update_data(
-        {"tumaniga": call.data.capitalize()}
-    )
-    await call.message.answer("Soat nechchilarda yubormoqchisiz ?",reply_markup=time)
-    await Pochta_andijon.soat.set()
-@dp.callback_query_handler(text='ortga',state=Pochta_andijon.soat)
-async def tumaniga(call:CallbackQuery,state:FSMContext):
-    await call.message.answer("Qaysi viloyatga pochta yubormoqchisiz ? ", reply_markup=viloyatlar_yol_x)
-    await Pochta_andijon.viloyatga.set()
-@dp.callback_query_handler(text_contains='atmen',state=Pochta_andijon.soat)
-async def haydovchi(call:CallbackQuery,state: FSMContext):
-    await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-    await state.finish()
+async def reys_tumaniga(call: CallbackQuery, state: FSMContext):
+    
+        await state.update_data(
+            {
+                "tumaniga": call.data.capitalize()
+            }
+        )
+        await call.message.answer("Qachon yo'lga chiqarasiz ?", reply_markup=reys_ortgaa)
+        await call.message.delete()
+        await Pochta_andijon.kuni.set()
+
+
+@dp.callback_query_handler(text="ortga", state=Pochta_andijon.kuni)
+async def taqas(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Qaysi viloyatga pochta yuborasiz ? ", reply_markup=viloyatlar_yol_x)
+        await call.message.delete()
+        await Pochta_andijon.viloyatga.set()
+
+
+@dp.callback_query_handler(text="atmen", state=Pochta_andijon.kuni)
+async def taqas(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
+
+
+@dp.callback_query_handler(text='Qoldakiritish', state=Pochta_andijon.kuni)
+async def qolda_yozing(call: CallbackQuery, state: FSMContext):
+    
+        markup = InlineKeyboardMarkup(row_width=6)
+        markup.insert(InlineKeyboardButton(text="Yanvar", callback_data="Yanvar"))
+        markup.insert(InlineKeyboardButton(text="Fevral", callback_data="Fevral"))
+        markup.insert(InlineKeyboardButton(text="Mart", callback_data="Mart"))
+        markup.insert(InlineKeyboardButton(text="Aprel", callback_data="Aprel"))
+        markup.insert(InlineKeyboardButton(text="May", callback_data="May"))
+        markup.insert(InlineKeyboardButton(text="Iyun", callback_data="Iyun"))
+        markup.insert(InlineKeyboardButton(text="Iyul", callback_data="Iyul"))
+        markup.insert(InlineKeyboardButton(text="Avgust", callback_data="Avgust"))
+        markup.insert(InlineKeyboardButton(text="Sentabr", callback_data="Sentabr"))
+        markup.insert(InlineKeyboardButton(text="Oktabr", callback_data="Oktabr"))
+        markup.insert(InlineKeyboardButton(text="Noyabr", callback_data="Noyabr"))
+        markup.insert(InlineKeyboardButton(text="Dekabr", callback_data="Dekabr"))
+        markup.insert(InlineKeyboardButton(text="Ortga", callback_data="Ortga"))
+        markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
+        await call.message.answer("Qaysi oyda yo'lga chiqarasiz ?", reply_markup=markup)
+        await call.message.delete()
+        await Pochta_andijon.oyini_kiritsh.set()
+
+
+@dp.callback_query_handler(text="boshmenu", state=Pochta_andijon.oyini_kiritsh)
+async def bosh(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
+
+
+@dp.callback_query_handler(text="Ortga", state=Pochta_andijon.oyini_kiritsh)
+async def qayyt(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Qachon yo'lga chiqarasiz ?", reply_markup=reys_ortgaa)
+        await call.message.delete()
+        await Pochta_andijon.kuni.set()
+
+
+@dp.callback_query_handler(state=Pochta_andijon.oyini_kiritsh)
+async def oyi(call: CallbackQuery, state: FSMContext):
+    
+        await state.update_data({"oyi": call.data})
+        markup = InlineKeyboardMarkup(row_width=6)
+        for i in range(1, 32):
+            markup.insert(InlineKeyboardButton(text=f"{i}", callback_data=f"{i}"))
+        markup.insert(InlineKeyboardButton(text="Ortga", callback_data="Ortga"))
+        markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
+        await call.message.answer(f"{call.data} oyining qaysi kunida yuborasiz ? ", reply_markup=markup)
+        await call.message.delete()
+        await Pochta_andijon.kunini_kiritsh.set()
+
+
+@dp.callback_query_handler(text="boshmenu", state=Pochta_andijon.kunini_kiritsh)
+async def bosh(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
+
+
+@dp.callback_query_handler(text="Ortga", state=Pochta_andijon.kunini_kiritsh)
+async def qayyt(call: CallbackQuery, state: FSMContext):
+    
+        markup = InlineKeyboardMarkup(row_width=6)
+        markup.insert(InlineKeyboardButton(text="Yanvar", callback_data="Yanvar"))
+        markup.insert(InlineKeyboardButton(text="Fevral", callback_data="Qoldakiritish"))
+        markup.insert(InlineKeyboardButton(text="Mart", callback_data="Mart"))
+        markup.insert(InlineKeyboardButton(text="Aprel", callback_data="Aprel"))
+        markup.insert(InlineKeyboardButton(text="May", callback_data="May"))
+        markup.insert(InlineKeyboardButton(text="Iyun", callback_data="Iyun"))
+        markup.insert(InlineKeyboardButton(text="Iyul", callback_data="Iyul"))
+        markup.insert(InlineKeyboardButton(text="Avgust", callback_data="Avgust"))
+        markup.insert(InlineKeyboardButton(text="Sentabr", callback_data="Sentabr"))
+        markup.insert(InlineKeyboardButton(text="Oktabr", callback_data="Oktabr"))
+        markup.insert(InlineKeyboardButton(text="Noyabr", callback_data="Noyabr"))
+        markup.insert(InlineKeyboardButton(text="Dekabr", callback_data="Dekabr"))
+        markup.insert(InlineKeyboardButton(text="Ortga", callback_data="Ortga"))
+        markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
+        await call.message.answer("Qaysi oyda yo'lga chiqarasiz ?", reply_markup=markup)
+        await call.message.delete()
+        await Pochta_andijon.oyini_kiritsh.set()
+
+
+@dp.callback_query_handler(state=Pochta_andijon.kunini_kiritsh)
+async def kunini(call: CallbackQuery, state: FSMContext):
+    
+        await state.update_data({"sanasi": call.data})
+        await call.message.answer("Soat nechchida yo'lga chiqarasiz ? ", reply_markup=time)
+        await call.message.delete()
+        await Pochta_andijon.soat.set()
+
+
+@dp.callback_query_handler(text='Bugun', state=Pochta_andijon.kuni)
+@dp.callback_query_handler(text='Ertaga', state=Pochta_andijon.kuni)
+@dp.callback_query_handler(text='Indinga', state=Pochta_andijon.kuni)
+async def oy(call: CallbackQuery, state: FSMContext):
+    
+        await state.update_data(
+            {
+                "kuni": call.data
+            }
+        )
+        await call.message.answer("Soat nechchida yo'lga chiqarasiz ? ", reply_markup=time)
+        await call.message.delete()
+        await Pochta_andijon.soat.set()
+
+
+@dp.callback_query_handler(text='qaytish', state=Pochta_andijon.aniq_kuni)
+async def aniq_ku(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Qachon yo'lga chiqarasiz ?", reply_markup=reys_ortgaa)
+        await call.message.delete()
+        await Pochta_andijon.kuni.set()
+
+
+@dp.callback_query_handler(text='bomenyu', state=Pochta_andijon.aniq_kuni)
+async def menu_bosh(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
+
+
+@dp.callback_query_handler(text='ortga', state=Pochta_andijon.kuni)
+async def andi_jon(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Qaysi viloyatga pochta yuborasiz ? ", reply_markup=viloyatlar_yol_x)
+        await call.message.delete()
+        await Pochta_andijon.viloyatga.set()
+
+@dp.callback_query_handler(text_contains='atmen', state=Pochta_andijon.kuni)
+async def haydovchi(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
+
+
+@dp.callback_query_handler(state=Pochta_andijon.aniq_kuni)
+async def reys_kuni(call: CallbackQuery, state: FSMContext):
+    
+        await state.update_data(
+            {
+                "kuni": call.data
+            }
+        )
+        await call.message.answer("Soat nechchida yo'lga chiqarasiz ? ", reply_markup=time)
+        await call.message.delete()
+        await Pochta_andijon.soat.set()
+
+
+@dp.callback_query_handler(text='ortga', state=Pochta_andijon.soat)
+async def andi_jon(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Qachon yo'lga chiqarasiz ?", reply_markup=reys_ortgaa)
+        await call.message.delete()
+        await Pochta_andijon.kuni.set()
+
+
+@dp.callback_query_handler(text_contains='atmen', state=Pochta_andijon.soat)
+async def haydovchi(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi\n"
+                                  "Sizga kerakli hizmat turini belgilang ?",
+                                  reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
 
 
 @dp.callback_query_handler(state=Pochta_andijon.soat)
-async def soat(call:CallbackQuery,state:FSMContext):
-    await state.update_data(
-        {
-            "soat": call.data
-        }
-    )
-
-    await call.message.answer("Sizga bog'lana oladiga telefon raqamingizni kiriting: ", reply_markup=phone_number)
-    await call.message.answer("Na'muna: 994813499 ?", reply_markup=phone_ortga)
-    await Pochta_andijon.phone.set()
-@dp.callback_query_handler(text='ortga',state=Pochta_andijon.phone)
-async def tumaniga(call:CallbackQuery,state:FSMContext):
-    await call.message.answer("Soat nechchilarda yubormoqchisiz ?", reply_markup=time)
-    await Pochta_andijon.soat.set()
-@dp.callback_query_handler(text_contains='atmen',state=Pochta_andijon.phone)
-async def haydovchi(call:CallbackQuery,state: FSMContext):
-    await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-    await state.finish()
+async def reys_soat(call: CallbackQuery, state: FSMContext):
+    
+        await state.update_data(
+            {
+                "soat": call.data
+            }
+        )
+        markup = aiogram.types.InlineKeyboardMarkup(row_width=3,)
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Ortga', callback_data='tortga'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Bosh menu', callback_data='atmen'))
+        await call.message.answer("Sizga bog'lanishimiz uchun", reply_markup=phone_number)
+        await call.message.answer("Telefon raqamingizni kiriting ..\nMana shu raqamni ishlatayotgan bo'lsangiz\n"
+                                       "Kontakt yuborish ni bosing", reply_markup=markup)
+        await call.message.delete()
+        await Pochta_andijon.phone.set()
 
 
-@dp.message_handler(content_types=['contact', 'text'],state=Pochta_andijon.phone)
-async def message(message:Message,state:FSMContext):
+@dp.callback_query_handler(text='tortga', state=Pochta_andijon.phone)
+async def andi_jon(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Soat nechchida yo'lga chiqasiz ? ", reply_markup=time)
+        await call.message.delete()
+        await Pochta_andijon.soat.set()
 
+
+@dp.callback_query_handler(text_contains='atmen', state=Pochta_andijon.phone)
+async def haydovchi(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
+@dp.message_handler(content_types=['contact', 'text'], state=Pochta_andijon.phone)
+async def reys_loc(message: Message, state: FSMContext):
+    
+
+        await bot.delete_message(chat_id=message.from_user.id,message_id=message.message_id-1)
+        await bot.delete_message(chat_id=message.from_user.id,message_id=message.message_id-2)
         if message.contact:
             await state.update_data(
                 {
@@ -199,257 +538,472 @@ async def message(message:Message,state:FSMContext):
                     "phone": message.text
                 }
             )
-        await message.answer("Sizni topib borish uchun lokatsiyangizni yuboring. ", reply_markup=lokatsiya)
-        await message.answer("Agar istamasangiz 'Keyingisi' ni bosing.", reply_markup=keyingisi)
-        await Pochta_andijon.locatsiya.set()
-@dp.callback_query_handler(text='ortga',state=Pochta_andijon.locatsiya)
-async def tumaniga(call:CallbackQuery,state:FSMContext):
-    await call.message.answer("Sizga bog'lana oladiga telefon raqamingizni kiriting: ", reply_markup=phone_number)
-    await call.message.answer("Na'muna: 994813499 ?", reply_markup=phone_ortga)
-    await Pochta_andijon.phone.set()
-@dp.callback_query_handler(text_contains='atmen',state=Pochta_andijon.locatsiya)
-async def haydovchi(call:CallbackQuery,state: FSMContext):
-    await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-    await state.finish()
 
-@dp.callback_query_handler(text="yingisi",state=Pochta_andijon.locatsiya)
-async def keyin_gisi(call:CallbackQuery,state:FSMContext):
+        data = await state.get_data()
+        viloyat = data.get('viloyat')
+        tuman = data.get('tuman').capitalize()
+        viloyatiga = data.get('viloyatiga')
+        tumaniga = data.get('tumaniga')
+        oy = data.get('oyi')
+        kuni = data.get('kuni')
+        sanasi = data.get('sanasi')
+        soat = data.get('soat')
+        phone = data.get('phone')
+        if oy is not None:
+            m = f"🚕\n<b> 🏢 {viloyat} </b>\n" \
+                f"🏤 <b>{tuman}dan </b> \n" \
+                f"🏢 <b>{viloyatiga} \n" \
+                f"🏪 <b>{tumaniga}ga pochta  </b>\n" \
+                f"📆 <b>Sanasi : {sanasi}-{oy}</b>\n" \
+                f"⏱ <b>{soat}</b>\n"
+            msg = f"🚕\n<b> 🏢 {viloyat} </b>\n" \
+                  f"🏤<b> {tuman} dan </b> \n" \
+                  f"🏢<b> {viloyatiga} </b>\n" \
+                  f"🏪 <b>{tumaniga}ga pochta </b>\n" \
+                  f"📆 <b>Qachon yo'lga chiqadi : {sanasi}-{oy}</b>\n" \
+                  f"⏱ <b>{soat}\n</b>" \
+                  f"📞 <b>Tel : {phone}</b>\n"
+            await state.update_data(
+                {
+                    "msg": msg, "m": m
+                }
+            )
+        else:
+            m = f"🚕\n🏢 <b>{viloyat} \n</b>" \
+                f"🏤 <b>{tuman}dan  </b>\n" \
+                f"🏢 <b>{viloyatiga} </b>\n" \
+                f"🏪 <b>{tumaniga}ga pochta </b>\n" \
+                f"📆 <b>Sanasi : {kuni}</b>\n" \
+                f"⏱ <b>{soat}</b>\n"
+            msg = f"🚕\n🏢 <b>{viloyat}  </b>\n" \
+                  f"🏤 <b>{tuman}dan \n</b>" \
+                  f"🏢 <b>{viloyatiga} \n</b>" \
+                  f"🏪 <b>{tumaniga}ga pochta</b>\n" \
+                  f"📆 <b>Qachon yo'lga chiqadi :  {kuni}</b>\n" \
+                  f"⏱ <b>{soat}\n</b>" \
+                  f"📞 <b>Tel : {phone}\n</b>"
+            await state.update_data(
+                {
+                    "msg": msg, "m": m
+                }
+            )
+        await message.answer(f"Ma'lumotlar to'g'rimi {msg}?", reply_markup=yes_not)
+        await Pochta_andijon.tasdiqlash.set()
+        await message.delete()
 
-    place = "Lokatsiya yuborilmadi"
-    data = await state.get_data()
-    turgan_viloyati = data.get('viloyat')
-    turgan_tumani = data.get('tuman')
-    ketish_viloyati = data.get('viloyatiga')
-    ketish_tumani = data.get('tumaniga')
-    soat = data.get('soat')
-    phone = data.get('phone')
-    pochta_haqida = data.get('pochta_haqida')
-    msg = f"<b>{turgan_viloyati} viloyati,\n</b>" \
-          f"<b>{turgan_tumani} tumanidan</b>\n" \
-          f"<b>{ketish_viloyati} viloyati</b>\n" \
-          f"<b>{ketish_tumani} tumaniga {soat} da pochta yuborilishi kerak</b>\n" \
-          f"<b>Telefon raqam :</b>\n {phone}\n" \
-          f"<b>Lokatsiya :</b>\n" \
-          f"{place}"
-    await state.update_data(
-        {
-            "msg": msg
-        }
-    )
-    m = f"<b>{turgan_viloyati} viloyati,\n</b>" \
-        f"<b>{turgan_tumani} tumanidan</b>\n" \
-        f"<b>{ketish_viloyati} viloyati</b>\n" \
-        f"<b>{ketish_tumani} tumaniga {soat}da  yuborilishi kerak pochta bor</b>\n"
-    await state.update_data(
-        {
-            "m": m
-        })
-
-    await call.message.answer(msg)
-    await call.message.answer("Malumotlaringiz to'g'rimi ?", reply_markup=yes_not)
-    await Pochta_andijon.tasdiqlash.set()
-
-
-@dp.message_handler(content_types=['location'],state=Pochta_andijon.locatsiya)
-async def location(message:Message, state:FSMContext):
-    lat = message.location.latitude
-    lon = message.location.longitude
-    place = show_on_gmaps.show(lat=lat, lon=lon)
-    data =await state.get_data()
-    turgan_viloyati = data.get('viloyat')
-    turgan_tumani = data.get('tuman')
-    ketish_viloyati = data.get('viloyatiga')
-    ketish_tumani = data.get('tumaniga')
-    soat = data.get('soat')
-    pochta_haqida = data.get('pochta_haqida')
-    phone = data.get('phone')
-    msg = f"<b>{turgan_viloyati} viloyati,\n</b>" \
-          f"<b>{turgan_tumani} tumanidan</b>\n" \
-          f"<b>{ketish_viloyati} viloyati</b>\n" \
-          f"<b>{ketish_tumani} tumaniga {soat}da  yuborilishi kerak pochta bor</b>\n" \
-          f"<b>Pochta haqida : {pochta_haqida}</b>\n"\
-          f"<b>Telefon raqam :</b>\n {phone}\n" \
-          f"<b>Lokatsiya :</b>\n" \
-          f"{place}"
-    await state.update_data(
-        {
-            "msg":msg
-        }
-    )
-    m = f"<b>{turgan_viloyati} viloyati,\n</b>" \
-          f"<b>{turgan_tumani} tumanidan</b>\n" \
-          f"<b>{ketish_viloyati} viloyati</b>\n" \
-          f"<b>{ketish_tumani} tumaniga {soat}da  yuborilishi kerak pochta bor</b>\n"
-    await state.update_data(
-        {
-            "m": m
-        })
-    await message.answer(msg)
-    await message.answer("Malumotlaringiz to'g'rimi ?",reply_markup=yes_not)
-    await Pochta_andijon.tasdiqlash.set()
-
-@dp.callback_query_handler(text='ortga',state=Pochta_andijon.tasdiqlash)
-async def tumaniga(call:CallbackQuery,state:FSMContext):
-    await call.message.answer("Sizni topib borish uchun lokatsiyangizni yuboring. ", reply_markup=lokatsiya)
-    await call.message.answer("Agar istamasangiz 'Keyingisi' ni bosing.", reply_markup=keyingisi)
-    await Pochta_andijon.locatsiya.set()
-@dp.callback_query_handler(text_contains='atmen',state=Pochta_andijon.tasdiqlash)
-async def haydovchi(call:CallbackQuery,state: FSMContext):
-    await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-    await state.finish()
-@dp.callback_query_handler(text='nott', state=Pochta_andijon.tasdiqlash)
-async def y_n(call:CallbackQuery, state:FSMContext):
-    await call.message.answer("Ma'lumotlarni tog'rilab qaytadan kiriting", reply_markup=umumiy_menu)
-    await state.finish()
+@dp.callback_query_handler(text='ortga', state=Pochta_andijon.tasdiqlash)
+async def reys_ortga(call: CallbackQuery, state: FSMContext):
+    
+        markup = aiogram.types.InlineKeyboardMarkup(row_width=3)
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Ortga', callback_data='tortga'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Bosh menu', callback_data='atmen'))
+        await call.message.answer("Telefon raqamingizni kiriting ..", reply_markup=phone_number)
+        await call.message.answer("Mana shu raqamni ishlatayotgan bo'lsangiz\n"
+                                  "Kontakt yuborish ni bosing", reply_markup=markup)
+        await call.message.delete()
+        await Pochta_andijon.phone.set()
 
 
 @dp.callback_query_handler(text='yesss', state=Pochta_andijon.tasdiqlash)
-async def y_n(call:CallbackQuery, state:FSMContext):
-    data = await state.get_data()
-    tuman = data.get('tuman')
-    tumaniga = data.get('tumaniga')
-    baza = data.get('baza')
-    print(tuman)
-    msg = data.get("msg")
-    m = data.get("m")
-    telegram_id = call.message.from_user.id
-    print(telegram_id)
-    await db.add_order_tayyor_taxi(
-        tayyor_taxi=None,
-        tayyor_taxi_full=None,
-        tayyor_yolovchi=None,
-        tayyor_yolovchi_full=None,
-        region=tuman,
-        telegram_id=telegram_id,
-        viloyatga=baza,
-        tumanga=tumaniga,
-        tayyor_pochta=m,
-        tayyor_pochta_full=msg,
-        tayyor_yuk=None,
-        tayyor_yuk_full=None,
-        tayyor_yuk_haydovchisi=None,
-        tayyor_yuk_haydovchisi_full=None,
-        tayyor_pochta_mashina=None,
-        tayyor_pochta_mashina_full=None,
-        tayyor_sayohatchi=None,
-        tayyor_sayohatchi_full=None,
-        tayyor_sayohatchi_mashina=None,
-        tayyor_sayohatchi_full_mashina=None)
-    drivers = await db.select_all_driver()
-    drivers_info = await db.select_all_driver_info()
-    for i in drivers:
-        if i[3] == 'ok':
-            for k in drivers_info:
-                if k[2] == tuman and i[4] == k[3]:
-                    markup = aiogram.types.InlineKeyboardMarkup()
-                    markup.insert(
-                        aiogram.types.InlineKeyboardButton(text="Qabul qilish",
-                                                           callback_data='6s5d6s5d65s6d56s5d'))
-                    await bot.send_message(text=m, chat_id=k[3], reply_markup=markup)
-    await call.message.answer("Sizning buyurtmangiz tumaningiz haydovchilariga yuborildi.\n"
-                              "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
-                              )
-    await state.reset_state(with_data=False)
+async def y_n(call: CallbackQuery, state: FSMContext):
+    
+        data = await state.get_data()
+        tuman = data.get('tuman')
+        tumaniga = data.get('tumaniga')
+        baza = data.get('viloyatiga')
+        viloyat = data.get('viloyat')
+        print(tuman)
+        msg = data.get("msg")
+        m = data.get("m")
+        telegram_id = call.from_user.id
+        print(telegram_id)
+        await db.add_order_tayyor_taxi(
+            tayyor_taxi=None,
+            tayyor_taxi_full=None,
+            tayyor_yolovchi=None,
+            tayyor_yolovchi_full=None,
+            viloyat=viloyat,
+            region=tuman,
+            telegram_id=telegram_id,
+            viloyatga=baza,
+            tumanga=tumaniga,
+            tayyor_pochta=m,
+            tayyor_pochta_full=msg,
+            tayyor_yuk=None,
+            tayyor_yuk_full=None,
+            tayyor_yuk_haydovchisi=None,
+            tayyor_yuk_haydovchisi_full=None,
+            tayyor_pochta_mashina=None,
+            tayyor_pochta_mashina_full=None,
+            tayyor_sayohatchi=None,
+            tayyor_sayohatchi_full=None,
+            tayyor_sayohatchi_mashina=None,
+            tayyor_sayohatchi_full_mashina=None
 
+        )
+        print("Qo'shildi")
+        order = await db.select_tayyor_pochta_mashina()
+        print(order)
+        await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
+                                  "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
+                                  )
+        await call.message.delete()
+        await state.finish()
+@dp.callback_query_handler(text='nott', state=Pochta_andijon.tasdiqlash)
+async def y_n(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Ma'lumotlarni tog'rilab qaytadan kiriting", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
 
-@dp.callback_query_handler(text="6s5d6s5d65s6d56s5d")
-async def qabul_qilish(call: CallbackQuery, state: FSMContext):
-    data = await state.get_data()
-    msg = data.get("msg")
-    await bot.send_message(text=msg, chat_id=call.from_user.id)
 @dp.callback_query_handler(text='add_information', state=Pochta_andijon.tasdiqlash)
 async def y_n(call:CallbackQuery, state:FSMContext):
-    await call.message.answer("Pochta haqida ma'lumot kiriting :  ? ")
-    await Pochta_andijon.turi.set()
-@dp.message_handler(state=Pochta_andijon.turi)
-async def pochta_turi(message:Message,state:FSMContext):
-    await state.update_data(
-        {
-            "turi":message.text
-        }
-    )
-    await message.answer("Pochta haqqini kiriting")
-    await Pochta_andijon.xa_yoq.set()
-@dp.message_handler(state=Pochta_andijon.xa_yoq)
-async def kisi(message:Message,state:FSMContext):
-    await state.update_data(
-        {
-            "pochta_haqqi":message.text
-        }
-    )
-    data = await state.get_data()
-    msg = data.get("msg")
-    turi = data.get('turi')
-    pochta_haqqi = data.get("pochta_haqqi")
-    msg_full = msg+f"\nPochta haqqi : {pochta_haqqi}\n" \
-                   f"Pochta turi : {turi} "
-    await state.update_data(
-        {
-            "msg_full": msg_full
-        }
-    )
-    await message.answer(msg_full)
-    await message.answer("Ma'lumotar to'g'rimi ?", reply_markup=tasdiq_oxir)
-    await Pochta_andijon.end.set()
+    
+        markup=InlineKeyboardMarkup(row_width=2)
+        markup.insert(InlineKeyboardButton(text="Ortga",callback_data="Qaytish"))
+        markup.insert(InlineKeyboardButton(text="Boshmenu",callback_data="Boshmenu"))
+        markup.insert(InlineKeyboardButton(text="Keyingisi",callback_data="Keyingisi"))
+        await call.message.answer("Sizni topib olishimiz oson bo'lishi uchun lokatsiya yuboring ? ",reply_markup=lokatsiya)
+        await call.message.answer("Kerak bo'lmasa keyingisini bosing ? ",reply_markup=markup)
+        await call.message.delete()
+        await Pochta_andijon.locatsiya.set()
+
+@dp.callback_query_handler(state=Pochta_andijon.locatsiya,text="Boshmenu")
+async def Boshmenuga(call:CallbackQuery,state:FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
+@dp.callback_query_handler(state=Pochta_andijon.locatsiya,text="Qaytish")
+async def qaytaman(call:CallbackQuery,state:FSMContext):
+    
+        await bot.delete_message(chat_id=call.from_user.id,message_id=call.message.message_id-1)
+        data=await state.get_data()
+        msg=data.get("msg")
+        await call.message.answer(f"Malumotlaringiz to'g'rimi ?\n{msg}", reply_markup=yes_not)
+        await call.message.delete()
+        await Pochta_andijon.tasdiqlash.set()
+@dp.callback_query_handler(state=Pochta_andijon.locatsiya,text="Keyingisi")
+async def keyingisio(call:CallbackQuery,state:FSMContext):
+    
+        await bot.delete_message(chat_id=call.from_user.id,message_id=call.message.message_id-1)
+        markup=InlineKeyboardMarkup(row_width=3)
+        markup.insert(InlineKeyboardButton(text="1",callback_data="bir"))
+        markup.insert(InlineKeyboardButton(text="2",callback_data="ikki"))
+        markup.insert(InlineKeyboardButton(text="3",callback_data="uch"))
+        markup.insert(InlineKeyboardButton(text="4",callback_data="to'rt"))
+        markup.insert(InlineKeyboardButton(text="5",callback_data="besh"))
+        markup.insert(InlineKeyboardButton(text="Kiritish",callback_data="Kiritish"))
+        markup.insert(InlineKeyboardButton(text="Ortga",callback_data="Kiritish"))
+        markup.insert(InlineKeyboardButton(text="Bosh menu",callback_data="Bosh menu"))
+        markup.insert(InlineKeyboardButton(text="Keyingisi",callback_data="Keyingisi"))
+        await call.message.answer("Nechta pochta yuborasiz ?",reply_markup=markup)
+        await call.message.delete()
+        await Pochta_andijon.necha_kishi.set()
+@dp.message_handler(content_types=['location'],state=Pochta_andijon.locatsiya)
+async def location(message:Message, state:FSMContext):
+    
+        await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id - 1)
+        await bot.delete_message(chat_id=message.from_user.id, message_id=message.message_id - 2)
+        lat = message.location.latitude
+        lon = message.location.longitude
+        place = show_on_gmaps.show(lat=lat, lon=lon)
+        await state.update_data(
+            {
+                "location":place
+            }
+        )
+        markup=InlineKeyboardMarkup(row_width=3)
+        markup.insert(InlineKeyboardButton(text="1",callback_data="bir"))
+        markup.insert(InlineKeyboardButton(text="2",callback_data="ikki"))
+        markup.insert(InlineKeyboardButton(text="3",callback_data="uch"))
+        markup.insert(InlineKeyboardButton(text="4",callback_data="to'rt"))
+        markup.insert(InlineKeyboardButton(text="5",callback_data="besh"))
+        markup.insert(InlineKeyboardButton(text="Kiritish",callback_data="Kiritish"))
+        markup.insert(InlineKeyboardButton(text="Ortga",callback_data="Ortga"))
+        markup.insert(InlineKeyboardButton(text="Bosh menu",callback_data="Bosh menu"))
+        markup.insert(InlineKeyboardButton(text="Keyingisi",callback_data="Keyingisi"))
+        await message.answer("Nechta pochta yuborasiz ?",reply_markup=markup)
+        await message.delete()
+        await Pochta_andijon.necha_kishi.set()
+
+@dp.callback_query_handler(state=Pochta_andijon.necha_kishi,text="Bosh menu")
+async def qayatdsdsaa(call:CallbackQuery,state:FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi sizga kerakli hizmat turini tanlang !", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
+@dp.callback_query_handler(state=Pochta_andijon.necha_kishi,text="Ortga")
+async def qayataa(call:CallbackQuery,state:FSMContext):
+    
+        markup = InlineKeyboardMarkup(row_width=2)
+        markup.insert(InlineKeyboardButton(text="Ortga", callback_data="Qaytish"))
+        markup.insert(InlineKeyboardButton(text="Boshmenu", callback_data="Boshmenu"))
+        markup.insert(InlineKeyboardButton(text="Keyingisi", callback_data="Keyingisi"))
+        await call.message.answer("Sizni topish oson bo'lishi uchun lokatsiya yuboring !", reply_markup=lokatsiya)
+        await call.message.answer("Kerak bo'lmasa keyingisini bosing ? ", reply_markup=markup)
+        await call.message.delete()
+        await Pochta_andijon.locatsiya.set()
+
+@dp.callback_query_handler(state=Pochta_andijon.necha_kishi,text="Keyingisi")
+async def kisi(call:CallbackQuery,state:FSMContext):
+    
+        markup = aiogram.types.InlineKeyboardMarkup(row_width=3)
+        markup.insert(aiogram.types.InlineKeyboardButton(text='10-20', callback_data='10-20'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='20-30', callback_data='20-30'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='30-40', callback_data='30-40'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='40-50', callback_data='40-50'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='50-60', callback_data='50-60'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='60-70', callback_data='60-70'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='70-80', callback_data='70-80'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='80-90', callback_data='80-90'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='90-100', callback_data='90+100'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='100+', callback_data='100+'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Ortga', callback_data='ortga'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text="Qo'lda kiritish", callback_data='ruchnoy'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Bosh menu', callback_data='boshmenu'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Keyingisi', callback_data='Keyingisi'))
+        await call.message.answer("Yo'l haqqi uchun qancha olasiz ?", reply_markup=markup)
+        await call.message.delete()
+        await Pochta_andijon.oldi_kerakmi.set()
+
+
+@dp.callback_query_handler(state=Pochta_andijon.necha_kishi,text="Kiritish")
+async def kisi(call:CallbackQuery,state:FSMContext):
+    
+        await call.message.answer("Nechta pochta yuborishingizni son orqali ifodalang")
+        await call.message.delete()
+        await Pochta_andijon.qolda_yozish.set()
+@dp.message_handler(state=Pochta_andijon.qolda_yozish)
+async def neckakishi(msg:Message,state:FSMContext):
+    
+
+        if msg.text.isdigit()==True:
+            await state.update_data(
+                {
+                    "odam_soni": msg.text
+                }
+            )
+            markup = aiogram.types.InlineKeyboardMarkup(row_width=3)
+            markup.insert(aiogram.types.InlineKeyboardButton(text='10-20', callback_data='10-20'))
+            markup.insert(aiogram.types.InlineKeyboardButton(text='20-30', callback_data='20-30'))
+            markup.insert(aiogram.types.InlineKeyboardButton(text='30-40', callback_data='30-40'))
+            markup.insert(aiogram.types.InlineKeyboardButton(text='40-50', callback_data='40-50'))
+            markup.insert(aiogram.types.InlineKeyboardButton(text='50-60', callback_data='50-60'))
+            markup.insert(aiogram.types.InlineKeyboardButton(text='60-70', callback_data='60-70'))
+            markup.insert(aiogram.types.InlineKeyboardButton(text='70-80', callback_data='70-80'))
+            markup.insert(aiogram.types.InlineKeyboardButton(text='80-90', callback_data='80-90'))
+            markup.insert(aiogram.types.InlineKeyboardButton(text='90-100', callback_data='90+100'))
+            markup.insert(aiogram.types.InlineKeyboardButton(text='100+', callback_data='100+'))
+            markup.insert(aiogram.types.InlineKeyboardButton(text='Ortga', callback_data='ortga'))
+            markup.insert(aiogram.types.InlineKeyboardButton(text="Qo'lda kiritish", callback_data='ruchnoy'))
+            markup.insert(aiogram.types.InlineKeyboardButton(text='Bosh menu', callback_data='boshmenu'))
+            markup.insert(aiogram.types.InlineKeyboardButton(text='Keyingisi', callback_data='Keyingisi'))
+            await msg.answer("Yo'l haqqi uchun qancha olasiz ?", reply_markup=markup)
+            await msg.delete()
+            await Pochta_andijon.oldi_kerakmi.set()
+        else:
+            await msg.answer("Iltimos Son orqali kiriting . Matn kiritmang !!!")
+            await msg.delete()
+            if msg.message_id - 1:
+                await bot.delete_message(chat_id=msg.from_user.id, message_id=msg.message_id - 1)
+            await Pochta_andijon.qolda_yozish.set()
+@dp.callback_query_handler(state=Pochta_andijon.oldi_kerakmi,text="ortga")
+async def kisi(call:CallbackQuery,state:FSMContext):
+    
+        markup = InlineKeyboardMarkup(row_width=3)
+        markup.insert(InlineKeyboardButton(text="1", callback_data="bir"))
+        markup.insert(InlineKeyboardButton(text="2", callback_data="ikki"))
+        markup.insert(InlineKeyboardButton(text="3", callback_data="uch"))
+        markup.insert(InlineKeyboardButton(text="4", callback_data="to'rt"))
+        markup.insert(InlineKeyboardButton(text="5", callback_data="besh"))
+        markup.insert(InlineKeyboardButton(text="Kiritish", callback_data="Kiritish"))
+        markup.insert(InlineKeyboardButton(text="Ortga", callback_data="Ortga"))
+        markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="Bosh menu"))
+        markup.insert(InlineKeyboardButton(text="Keyingisi", callback_data="Keyingisi"))
+        await call.message.answer("Nechta pochta yuborasiz ?", reply_markup=markup)
+        await call.message.delete()
+        await Pochta_andijon.necha_kishi.set()
+@dp.callback_query_handler(state=Pochta_andijon.oldi_kerakmi,text="ruchnoy")
+async def grjrjfjkj(call:CallbackQuery,state:FSMContext):
+    
+        await call.message.answer("Qancha haq bermoqchisiz ")
+        await Pochta_andijon.pul_qol.set()
+@dp.callback_query_handler(state=Pochta_andijon.necha_kishi)
+async def kisi(call:CallbackQuery,state:FSMContext):
+    
+        print(call.data)
+        await state.update_data(
+            {
+                "odam_soni":call.data
+            }
+        )
+        markup = aiogram.types.InlineKeyboardMarkup(row_width=3)
+        markup.insert(aiogram.types.InlineKeyboardButton(text='10-20', callback_data='10-20'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='20-30', callback_data='20-30'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='30-40', callback_data='30-40'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='40-50', callback_data='40-50'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='50-60', callback_data='50-60'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='60-70', callback_data='60-70'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='70-80', callback_data='70-80'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='80-90', callback_data='80-90'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='90-100', callback_data='90+100'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='100+', callback_data='100+'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Ortga', callback_data='ortga'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text="Qo'lda kiritish", callback_data='ruchnoy'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Bosh menu', callback_data='boshmenu'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Keyingisi', callback_data='Keyingisi'))
+        await call.message.answer("Yo'l haqqi uchun qancha berasiz ?", reply_markup=markup)
+        await call.message.delete()
+        await Pochta_andijon.oldi_kerakmi.set()
+@dp.callback_query_handler(state=Pochta_andijon.oldi_kerakmi,text="Bosh menu")
+async def kisi(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi sizga kerakli hizmat turini tanlang !", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
+@dp.callback_query_handler(state=Pochta_andijon.oldi_kerakmi, text="Keyingisi")
+async def kisi(call: CallbackQuery, state: FSMContext):
+    
+
+        data = await state.get_data()
+        msg = data.get("msg")
+        lokatsiya = data.get("location")
+        odam_soni = data.get("odam_soni")
+        if lokatsiya == None:
+            lokatsiya = ""
+        if odam_soni == None:
+            odam_soni = ""
+        odam_soni = f"Nechta po'chta yuboradi: {odam_soni}"
+        msg_full = msg + f"\n{odam_soni}\n{lokatsiya}"
+        await state.update_data(
+            {
+                "msg_full": msg_full
+            }
+        )
+        await call.message.answer(f"Ma'lumotlaringiz to'g'rimi ?\n{msg_full} ", reply_markup=tasdiq_oxir)
+        await call.message.delete()
+        await Pochta_andijon.end.set()
+
+
+@dp.callback_query_handler(state=Pochta_andijon.oldi_kerakmi)
+async def kisi(call:CallbackQuery,state:FSMContext):
+    
+
+        data = await state.get_data()
+        msg = data.get("msg")
+        lokatsiya = data.get("location")
+        odam_soni = data.get("odam_soni")
+        yolkira=call.data
+        if lokatsiya == None:
+            lokatsiya = ""
+        if odam_soni == None:
+            odam_soni = ""
+        odam_soni = f"Nechta po'chta yuboradi: {odam_soni}"
+        msg_full = msg + f"\n{odam_soni}\n{lokatsiya}\nHaydovchiga {yolkira} ming so'm bermoqchi"
+        await state.update_data(
+            {
+                "msg_full": msg_full
+            }
+        )
+        await call.message.answer(f"Ma'lumotlaringiz to'g'rimi ?\n{msg_full} ", reply_markup=tasdiq_oxir)
+        await call.message.delete()
+        await Pochta_andijon.end.set()
+
+@dp.message_handler(state=Pochta_andijon.pul_qol)
+async def grjrjfjkj(message:Message,state:FSMContext):
+    
+
+        data = await state.get_data()
+        msg = data.get("msg")
+        lokatsiya = data.get("location")
+        odam_soni = data.get("odam_soni")
+        yolkira = message.text
+        if lokatsiya == None:
+            lokatsiya = ""
+        if odam_soni == None:
+            odam_soni = ""
+        odam_soni = f"Nechta po'chta yuboradi: {odam_soni}"
+        msg_full = msg + f"\n{odam_soni}\n{lokatsiya}\nHaydovchiga {yolkira} ming so'm bermoqchi"
+        await state.update_data(
+            {
+                "msg_full": msg_full
+            }
+        )
+        await message.answer(f"Ma'lumotlaringiz to'g'rimi ?\n{msg_full} ", reply_markup=tasdiq_oxir)
+        await message.delete()
+        await Pochta_andijon.end.set()
+@dp.callback_query_handler(text='qaytish',state=Pochta_andijon.end)
+async def oxirgi(call:CallbackQuery,state:FSMContext):
+    
+        markup = aiogram.types.InlineKeyboardMarkup(row_width=3)
+        markup.insert(aiogram.types.InlineKeyboardButton(text='10-20', callback_data='10-20'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='20-30', callback_data='20-30'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='30-40', callback_data='30-40'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='40-50', callback_data='40-50'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='50-60', callback_data='50-60'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='60-70', callback_data='60-70'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='70-80', callback_data='70-80'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='80-90', callback_data='80-90'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='90-100', callback_data='90+100'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='100+', callback_data='100+'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Ortga', callback_data='ortga'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text="Qo'lda kiritish", callback_data='ruchnoy'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Bosh menu', callback_data='boshmenu'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Keyingisi', callback_data='Keyingisi'))
+        await call.message.answer("Yo'l haqqi uchun qancha berasiz ?", reply_markup=markup)
+        await call.message.delete()
+        await Pochta_andijon.oldi_kerakmi.set()
+@dp.callback_query_handler(text='glavmenu', state=Pochta_andijon.end)
+async def oxirgi(call: CallbackQuery, state: FSMContext):
+    
+        await call.message.answer("Salom yo'lovchi sizga kerakli hizmat turini tanlang !", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()
 @dp.callback_query_handler(text='Confirm',state=Pochta_andijon.end)
 async def oxirgi(call:CallbackQuery,state:FSMContext):
-    data = await state.get_data()
-    tuman = data.get('tuman')
-    print(tuman)
-    msg = data.get("msg_full")
-    data = await state.get_data()
-    tuman = data.get('tuman')
-    tumaniga = data.get('tumaniga')
-    baza = data.get('baza')
-    m = data.get("m")
-    telegram_id = call.message.from_user.id
-    await db.add_order_tayyor_taxi(
-        tayyor_taxi=None,
-        tayyor_taxi_full=None,
-        tayyor_yolovchi=None,
-        tayyor_yolovchi_full=None,
-        region=tuman,
-        telegram_id=telegram_id,
-        viloyatga=baza,
-        tumanga=tumaniga,
-        tayyor_pochta=m,
-        tayyor_pochta_full=msg,
-        tayyor_yuk=None,
-        tayyor_yuk_full=None,
-        tayyor_yuk_haydovchisi=None,
-        tayyor_yuk_haydovchisi_full=None,
-        tayyor_pochta_mashina=None,
-        tayyor_pochta_mashina_full=None,
-        tayyor_sayohatchi=None,
-        tayyor_sayohatchi_full=None,
-        tayyor_sayohatchi_mashina=None,
-        tayyor_sayohatchi_full_mashina=None
-    )
+    
+        data = await state.get_data()
+        tuman = data.get('tuman')
+        viloyat = data.get('viloyat')
+        tumaniga = data.get('tumaniga')
+        baza = data.get('baza')
+        print(tuman)
+        msg = data.get("msg_full")
+        m = data.get("m")
+        telegram_id = call.from_user.id
+        print(telegram_id)
+        await db.add_order_tayyor_taxi(tayyor_taxi=None,
+                                       tayyor_taxi_full=None,
+                                       tayyor_yolovchi=None,
+                                       tayyor_yolovchi_full=None,
+                                       viloyat=viloyat,
+                                       region=tuman,
+                                       telegram_id=telegram_id,
+                                       viloyatga=baza,
+                                       tumanga=tumaniga,
+                                       tayyor_pochta=m,
+                                       tayyor_pochta_full=msg,
+                                       tayyor_yuk=None,
+                                       tayyor_yuk_full=None,
+                                       tayyor_yuk_haydovchisi=None,
+                                       tayyor_yuk_haydovchisi_full=None,
+                                       tayyor_pochta_mashina=None,
+                                       tayyor_pochta_mashina_full=None,
+                                       tayyor_sayohatchi=None,
+                                       tayyor_sayohatchi_full=None,
+                                       tayyor_sayohatchi_full_mashina=None,
+                                       tayyor_sayohatchi_mashina=None)
 
-    drivers = await db.select_all_driver()
-    drivers_info = await db.select_all_driver_info()
-    for i in drivers:
-        if i[3] == 'ok':
-            for k in drivers_info:
-                if k[2] == tuman and i[4] == k[3]:
-                    markup = aiogram.types.InlineKeyboardMarkup()
-                    markup.insert(
-                        aiogram.types.InlineKeyboardButton(text="Qabul qilish",
-                                                           callback_data='we787e8w7e8w7'))
-                    await bot.send_message(text=m, chat_id=k[3], reply_markup=markup)
-    await call.message.answer("Sizning buyurtmangiz tumaningiz haydovchilariga yuborildi.\n"
-                              "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
-                              )
-    await state.reset_state(with_data=False)
-
-
-@dp.callback_query_handler(text="we787e8w7e8w7")
-async def qabul_qilish(call: CallbackQuery, state: FSMContext):
-    data = await state.get_data()
-    msg = data.get("msg_full")
-    await bot.send_message(text=msg, chat_id=call.from_user.id)
+        await call.message.answer("Sizning buyurtmangiz tumaningiz haydovchilariga yuborildi.\n"
+                                  "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
+                                  )
+        await call.message.delete()
+        await state.finish()
 
 @dp.callback_query_handler(text='UnConfirm', state=Pochta_andijon.end)
 async def y_n(call:CallbackQuery, state:FSMContext):
-    await call.message.answer("Ma'lumotlarni tog'rilab qaytadan kiriting", reply_markup=umumiy_menu)
-    await state.finish()
+    
+        await call.message.answer("Ma'lumotlarni tog'rilab qaytadan kiriting", reply_markup=umumiy_menu)
+        await call.message.delete()
+        await state.finish()

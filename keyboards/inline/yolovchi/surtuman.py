@@ -23,23 +23,24 @@ for key,value in surxondaryo.items():
     surxondaryo_tuman.insert(InlineKeyboardButton(text=key, callback_data=surxon_callback.new(item_name=value)))
 
 surxondaryo_y = {
-"Angor":"angor",
-"Bandixon":"bandixon",
-"Boysun":"boysun",
-"Denov" :"denov",
-"Jarqoʻrgʻon":"jarqorgon",
-"Qiziriq":"qiziriq",
-"Qumqoʻrgʻon":"qumqorgon",
-"Muzrabod":"muzrabod",
-"Oltinsoy":"oltinsoy",
-"Sariosiyo":"sariosiyo",
-"Sherobod":"sherobod",
-"Shoʻrchi":"shorchi" ,
-"Termiz":"termiz",
-"Uzun":"uzun",
+"Termiz shahar":"termiz shahar",
+"Termiz tuman":"termiz tumani",
+"Angor":"angor tumani",
+"Bandixon":"bandixon tumani",
+"Boysun":"boysun tumani",
+"Denov" :"denov tumani",
+"Jarqoʻrgʻon":"jarqorgon tumani",
+"Qiziriq":"qiziriq tumani",
+"Qumqoʻrgʻon":"qumqorgon tumani",
+"Muzrabod":"muzrabod tumani",
+"Oltinsoy":"oltinsoy tumani",
+"Sariosiyo":"sariosiyo tumani",
+"Sherobod":"sherobod tumani",
+"Shoʻrchi":"shorchi tumani" ,
+"Uzun":"uzun tumani",
 
 }
-surxondaryo_yol = InlineKeyboardMarkup(row_width=4)
+surxondaryo_yol = InlineKeyboardMarkup(row_width=2)
 for key,value in surxondaryo_y.items():
     surxondaryo_yol.insert(InlineKeyboardButton(text=key, callback_data=value))
 surxondaryo_yol.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
@@ -141,3 +142,26 @@ for key,value in surxondaryo_yuk1.items():
 surxondaryo_yuuk_mashina.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
 surxondaryo_yuuk_mashina.insert(InlineKeyboardButton(text='ortga',callback_data='ortga'))
 
+surxondaryo_PO = {
+    "Angor":"angor",
+    "Bandixon":"bandixon",
+    "Boysun":"boysun",
+    "Denov" :"denov",
+    "Jarqoʻrgʻon":"jarqorgon",
+    "Qiziriq":"qiziriq",
+    "Qumqoʻrgʻon":"qumqorgon",
+    "Muzrabod":"muzrabod",
+    "Oltinsoy":"oltinsoy",
+    "Sariosiyo":"sariosiyo",
+    "Sherobod":"sherobod",
+    "Shoʻrchi":"shorchi" ,
+    "Termiz":"termiz",
+    "Uzun":"uzun",
+    "Boshqa viloyat": "boshqaviloyat",
+
+    "Bosh menu": "glavmenu",
+    "Ortga": "qaytamiz",
+}
+surxondaryo_pochta_uchun = InlineKeyboardMarkup(row_width=4)
+for key,value in surxondaryo_PO.items():
+    surxondaryo_pochta_uchun.insert(InlineKeyboardButton(text=key, callback_data=value))

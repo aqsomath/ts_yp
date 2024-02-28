@@ -8,6 +8,7 @@ viloyat = {
     "Namangan":"tuesday",
     "Farg'ona":"wenesday",
     "Buxoro":"thursday",
+    "Toshkent shahar":"kent shahar",
     "Toshkent":"friday",
     "Sirdaryo":"saturday",
     "Surxondaryo":"sunday",
@@ -16,10 +17,12 @@ viloyat = {
     "Navoiy":"march",
     "Jizzax":"june",
     "Samarqand":"july",
+    "Qoraqalpog'iston":"qoraqalpoq",
+    "Ortga":"ortga",
 }
 tax_yuk_vil = InlineKeyboardMarkup(row_width=2)
 for key,value in viloyat.items():
-    tax_yuk_vil.insert(InlineKeyboardButton(text=key, callback_data=taxi_yuk_callback.new(item_name=value)))
+    tax_yuk_vil.insert(InlineKeyboardButton(text=key, callback_data=value))
 
 
 yuk_ortgaa = InlineKeyboardMarkup(row_width=2)

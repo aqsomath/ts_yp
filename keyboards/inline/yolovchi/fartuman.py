@@ -26,25 +26,29 @@ for key, value in fargona_t.items():
 
 
 fargona_y = {
-"Oltiariq":"oltiariq",
-"Bagʻdod ":"bog'dod",
-"Beshariq ":"beshariq",
-"Buvayda" :"buvayda",
-"Dangʻara" :"dangara",
-"Fargʻona" :"fergana ",
-"Furqat" :"furqat",
-"Qoʻshtepa":"qo'shtepa",
-"Quva" :"quva",
-"Rishton":"rishton",
-"Soʻx" :"sox",
-"Toshloq":"toshloq",
-"Oʻzbekiston":"o'zbekiston",
-"Uchkoʻprik" :"uchko'prik",
-"Yozyovon" :"yozyovon",
+"Fargʻona shaxar" :"farg'ona shahar",
+"Fargʻona tuman" :"farg'ona tuman",
+"Qo'qon shahar":"qo'qon shahar",
+"Quvasoy shahar":"quvasoy shahar",
+"Marg'ilon shahar":"marg'ilon shahar",
+"Oltiariq":"oltiariq tuman",
+"Bagʻdod ":"bog'dod tuman",
+"Beshariq ":"beshariq tuman",
+"Buvayda" :"buvayda tuman",
+"Dangʻara" :"dangara tuman",
+"Furqat" :"furqat tuman",
+"Qoʻshtepa":"qo'shtepa tuman",
+"Quva" :"quva tuman",
+"Rishton":"rishton tuman",
+"Soʻx" :"sox tuman",
+"Toshloq":"toshloq tuman",
+"Oʻzbekiston":"o'zbekiston tuman",
+"Uchkoʻprik" :"uchko'prik tuman",
+"Yozyovon" :"yozyovon tuman",
 
 }
 
-fargona_yol = InlineKeyboardMarkup(row_width=4)
+fargona_yol = InlineKeyboardMarkup(row_width=2)
 for key, value in fargona_y.items():
     fargona_yol.insert(InlineKeyboardButton(text=key, callback_data=value))
 
@@ -147,4 +151,30 @@ fargona_yuuk_mashina = InlineKeyboardMarkup(row_width=4)
 for key, value in fargona_yuk_mashina.items():
     fargona_yuuk_mashina.insert(InlineKeyboardButton(text=key, callback_data=value))
     
-    
+
+fargona_sdjht = {
+    "Oltiariq":"oltiariq",
+    "Bagʻdod ":"bog'dod",
+    "Beshariq ":"beshariq",
+    "Buvayda" :"buvayda",
+    "Dangʻara" :"dangara",
+    "Fargʻona" :"fergana",
+    "Furqat" :"furqat",
+    "Qoʻshtepa":"qo'shtepa",
+    "Quva" :"quva",
+    "Rishton":"rishton",
+    "Soʻx" :"sox",
+    "Toshloq":"toshloq",
+    "Oʻzbekiston":"o'zbekiston",
+    "Uchkoʻprik" :"uchko'prik",
+    "Yozyovon" :"yozyovon",
+    "Boshqa viloyat": "boshqaviloyat",
+
+    "Bosh menu": "glavmenu",
+    "Ortga": "qaytamiz",
+}
+
+fargona_pochta_uchun = InlineKeyboardMarkup(row_width=4)
+for key, value in fargona_sdjht.items():
+    fargona_pochta_uchun.insert(InlineKeyboardButton(text=key, callback_data=value))
+
