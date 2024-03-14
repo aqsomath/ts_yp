@@ -1,9 +1,11 @@
+import asyncio
+
 import aiogram.types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
 from keyboards.default.location import lokatsiya, phone_number
 from keyboards.inline.haydovchi_reys.haydovchi_reys_tugmalar import reys_ortgaa
-from keyboards.inline.yolovchi.andtuman import andijon_yol, qoraqalpogiston_yol, tosh_shsha
+from keyboards.inline.yolovchi.andtuman import andijon_yol, qoraqalpogiston_yol
 from keyboards.inline.yolovchi.buxtuman import buxoro_yol
 from keyboards.inline.yolovchi.fartuman import fargona_yol
 from keyboards.inline.yolovchi.jizztuman import jizzax_yol
@@ -20,7 +22,7 @@ from keyboards.inline.yolovchi.xa_yoq import yes_not
 from keyboards.inline.yolovchi.xorazmtuman import xorazm_yol
 from states.yolovchi_reys_states import Yolovchi_andijon
 from keyboards.inline.yolovchi.viloyatlar import viloyatlar_yol, viloyatlar_yol_x
-from loader import dp, bot, db
+from loader import dp, bot, db, limiter
 from utils.misc import show_on_gmaps
 
 #  1 - ORTGA
@@ -68,11 +70,6 @@ async def andijon(call: CallbackQuery, state: FSMContext):
             if call.data=='toshkent':
                 await state.update_data({"viloyat": "Toshkent"})
                 await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=toshkent_yol)
-                await call.message.delete()
-                await Yolovchi_andijon.tuman.set()
-            if call.data=='kent shahar':
-                await state.update_data({"viloyat": "Toshkent shahar"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=tosh_shsha)
                 await call.message.delete()
                 await Yolovchi_andijon.tuman.set()
             if call.data=='sirdaryo':
@@ -156,8 +153,6 @@ async def andi_jon(call: CallbackQuery, state: FSMContext):
             await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=buxoro_yol)
         if viloyat == "Toshkent":
             await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=toshkent_yol)
-        if viloyat == "Toshkent shahar":
-            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=tosh_shsha)
         if viloyat == "Sirdaryo":
             await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=sirdaryo_yol)
         if viloyat == "Surxondaryo":
@@ -202,11 +197,7 @@ async def reys_viloyatga(call: CallbackQuery, state: FSMContext):
                 {"viloyatiga": "Andijon"}
             )
             await call.message.answer("Qaysi tumaniga borasiz", reply_markup=andijon_yol)
-        if data == 'kent shahar':
-            await state.update_data(
-                {"viloyatiga": "Toshkent shahar"}
-            )
-            await call.message.answer("Qaysi tumaniga borasiz", reply_markup=tosh_shsha)
+
         if data == "kdjhaigdakhdksa":
             await state.update_data(
                 {"viloyatiga": "Farg'ona"}
@@ -641,21 +632,20 @@ async def y_n(call: CallbackQuery, state: FSMContext):
         await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
                                   "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
                                   )
-
-        drivers = await db.select_all_driver_info()
-        drivers_1 = await db.select_all_driver()
-        list = []
-        for i in drivers:
-            if i[2] == tuman:
-                for m in drivers_1:
-                    if m[1] == "odam":
-                        if i[3] == m[4]:
-                            list.append(m[4])
-
-        for i in list:
-            await bot.send_message(i,msg)
-        await state.finish()
-        await call.message.delete()
+        offset = -28
+        limit = 28
+        while True:
+            offset += limit
+            drivers = await db.select_all_drivers(limit=limit, offset=offset)
+            await asyncio.sleep(1)
+            for driver in drivers:
+                if driver[1] == 'odam':
+                    async with limiter:
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                        await bot.send_message(chat_id=driver[4], text=msg, reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
 @dp.callback_query_handler(text='nott', state=Yolovchi_andijon.tasdiqlash)
 async def y_n(call: CallbackQuery, state: FSMContext):
     
@@ -1006,20 +996,20 @@ async def oxirgi(call:CallbackQuery,state:FSMContext):
                                   "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
                                   )
 
-        drivers = await db.select_all_driver_info()
-        drivers_1 = await db.select_all_driver()
-        list = []
-        for i in drivers:
-            if i[2] == tuman:
-                for m in drivers_1:
-                    if m[1] == "odam":
-                        if i[3] == m[4]:
-                            list.append(m[4])
-        for x in set(list):
-            await bot.send_message(chat_id=x, text=msg)
+        offset = -28
+        limit = 28
+        while True:
+            offset += limit
+            drivers = await db.select_all_drivers(limit=limit, offset=offset)
+            await asyncio.sleep(1)
+            for driver in drivers:
+                if driver[1] == 'odam':
+                    async with limiter:
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                        await bot.send_message(chat_id=driver[4], text=msg, reply_markup=markup)
             await call.message.delete()
-        await call.message.delete()
-        await state.finish()
+            await state.finish()
 
 @dp.callback_query_handler(text='UnConfirm', state=Yolovchi_andijon.end)
 async def y_n(call:CallbackQuery, state:FSMContext):

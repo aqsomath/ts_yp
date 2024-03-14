@@ -48,6 +48,18 @@ toshkent_y = {
     "Yuqori Chirchiq":"yuqorichirchiq tumani",
     "Zangiota":"zangiota tumani",
     "Qo'yliq":"qoyliq",
+    "Toshkent shahar": "Toshkent shahar",
+    "Bektemir": "Bektemir tumani",
+    "Mirzo Ulug‘bek": "Mirzo Ulug'bek tumani",
+    "Mirobod tumani": "Mirobod tumani",
+    "Olmazor tumani": "Olmazor tumani",
+    "Sirg‘ali tumani": "Sirg'ali tumani",
+    "Uchtepa tumani": "Uchtepa tumani",
+    "Chilonzor tumani": "Chilonzor tumani",
+    "Shayxontohur tumani": "Shayxontohur tumani",
+    "Yunusobod tumani": "Yunusobod tumani",
+    "Yakkasaroy tumani": "Yakkasaroy tumani",
+    "Yashnobod tumani": "Yashnobod tumani",
 
 }
 

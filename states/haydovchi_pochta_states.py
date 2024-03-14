@@ -4,6 +4,8 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 
 class Reys_pochta_andijon(StatesGroup):
     asosiy = State()
+    qoshimcha_tumanlarga = State()
+    qoshimcha_tuman = State()
     qolda_odam_soni = State()
     oyini_kiritsh = State()
     kunini_kiritsh = State()

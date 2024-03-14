@@ -31,6 +31,8 @@ class Yuk_reys_toshkent_shahar(StatesGroup):
     end = State()
 
 class Yuk_reys_andijon(StatesGroup):
+    qoshimcha_tumanlarga = State()
+    qoshimcha_tuman = State()
     asosiy = State()
     qolda_odam_soni = State()
     oyini_kiritsh = State()

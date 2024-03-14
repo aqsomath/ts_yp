@@ -1,14 +1,16 @@
+import asyncio
+
 import aiogram.types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
 from keyboards.default.location import phone_number, lokatsiya
 from keyboards.inline.haydovchi_reys.haydovchi_reys_tugmalar import reys_ortgaa
-from keyboards.inline.sayohat_qilish.sayohat_viloyatlar import sayohat_vil, sayohat_callback
-from keyboards.inline.yolovchi.andtuman import andijon_yol, qoraqalpogiston_yol, tosh_shsha
+from keyboards.inline.sayohat_qilish.sayohat_viloyatlar import sayohat_vil
+from keyboards.inline.yolovchi.andtuman import andijon_yol, qoraqalpogiston_yol
 from keyboards.inline.yolovchi.buxtuman import buxoro_yol
 from keyboards.inline.yolovchi.fartuman import fargona_yol
 from keyboards.inline.yolovchi.jizztuman import jizzax_yol
-from keyboards.inline.yolovchi.kirish import umumiy_menu, tasdiq_oxir, umumiy_menu
+from keyboards.inline.yolovchi.kirish import  tasdiq_oxir, umumiy_menu
 from keyboards.inline.yolovchi.namtuman import namangan_yol
 from keyboards.inline.yolovchi.navoiytuman import navoiy_yol
 from keyboards.inline.yolovchi.qashtuman import qashqadaryo_yol
@@ -20,8 +22,7 @@ from keyboards.inline.yolovchi.toshtuman import toshkent_yol
 from keyboards.inline.yolovchi.viloyatlar import viloyatlar_yol_x
 from keyboards.inline.yolovchi.xa_yoq import yes_not
 from keyboards.inline.yolovchi.xorazmtuman import xorazm_yol
-from keyboards.inline.yuk_yuborish.yuk_tugmalari import yuk_callback
-from loader import dp, db, bot
+from loader import dp, db, bot, limiter
 from states.sayohat_states import Sayohat_andijon
 from utils.misc import show_on_gmaps
 
@@ -40,7 +41,6 @@ viloyat = {
     "Farg'ona":"chorshanba",
     "Buxoro":"payshanba",
     "Toshkent":"juma",
-    "Toshkent shahar":"kent shahar",
     "Sirdaryo":"shanba",
     "Surxondaryo":"yakshanba",
     "Qashqadaryo":"iyul",
@@ -84,11 +84,6 @@ for key,value in viloyat.items():
             if call.data=='juma':
                 await state.update_data({"viloyat": "Toshkent"})
                 await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=toshkent_yol)
-                await call.message.delete()
-                await Sayohat_andijon.tuman.set()
-            if call.data=='kent shahar':
-                await state.update_data({"viloyat": "Toshkent shahar"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=tosh_shsha)
                 await call.message.delete()
                 await Sayohat_andijon.tuman.set()
             if call.data=='shanba':
@@ -337,8 +332,6 @@ async def reys_tuman(call: CallbackQuery, state: FSMContext):
                 await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=buxoro_yol)
             if viloyat == "Toshkent":
                 await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=toshkent_yol)
-            if viloyat == "Toshkent shahar":
-                await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=tosh_shsha)
             if viloyat == "Sirdaryo":
                 await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=sirdaryo_yol)
             if viloyat == "Surxondaryo":
@@ -789,12 +782,12 @@ async def y_n(call: CallbackQuery, state: FSMContext):
             tayyor_sayohatchi_full_mashina=None
 
         )
-        print("Qo'shildi")
-        order = await db.select_tayyor_sayohatchi()
-        print(order)
+
+
+
         await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
-                                  "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
-                                  )
+                              "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
+                              )
         list_1 = []
         viloyat_jami = await db.select_all_sayohat_info()
         for i in viloyat_jami:
@@ -802,8 +795,20 @@ async def y_n(call: CallbackQuery, state: FSMContext):
                 list_1.append(i[1])
         for b in list_1:
             await db.delete_sayohat_info(telegram_id=call.from_user.id, viloyat=b)
-        await state.finish()
-        await call.message.delete()
+        offset = -28
+        limit = 28
+        while True:
+            offset += limit
+            drivers = await db.select_all_drivers(limit=limit, offset=offset)
+            await asyncio.sleep(1)
+            for driver in drivers:
+                if driver[5] == 'sayohat':
+                    async with limiter:
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                        await bot.send_message(chat_id=driver[4], text=msg, reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
 
 
 @dp.callback_query_handler(text='nott', state=Sayohat_andijon.tasdiqlash)
@@ -1479,8 +1484,21 @@ async def oxirgi(call: CallbackQuery, state: FSMContext):
         await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
                                   "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
                                   )
-        await call.message.delete()
-        await state.finish()
+        offset = -28
+        limit = 28
+        while True:
+            offset += limit
+            drivers = await db.select_all_drivers(limit=limit, offset=offset)
+            await asyncio.sleep(1)
+            for driver in drivers:
+                if driver[5] == 'sayohat':
+                    async with limiter:
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                        await bot.send_message(chat_id=driver[4], text=msg, reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+
 
 
 @dp.callback_query_handler(text='UnConfirm', state=Sayohat_andijon.end)

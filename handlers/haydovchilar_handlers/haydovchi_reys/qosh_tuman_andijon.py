@@ -21,7 +21,6 @@ async def tuman_yol(call: CallbackQuery, state: FSMContext):
                 "Farg'ona": "farg'ona",
                 "Buxoro": "buxoro",
                 "Toshkent": "toshkent",
-                "Toshkent shahri": "kent shahar",
                 "Sirdaryo": "sirdaryo",
                 "Surxondaryo": "surxondaryo",
                 "Qashqadaryo": "qashqadaryo",
@@ -453,6 +452,54 @@ async def tuman_yol(call: CallbackQuery, state: FSMContext):
             toshkent["✅Qo'yliq"] = "qoyliq"
         else:
             toshkent["Qo'yliq"] = "qoyliq"
+        if "Toshkent shahar" in list:
+            toshkent["✅Toshkent shahar"] = "Toshkent shahar"
+        else:
+            toshkent["Toshkent shahar"] = "Toshkent shahar"
+        if "Bektemir" in list:
+            toshkent["✅Bektemir tumani"] = "Bektemir"
+        else:
+            toshkent["Bektemir tumani"] = "Bektemir"
+        if "Mirzo Ulug‘bek tumani" in list:
+            toshkent["✅Mirzo Ulug‘bek tumani"] = "Mirzo Ulug‘bek tumani"
+        else:
+            toshkent["Mirzo Ulug‘bek tumani"] = "Mirzo Ulug‘bek tumani"
+        if "Mirobod tumani" in list:
+            toshkent["✅Mirobod tumani"] = "Mirobod tumani"
+        else:
+            toshkent["Mirobod tumani"] = "Mirobod tumani"
+        if "Olmazor tumani" in list:
+            toshkent["✅Olmazor tumani"] = 'Olmazor tumani'
+        else:
+            toshkent["Olmazor tumani"] = 'Olmazor tumani'
+        if "Sirg‘ali tumani" in list:
+            toshkent["✅Sirg‘ali tumani"] = 'Sirg‘ali tumani'
+        else:
+            toshkent["Sirg‘ali tumani"] = 'Sirg‘ali tumani'
+        if "Uchtepa tumani" in list:
+            toshkent["✅Uchtepa tumani"] = "Uchtepa tumani"
+        else:
+            toshkent["Uchtepa tumani"] = "Uchtepa tumani"
+        if "Chilonzor tumani" in list:
+            toshkent["✅Chilonzor tumani"] = "Chilonzor tumani"
+        else:
+            toshkent["Chilonzor tumani"] = 'Chilonzor tumani'
+        if "Shayxontohur tumani" in list:
+            toshkent["✅Shayxontohur tumani"] = "Shayxontohur tumani"
+        else:
+            toshkent["Shayxontohur tumani"] = "Shayxontohur tumani"
+        if "Yunusobod tumani" in list:
+            toshkent["✅Yunusobod tumani"] = "Yunusobod tumani"
+        else:
+            toshkent["Yunusobod tumani"] = 'Yunusobod tumani'
+        if "Yakkasaroy tumani" in list:
+            toshkent["✅Yakkasaroy tumani"] = "Yakkasaroy tumani"
+        else:
+            toshkent["Yakkasaroy tumani"] = "Yakkasaroy tumani"
+        if "Yashnobod tumani" in list:
+            toshkent["✅Yashnobod tumani"] = "Yashnobod tumani"
+        else:
+            toshkent["Yashnobod tumani"] = "Yashnobod tumani"
         shaxsiy_toshkent = InlineKeyboardMarkup(row_width=3)
         for key, value in toshkent.items():
             shaxsiy_toshkent.insert(InlineKeyboardButton(text=key, callback_data=value))
@@ -1082,12 +1129,18 @@ async def tuman_yol(call: CallbackQuery, state: FSMContext):
             ton = f"⁉️ <b>Nechtagacha yo'lovchi olinadi ? - {tonna}</b>\n"
             if tonna is None:
                 ton = ""
+            qoshimcha_tumanlar = data.get('qoshimcha_tumanlar')
+            print(qoshimcha_tumanlar)
+            tumanlarga = f"<b>Qo'shimcha qaysi tumanlarga boradi ? </b>\n " + ",".join(qoshimcha_tumanlar)
+            if qoshimcha_tumanlar is None:
+                tumanlarga = ""
             msg_full = msg + f"{mashina}" \
                              f"{kap}" \
                              f"{bag}" \
                              f"{ton}" \
                              f"{yolkira}" \
-                             f"{tartib}"
+                             f"{tartib}"\
+                             f"{tumanlarga}"\
 
             await state.update_data(
                 {
@@ -1164,10 +1217,7 @@ async def tuman_yol(call: CallbackQuery, state: FSMContext):
             if call.data == value:
                 await call.message.edit_reply_markup(shaxsiy_samarqand)
                 await Reys_andijon.tuman_yol.set()
-        for key, value in tosh_shahar.items():
-            if call.data == value:
-                await call.message.edit_reply_markup(shaxsiy_tosh_shahar)
-                await Reys_andijon.tuman_yol.set()
+
         for key, value in qoraqalpoq.items():
                 if call.data == value:
                     await call.message.edit_reply_markup(shaxsiy_qoraqalpoq)

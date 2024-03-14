@@ -1,3 +1,4 @@
+import asyncio
 from typing import Union
 
 import asyncpg
@@ -336,6 +337,14 @@ class Database:
 
     async def drop_driver(self):
             await self.execute("DROP TABLE Driver", execute=True)
+
+    async def select_all_drivers(self, limit,offset):
+        sql = f"SELECT * FROM Driver LIMIT {limit} OFFSET {offset}"
+        return await self.execute(sql, fetch=True)
+
+
+
+
     async def create_table_driver_info(self):
         sql = """
            CREATE TABLE IF NOT EXISTS Info (
@@ -410,6 +419,32 @@ class Database:
     async def drop_yoldan_odam_info(self):
         await self.execute("DROP TABLE Yoldan", execute=True)
 
+    async def create_qoshimcha_tumanlar(self):
+        sql = """
+              CREATE TABLE IF NOT EXISTS Tumanlar (
+              id SERIAL PRIMARY KEY,
+              tuman TEXT NULL,
+              telegram_id BIGINT NULL
+             );
+              """
+        await self.execute(sql, execute=True)
+
+    async def add_qoshimcha_tumanlar(self, tuman, telegram_id):
+        sql = "INSERT INTO Tumanlar (tuman,telegram_id) VALUES($1, $2) returning *"
+        return await self.execute(sql, tuman, telegram_id, fetchrow=True)
+
+    async def select_all_qoshimcha_tumanlar(self):
+        sql = "SELECT * FROM Tumanlar"
+        return await self.execute(sql, fetch=True)
+
+    async def delete_qoshimcha_tumanlar(self, **kwargs):
+        sql = "DELETE FROM Tumanlar WHERE "
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return await self.execute(sql, *parameters, fetchrow=True)
+
+    async def drop_qoshimcha_tumanlar(self):
+        await self.execute("DROP TABLE Tumanlar", execute=True)
+
     async def create_table_yolovchi(self):
         sql = """
         CREATE TABLE IF NOT EXISTS Yolovchi (
@@ -466,7 +501,7 @@ class Database:
     async def update_balans(self, balans, telegram_id):
         sql = "UPDATE Haydovchi SET balans=$1 WHERE telegram_id=$2"
         return await self.execute(sql, balans, telegram_id, execute=True)
-    async def select_driver(self, **kwargs):
+    async def select_haydovchi(self, **kwargs):
         sql = "SELECT * FROM Haydovchi WHERE "
         sql, parameters = self.format_args(sql, parameters=kwargs)
         return await self.execute(sql, *parameters, fetchrow=True)

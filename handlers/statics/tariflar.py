@@ -47,7 +47,8 @@ async def first_conf_day(message:Message,state:FSMContext):
     else:
         await message.answer("Iltimos son kiriting !!!")
 
-
+    tarif = await db.select_tarif(tarif_name="first")
+    print(tarif)
 class ConfSecondGroup(StatesGroup):
     pay = State()
     day = State()
@@ -171,13 +172,9 @@ class FirstStatesGroup(StatesGroup):
     id = State()
 @dp.message_handler(commands=['first_type'])
 async def tarif_1_ga_otkazish(message: Message, state: FSMContext):
-    for i in fourth:
-        fourth.remove(i)
-    for i in fifth:
-        fifth.remove(i)
     markup = InlineKeyboardMarkup(row_width=2)
     markup.insert(InlineKeyboardButton(text="Yakunlash",callback_data="xa"))
-    await message.answer("1 - ta'rif yoqildi . Kimnidur bu tarifga o'tkazmoqchi bo'lsangiz Foydalanuvchi ID raqamini kiriting , aks holda yakunlashni bosing",reply_markup=markup)
+    await message.answer("1 - ta'rif. Kimnidur bu tarifga o'tkazmoqchi bo'lsangiz Foydalanuvchi ID raqamini kiriting , aks holda yakunlashni bosing",reply_markup=markup)
     await FirstStatesGroup.id.set()
     await message.delete()
 @dp.callback_query_handler(text="xa",state=FirstStatesGroup.id)
@@ -201,14 +198,6 @@ async def tarif_1_id(message:Message,state:FSMContext):
                 for i in third:
                     if i==user[3]:
                         third.remove(i)
-            if user[3] in fourth:
-                for i in fourth:
-                    if i==user[3]:
-                        fourth.remove(i)
-            if user[3] in fifth:
-                for i in fifth:
-                    if i==user[3]:
-                        fifth.remove(i)
             first.append(user[3])
             await message.answer(f"{id} - raqamli foydalanuvchi 1- tarifga o'tkazildi .")
             await state.finish()
@@ -221,10 +210,6 @@ class SecondStatesGroup(StatesGroup):
     id = State()
 @dp.message_handler(commands=['second_type'])
 async def tarif_2_ga_otkazish(message: Message, state: FSMContext):
-    for i in fourth:
-        fourth.remove(i)
-    for i in fifth:
-        fifth.remove(i)
     await message.answer("2 - ta'rifga o'tkaziladigan haydovchi ID sini kiriting")
     markup = InlineKeyboardMarkup(row_width=2)
     markup.insert(InlineKeyboardButton(text="Yakunlash", callback_data="xa"))
@@ -254,14 +239,6 @@ async def tarif_1_id(message:Message,state:FSMContext):
                 for i in third:
                     if i==user[3]:
                         third.remove(i)
-            if user[3] in fourth:
-                for i in fourth:
-                    if i==user[3]:
-                        fourth.remove(i)
-            if user[3] in fifth:
-                for i in fifth:
-                    if i==user[3]:
-                        fifth.remove(i)
             second.append(user[3])
             await message.answer(f"{id} - raqamli foydalanuvchi 2 - tarifga o'tkazildi .")
             await state.finish()
@@ -274,10 +251,6 @@ class ThirdStatesGroup(StatesGroup):
     id = State()
 @dp.message_handler(commands=['third_type'])
 async def tarif_3_ga_otkazish(message: Message, state: FSMContext):
-    for i in fourth:
-        fourth.remove(i)
-    for i in fifth:
-        fifth.remove(i)
     markup = InlineKeyboardMarkup(row_width=2)
     markup.insert(InlineKeyboardButton(text="Yakunlash", callback_data="xa"))
     await message.answer(
@@ -306,14 +279,6 @@ async def tarif_1_id(message:Message,state:FSMContext):
                 for i in first:
                     if i==user[3]:
                         first.remove(i)
-            if user[3] in fourth:
-                for i in fourth:
-                    if i==user[3]:
-                        fourth.remove(i)
-            if user[3] in fifth:
-                for i in fifth:
-                    if i==user[3]:
-                        fifth.remove(i)
             third.append(user[3])
             await message.answer(f"{id} - raqamli foydalanuvchi 3 - tarifga o'tkazildi .")
             await state.finish()
@@ -326,8 +291,6 @@ class FouthStatesGroup(StatesGroup):
     id = State()
 @dp.message_handler(commands=['fourth_type'])
 async def tarif_4_ga_otkazish(message: Message, state: FSMContext):
-    for i in fifth:
-        fifth.remove(i)
     users = await db.select_all_users()
     for user in users:
         print(user[3])
@@ -430,3 +393,12 @@ async def tarif_1_id(message:Message,state:FSMContext):
             second.remove(user[3])
         except TypeError:
             await message.answer("Bu ID da foydalanuvchi mavjud emas . ")
+
+
+@dp.message_handler(commands="hammaga_pullik_qilish")
+async def hammaga_pullik(message:Message):
+    for i in fourth:
+        fourth.remove(i)
+    for i in fifth:
+        fifth.remove(i)
+    await message.answer("Hamma uchun pullik bo'ldi !!!")

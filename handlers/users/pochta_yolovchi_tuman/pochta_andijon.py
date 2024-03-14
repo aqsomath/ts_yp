@@ -1,10 +1,12 @@
+import asyncio
+
 import aiogram.types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
 from keyboards.default.location import lokatsiya, phone_number
 from keyboards.inline.haydovchi_reys.haydovchi_reys_tugmalar import reys_ortgaa
 from keyboards.inline.pochta_yuborish.pochta_yuborish_tugmalari import pochta_viloyatlar
-from keyboards.inline.yolovchi.andtuman import andijon_yol, qoraqalpogiston_yol, tosh_shsha
+from keyboards.inline.yolovchi.andtuman import andijon_yol, qoraqalpogiston_yol
 from keyboards.inline.yolovchi.buxtuman import buxoro_yol
 from keyboards.inline.yolovchi.fartuman import fargona_yol
 from keyboards.inline.yolovchi.jizztuman import jizzax_yol
@@ -20,7 +22,7 @@ from keyboards.inline.yolovchi.toshtuman import toshkent_yol
 from keyboards.inline.yolovchi.xa_yoq import yes_not
 from keyboards.inline.yolovchi.xorazmtuman import xorazm_yol
 from keyboards.inline.yolovchi.viloyatlar import viloyatlar_yol_x
-from loader import dp, bot, db
+from loader import dp, bot, db, limiter
 from states.yolovchi_pochta_statet import Pochta_andijon
 from utils.misc import show_on_gmaps
 
@@ -69,11 +71,6 @@ async def andijon(call: CallbackQuery, state: FSMContext):
             if call.data=='5555':
                 await state.update_data({"viloyat": "Toshkent"})
                 await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=toshkent_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
-            if call.data=='kent shahar':
-                await state.update_data({"viloyat": "Toshkent shahar"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=tosh_shsha)
                 await call.message.delete()
                 await Pochta_andijon.tuman.set()
             if call.data=='6666':
@@ -162,8 +159,6 @@ async def andi_jon(call: CallbackQuery, state: FSMContext):
             await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=buxoro_yol)
         if viloyat == "Toshkent":
             await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=toshkent_yol)
-        if viloyat == "Toshkent shahar":
-            await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=tosh_shsha)
         if viloyat == "Sirdaryo":
             await call.message.answer("Qaysi tumanidan yuk yuborasiz ? ", reply_markup=sirdaryo_yol)
         if viloyat == "Surxondaryo":
@@ -209,11 +204,7 @@ async def reys_viloyatga(call: CallbackQuery, state: FSMContext):
                 {"viloyatiga": "Andijon"}
             )
             await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=andijon_yol)
-        if data == 'kent shahar':
-            await state.update_data(
-                {"viloyatiga": "Toshkent shahar"}
-            )
-            await call.message.answer("Qaysi tumaniga pochta yuborasiz", reply_markup=tosh_shsha)
+
         if data == "kdjhaigdakhdksa":
             await state.update_data(
                 {"viloyatiga": "Farg'ona"}
@@ -647,8 +638,21 @@ async def y_n(call: CallbackQuery, state: FSMContext):
         await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
                                   "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
                                   )
-        await call.message.delete()
-        await state.finish()
+        offset = -28
+        limit = 28
+        while True:
+            offset += limit
+            drivers = await db.select_all_drivers(limit=limit, offset=offset)
+            await asyncio.sleep(1)
+            for driver in drivers:
+                if driver[3] == 'pochta':
+                    async with limiter:
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Qabul qilish",callback_data='qabul'))
+                        await bot.send_message(chat_id=driver[4], text=msg,reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+
 @dp.callback_query_handler(text='nott', state=Pochta_andijon.tasdiqlash)
 async def y_n(call: CallbackQuery, state: FSMContext):
     
@@ -998,8 +1002,22 @@ async def oxirgi(call:CallbackQuery,state:FSMContext):
         await call.message.answer("Sizning buyurtmangiz tumaningiz haydovchilariga yuborildi.\n"
                                   "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
                                   )
-        await call.message.delete()
-        await state.finish()
+        offset = -28
+        limit = 28
+        while True:
+            offset += limit
+            drivers = await db.select_all_drivers(limit=limit, offset=offset)
+            await asyncio.sleep(1)
+            for driver in drivers:
+                if driver[3] == 'pochta':
+                    async with limiter:
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                        await bot.send_message(chat_id=driver[4], text=msg, reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+
+
 
 @dp.callback_query_handler(text='UnConfirm', state=Pochta_andijon.end)
 async def y_n(call:CallbackQuery, state:FSMContext):

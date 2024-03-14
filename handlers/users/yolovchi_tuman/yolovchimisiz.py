@@ -10,7 +10,6 @@ from states.yolovchi_reys_states import Yolovchi_andijon
 @dp.callback_query_handler(kirish_callback.filter(item_name='yolovchi'))
 async def haydovchi(call:CallbackQuery):
     
-        await db.add_yolovchi(username=call.from_user.username,telegram_id=call.from_user.id)
         await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
         await call.message.delete()
 

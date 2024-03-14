@@ -1,13 +1,13 @@
 from aiogram.dispatcher import FSMContext
-from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
-
-from keyboards.inline.yolovchi.kirish import tasdiq_oxir, umumiy_menu_1
+from aiogram.types import CallbackQuery,  InlineKeyboardMarkup, InlineKeyboardButton
+import aiogram
+from keyboards.inline.yolovchi.kirish import  umumiy_menu_1
 from loader import dp, db, bot
-from states.haydovchi_pochta_states import Reys_pochta_andijon
+from states.haydovchi_reys_states import Reys_andijon
 
 
-@dp.callback_query_handler(state=Reys_pochta_andijon.tuman_yol)
-async def tuman_yol(call: CallbackQuery, state: FSMContext):
+@dp.callback_query_handler(state=Reys_andijon.qoshimcha_tuman)
+async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
 
     if call.data == "boshmenu":
             await call.message.answer("Ma'lumotlarni tog'rilab qaytadan kiriting", reply_markup=umumiy_menu_1)
@@ -37,20 +37,20 @@ async def tuman_yol(call: CallbackQuery, state: FSMContext):
         viloyatlar_yol = InlineKeyboardMarkup(row_width=3)
         for key, value in viloyat.items():
             viloyatlar_yol.insert(InlineKeyboardButton(text=key, callback_data=value))
-        await call.message.answer("Yo'lingizdagi qaysi tumanlardan qo'shimcha yo'lovchi olasiz ? ",
+        await call.message.answer("Qo'shimcha qaysi viloyatlarning qaysi tumaniga borasiz ? ",
                                   reply_markup=viloyatlar_yol)
-        await Reys_pochta_andijon.odam_vil.set()
+        await Reys_andijon.odam_vil.set()
         await call.message.delete()
     list_1 = []
-    jami = await db.select_all_yoldan_odam()
+    jami = await db.select_all_qoshimcha_tumanlar()
     for i in jami:
         if i[2] == call.from_user.id:
             list_1.append(i[1])
     if call.data in list_1:
-        await db.delete_yoldan_odam(telegram_id=call.from_user.id, tuman=call.data)
+        await db.delete_qoshimcha_tumanlar(telegram_id=call.from_user.id, tuman=call.data)
     else:
-        await db.add_yoldan_odam(telegram_id=call.from_user.id, tuman=call.data)
-    jamii = await db.select_all_yoldan_odam()
+        await db.add_qoshimcha_tumanlar(telegram_id=call.from_user.id, tuman=call.data)
+    jamii = await db.select_all_qoshimcha_tumanlar()
     list = []
     for i in jamii:
         if i[2] == call.from_user.id:
@@ -59,8 +59,7 @@ async def tuman_yol(call: CallbackQuery, state: FSMContext):
                 list.remove("qaytish")
             if "tanladim" in list:
                 list.remove("tanladim")
-    await state.update_data({"yo'ldagilar": list})
-    shaxsiy_buxoro = str(call.from_user.id)
+    await state.update_data({"qoshimcha_tumanlar": list})
     buxoro = {}
     if "buxoro shaxar" in list:
         buxoro["✅Buxoro shahar"] = "buxoro shaxar"
@@ -1015,152 +1014,105 @@ async def tuman_yol(call: CallbackQuery, state: FSMContext):
     shaxsiy_qoraqalpoq.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
     shaxsiy_qoraqalpoq.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
     if call.data == 'tanladim':
-        tartib = ""
-        data = await state.get_data()
-        yolda = data.get("yo'ldagilar")
-        if yolda is not None:
 
-            for i in yolda:
-                if i == "boshqaviloyat":
-                    yolda.remove(i)
-                if i == "qaytish":
-                    await db.delete_yoldan_odam(telegram_id=call.from_user.id, tuman="qaytish")
-                    yolda.remove(i)
-                if i == "glavmenu":
-                    yolda.remove(i)
-            tartib = f"⁉️ <b>Yo'ldagi qaysi tumanlardan sayohatchi olinadi ?</b> \n" + ",".join(yolda)
-            jamii = await db.select_all_yoldan_odam()
-            list = []
-            for i in jamii:
-                if i[2] == call.from_user.id:
-                    list.append(i[1])
-            for a in list:
-                await db.delete_yoldan_odam(telegram_id=call.from_user.id, tuman=a)
-
-        await state.update_data(
-            {
-                "yo'ldagilar": yolda
-            }
-        )
-        # @dp.callback_query_handler(state=Reys_pochta_andijon.odam)
-        # async def reys_odam(call:CallbackQuery,state:FSMContext):
-
-        data = await state.get_data()
-        msg = data.get("msg")
-
-        mashina_turi = data.get('mashina_turi')
-        mashina = f"🚚 <b>Mashina turi : {mashina_turi}</b>\n"
-        if mashina_turi == "Kiritilmadi":
-            mashina = ""
-        yol_haqqi = data.get("yol_haqqi")
-        yolkira = f"💲 <b>Yo'l haqqi: {yol_haqqi}</b>\n"
-        if yol_haqqi == "Kiritilmadi":
-            yolkira = ""
-        kapot = data.get("kapot")
-        kap = f"⁉️ <b>Kapot bo'shmi ? - {kapot}</b>\n"
-        if kapot == "Kiritilmadi":
-            kap = ""
-        qoshimcha_tumanlar = data.get('qoshimcha_tumanlar')
-        print(qoshimcha_tumanlar)
-        tumanlarga = f"<b>Qo'shimcha qaysi tumanlarga boradi ? </b>\n " + ",".join(qoshimcha_tumanlar)
-        if qoshimcha_tumanlar is None:
-            tumanlarga = ""
-        bagaj = data.get("bagaj")
-        bag = f"⁉️ <b>Bagaj bo'shmi ? - {bagaj}</b>\n"
-        if bagaj == "Kiritilmadi":
-            bag = ""
-        tonna = data.get("tonna")
-        ton = f"⁉️ <b>Nechtagacha pochta olinadi ? - {tonna}</b>\n"
-        if tonna is None:
-            ton = ""
-        msg_full = msg + f"{mashina}" \
-                         f"{kap}" \
-                         f"{bag}" \
-                         f"{ton}" \
-                         f"{yolkira}" \
-                         f"{tartib}\n"\
-                         f"{tumanlarga}"
-
-        await state.update_data(
-            {
-                "msg_full": msg_full
-            }
-        )
-        await call.message.answer(f"Ma'lumotar to'g'rimi ?\n{msg_full}", reply_markup=tasdiq_oxir)
-        await call.message.delete()
-        jamii = await db.select_all_yoldan_odam()
+        jamii = await db.select_all_qoshimcha_tumanlar()
         list = []
         for i in jamii:
             if i[2] == call.from_user.id:
                 list.append(i[1])
         for a in list:
-            await db.delete_yoldan_odam(telegram_id=call.from_user.id, tuman=a)
-        list_1 = []
-        viloyat_jami = await db.select_all_sayohat_info()
-        for i in viloyat_jami:
-            if i[2] == call.from_user.id:
-                list_1.append(i[1])
-        for b in list_1:
-            await db.delete_sayohat_info(telegram_id=call.from_user.id, viloyat=b)
-        await Reys_pochta_andijon.end.set()
+            await db.delete_qoshimcha_tumanlar(telegram_id=call.from_user.id, tuman=a)
+        markup = aiogram.types.InlineKeyboardMarkup(row_width=3)
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Nexia', callback_data='Nexia'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Kobalt', callback_data='Kobalt'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Damas', callback_data='Damas'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Gentra', callback_data='Gentra'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Tracker', callback_data='Tracker'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Onix', callback_data='Onix'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Monza', callback_data='Monza'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Elektro car', callback_data='Elektro car'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Keyingisi', callback_data='Keyingisi'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Turini kiritish', callback_data='qoldayozish'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Ortga', callback_data='ortga'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Bosh menu', callback_data='boshmenu'))
+        await call.message.answer("Mahsinangiz qanday ? :   ", reply_markup=markup)
+        await call.message.delete()
+        await Reys_andijon.xa_yoq.set()
+    if call.data == 'Olinmaydi':
+        markup = aiogram.types.InlineKeyboardMarkup(row_width=3)
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Nexia', callback_data='Nexia'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Kobalt', callback_data='Kobalt'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Damas', callback_data='Damas'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Gentra', callback_data='Gentra'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Tracker', callback_data='Tracker'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Onix', callback_data='Onix'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Monza', callback_data='Monza'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Elektro car', callback_data='Elektro car'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Keyingisi', callback_data='Keyingisi'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Turini kiritish', callback_data='qoldayozish'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Ortga', callback_data='ortga'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Bosh menu', callback_data='boshmenu'))
+        await call.message.answer("Mahsinangiz qanday ? :   ", reply_markup=markup)
+        await call.message.delete()
+        await Reys_andijon.xa_yoq.set()
 
     for key, value in andijon.items():
         if call.data == value:
             await call.message.edit_reply_markup(shaxsiy_tugma)
-            await Reys_pochta_andijon.tuman_yol.set()
+            await Reys_andijon.qoshimcha_tuman.set()
     for key, value in namangan.items():
         if call.data == value:
             await call.message.edit_reply_markup(shaxsiy_namangan)
-            await Reys_pochta_andijon.tuman_yol.set()
+            await Reys_andijon.qoshimcha_tuman.set()
     for key, value in fargona.items():
         if call.data == value:
             await call.message.edit_reply_markup(shaxsiy_fargona)
-            await Reys_pochta_andijon.tuman_yol.set()
+            await Reys_andijon.qoshimcha_tuman.set()
     for key, value in buxoro.items():
         if call.data == value:
             await call.message.edit_reply_markup(shaxsiy_buxoro)
-            await Reys_pochta_andijon.tuman_yol.set()
+            await Reys_andijon.qoshimcha_tuman.set()
     for key, value in toshkent.items():
         if call.data == value:
             await call.message.edit_reply_markup(shaxsiy_toshkent)
-            await Reys_pochta_andijon.tuman_yol.set()
+            await Reys_andijon.qoshimcha_tuman.set()
     for key, value in surxondaryo.items():
         if call.data == value:
             await call.message.edit_reply_markup(shaxsiy_surxondaryo)
-            await Reys_pochta_andijon.tuman_yol.set()
+            await Reys_andijon.qoshimcha_tuman.set()
     for key, value in sirdaryo.items():
         if call.data == value:
             await call.message.edit_reply_markup(shaxsiy_sirdaryo)
-            await Reys_pochta_andijon.tuman_yol.set()
+            await Reys_andijon.qoshimcha_tuman.set()
 
     for key, value in qashqadaryo.items():
         if call.data == value:
             await call.message.edit_reply_markup(shaxsiy_qashqadaryo)
-            await Reys_pochta_andijon.tuman_yol.set()
+            await Reys_andijon.qoshimcha_tuman.set()
     for key, value in xorazm.items():
         if call.data == value:
             await call.message.edit_reply_markup(shaxsiy_xorazm)
-            await Reys_pochta_andijon.tuman_yol.set()
+            await Reys_andijon.qoshimcha_tuman.set()
 
     for key, value in navoiy.items():
         if call.data == value:
             await call.message.edit_reply_markup(shaxsiy_navoiy)
-            await Reys_pochta_andijon.tuman_yol.set()
+            await Reys_andijon.qoshimcha_tuman.set()
 
     for key, value in jizzax.items():
         if call.data == value:
             await call.message.edit_reply_markup(shaxsiy_jizzax)
-            await Reys_pochta_andijon.tuman_yol.set()
+            await Reys_andijon.qoshimcha_tuman.set()
 
     for key, value in samarqand.items():
         if call.data == value:
             await call.message.edit_reply_markup(shaxsiy_samarqand)
-            await Reys_pochta_andijon.tuman_yol.set()
+            await Reys_andijon.qoshimcha_tuman.set()
 
     for key, value in qoraqalpoq.items():
             if call.data == value:
                 await call.message.edit_reply_markup(shaxsiy_qoraqalpoq)
-                await Reys_pochta_andijon.tuman_yol.set()
+                await Reys_andijon.qoshimcha_tuman.set()
 
 
 

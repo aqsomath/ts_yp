@@ -8,6 +8,8 @@ from utils.notify_admins import on_startup_notify
 async def on_startup(dispatcher):
         # Birlamchi komandalar (/star va /help)
         await db.create()
+        await db.create_qoshimcha_tumanlar()
+        # await db.drop_qoshimcha_tumanlar()
         await db.drop_driver()
         await db.drop_last_tarif()
         await db.drop_yoldan_odam_info()
@@ -23,7 +25,7 @@ async def on_startup(dispatcher):
         await db.create_table_tarif()
         await db.add_tarif(tarif_name="first", tarif_kuni=3, tarif_narxi=30000)
         await db.add_tarif(tarif_name="second", tarif_kuni=6, tarif_narxi=50000)
-        await db.add_tarif(tarif_name="third", tarif_kuni=12, tarif_narxi=10000)
+        await db.add_tarif(tarif_name="third", tarif_kuni=12, tarif_narxi=100000)
         await db.add_tarif(tarif_name="fourth", tarif_kuni=2, tarif_narxi=0)
         await db.add_tarif(tarif_name="fifth", tarif_kuni=2, tarif_narxi=0)
         await db.create_table_users()

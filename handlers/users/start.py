@@ -3,23 +3,23 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from keyboards.inline.yolovchi.callback_data import menu_callback
 from keyboards.inline.yolovchi.kirish import kirish, umumiy_menu
-from loader import dp, db, bot, message_semaphore
+from loader import dp, db, bot
 
 admin_ids = [6132434228,343103355]
 
 @dp.message_handler(commands=["start"])
 async def bot_start(message: types.Message):
-    if message.from_user.id not in admin_ids:
-        one = await db.select_tarif(tarif_name='first')
-        msg_1 = f"Kuniga {one[3]}ta qabul qilish, oyiga - > {one[2]}"
-        two = await db.select_tarif(tarif_name='second')
-        msg_2 = f"Kuniga {two[3]}ta qabul qilish, oyiga - > {two[2]}"
-        three = await db.select_tarif(tarif_name='third')
-        msg_3 = f"Kuniga {three[3]}ta qabul qilish, oyiga - > {three[2]}"
-        four = await db.select_tarif(tarif_name='fourth')
-        msg_4 = f"Kuniga {four[3]}ta qabul qilish, oyiga - > {four[2]} "
-        five = await db.select_tarif(tarif_name='fifth')
-        msg_5 = f"/start bosilishiga {five[3]} kun bepul qilish "
+    one = await db.select_tarif(tarif_name='first')
+    msg_1 = f"Kuniga {one[3]} ta qabul qilish, oyiga - > {one[2]}"
+    two = await db.select_tarif(tarif_name='second')
+    msg_2 = f"Kuniga {two[3]} ta qabul qilish, oyiga - > {two[2]}"
+    three = await db.select_tarif(tarif_name='third')
+    msg_3 = f"Kuniga {three[3]} ta qabul qilish, oyiga - > {three[2]}"
+    four = await db.select_tarif(tarif_name='fourth')
+    msg_4 = f"Kuniga {four[3]} ta qabul qilish, oyiga - > {four[2]} "
+    five = await db.select_tarif(tarif_name='fifth')
+    msg_5 = f"/start bosilishiga {five[3]} kun bepul qilish "
+    if message.from_user.id in admin_ids:
 
         await dp.bot.set_my_commands(
             [
@@ -35,9 +35,11 @@ async def bot_start(message: types.Message):
                 types.BotCommand("fifth_type", msg_5),
                 types.BotCommand("tarif_sozlamalari", "Tarif summasi va limitini o'zgartirish"),
                 types.BotCommand("filter", "Sozlamalar bo'limi"),
-                types.BotCommand("balans_toldirish", "Haydovchi balansini to'ldirish")
+                types.BotCommand("balans_toldirish", "Haydovchi balansini to'ldirish"),
+                types.BotCommand("hammaga_pullik_qilish", "Barcha uchun pullik qilish")
             ]
         )
+
     else:
         await dp.bot.set_my_commands(
             [
@@ -85,17 +87,10 @@ async def bot_start(message: types.Message):
         await message.delete()
     else:
         await message.answer(f"Salom, {message.from_user.full_name}!", reply_markup=kirish)
-        # if message.from_user.id not in first:
-        #     if message.from_user.id not in second:
-        #         if message.from_user.id not in third:
-        #             if message.from_user.id not in fifth:
-        #                 fourth.append(message.from_user.id)
-        #                 print("4 - ta'rifga avtomatik qo'shildi")
-        #                 await asyncio.sleep(60*60*24*3)
-        #                 fourth.remove(message.from_user.id)
-        # else:
-        #     print("Boshqa ta'rifga oldin qo'shilgan")
-
-
+        await db.add_yolovchi(username=message.from_user.username,telegram_id=message.from_user.id)
+        await db.add_haydovchi(username=message.from_user.username, telegram_id=message.from_user.id, balans=0)
+        await db.add_driver(tashiman_odam="odam", tashiman_pochta='pochta', tashiman_yuk='yuk',
+                            sayohatchi_tashiman='sayohat',
+                            telegram_id=message.from_user.id)
 
 

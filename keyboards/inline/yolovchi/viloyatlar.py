@@ -58,7 +58,6 @@ viloyat_x = {
     "Farg'ona":"kdjhaigdakhdksa",
     "Buxoro":"allaskalkdaslkjd",
     "Toshkent":"euywiudhkns",
-    "Toshkent shahar":"kent shahar",
     "Sirdaryo":"jweytfugdiahjash",
     "Surxondaryo":"qdwqwdqwsasxa",
     "Qashqadaryo":"asasdsadasd",

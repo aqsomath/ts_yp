@@ -9,7 +9,6 @@ viloyat = {
     "Farg'ona":"detsi",
     "Buxoro":"kilo",
     "Toshkent":"tonna",
-    "Toshkent shahri": "kent shahar",
     "Sirdaryo":"mega",
     "Surxondaryo":"mikro",
     "Qashqadaryo":"makro",

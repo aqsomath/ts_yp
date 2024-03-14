@@ -9,7 +9,6 @@ viloyat = {
     "Farg'ona":"chorshanba",
     "Buxoro":"payshanba",
     "Toshkent":"juma",
-    "Toshkent shahar":"kent shahar",
     "Sirdaryo":"shanba",
     "Surxondaryo":"yakshanba",
     "Qashqadaryo":"iyul",

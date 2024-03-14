@@ -34,7 +34,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[15] != "Kelishilmoqda...!":
                         if order[15] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -65,7 +65,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[9] != "Kelishilmoqda...!":
                         if order[9] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -121,7 +121,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[11] != "Kelishilmoqda...!":
                         if order[11] !="Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -207,7 +207,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[19] != "Kelishilmoqda...!":
                         if order[19] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -279,7 +279,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[15] != "Kelishilmoqda...!":
                         if order[15] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -313,7 +313,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[9] != "Kelishilmoqda...!":
                         if order[9] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -374,7 +374,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[11] != "Kelishilmoqda...!":
                         if order[11] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -469,7 +469,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[19] != "Kelishilmoqda...!":
                         if order[19] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -530,275 +530,1118 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                 if i[1] == call.from_user.id:
                     count.append(i)
             tarif =await db.select_tarif(tarif_name="first")
-            if len(count) < tarif[3]+1:
+            if call.from_user.id in fourth:
+                tarif_4= await db.select_tarif(tarif_name="fourth")
+                if len(count) < tarif[3] + 1+tarif_4[3]:
 
-                data = await state.get_data()
-                first_data = data.get("First_data")
-                id = data.get("id")
-                order = await db.select_order(id=id)
-                if first_data == "course:tayyoryolovchi":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(
-                        InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
-                    await state.update_data({"msg_full": order[15]})
-                    chat_id = order[1]
-                    if order[15] != "Kelishilmoqda...!":
-                        if order[15] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
-                            driver_id = driver[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                     callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
+                    data = await state.get_data()
+                    first_data = data.get("First_data")
+                    id = data.get("id")
+                    order = await db.select_order(id=id)
+                    if first_data == "course:tayyoryolovchi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[15]})
+                        chat_id = order[1]
+                        if order[15] != "Kelishilmoqda...!":
+                            if order[15] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await call.message.answer(order[15], reply_markup=markup)
+                                await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishilmoqda...!", id=id)
+                                ord = await db.select_order(id=id)
+                                print(ord[15])
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
                             await call.message.answer(order[15], reply_markup=markup)
-                            await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishilmoqda...!", id=id)
-                            ord = await db.select_order(id=id)
-                            print(ord[15])
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await call.message.answer(order[15], reply_markup=markup)
-                        await asyncio.sleep(600)
-                        if order[15] == "Kelishilmoqda...!":
-                            await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishildi", id=id)
-                    await call.message.delete()
-                if first_data == "course:tayyorpochta":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(InlineKeyboardButton(text="Pochta yuborilmaydigan bo'libdi",
-                                                       callback_data="Pochtayuborilmaydiganbolibdi'"))
-                    await call.message.answer(order[9], reply_markup=markup)
-                    await state.update_data({"msg_full": order[9]})
-                    chat_id = order[1]
-                    if order[9] != "Kelishilmoqda...!":
-                        if order[9] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
-                            driver_id = driver[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Yubormaydigan bo'ldim", callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await call.message.answer(order[9], reply_markup=markup)
-                            await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
-
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await asyncio.sleep(600)
+                            if order[15] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorpochta":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(InlineKeyboardButton(text="Pochta yuborilmaydigan bo'libdi",
+                                                           callback_data="Pochtayuborilmaydiganbolibdi'"))
                         await call.message.answer(order[9], reply_markup=markup)
-                        await asyncio.sleep(600)
-                        if order[9] == "Kelishilmoqda...!":
-                            await db.update_tayyor_pochta(tayyor_pochta_full="Kelishildi", id=id)
-                if first_data == "course:tayyorpochtamashinasi":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(
-                        InlineKeyboardButton(text="Mashina bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
-                    await state.update_data({"msg_full": order[17]})
-                    chat_id = order[1]
-                    if order[17] != "Kelishilmoqda . . . . .!":
-                        if order[17] != "Rad etildi":
-                            yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-                            yolovchi_id = yolovchi[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                     callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishilmoqda...!", id=id)
-                            await call.message.answer(order[17], reply_markup=markup)
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await call.message.answer(order[17], reply_markup=ortga)
-                        await asyncio.sleep(600)
-                        if order[17] == "Kelishilmoqda...!":
-                            await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishildi", id=id)
-                    await call.message.delete()
-                if first_data == "course:tayyoryuk":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(
-                        InlineKeyboardButton(text="Yuk yuborilmaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
-                    await state.update_data({"msg_full": order[11]})
-                    chat_id = order[1]
-                    if order[11] != "Kelishilmoqda...!":
-                        if order[11] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
-                            driver_id = driver[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Yuk  yubormaydigan bo'ldim",
-                                                     callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
-                            await call.message.answer(order[11], reply_markup=markup)
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await call.message.answer(order[11], reply_markup=ortga)
-                        await asyncio.sleep(600)
-                        if order[11] == "Kelishilmoqda...!":
-                            await db.update_tayyor_yuk(tayyor_yuk_full="Kelishildi", id=id)
-                    await call.message.delete()
-                if first_data == "course:tayyoryukmashinasi":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik  🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(
-                        InlineKeyboardButton(text="Mashina bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
-                    await state.update_data({"msg_full": order[13]})
-                    chat_id = order[1]
-                    if order[13] != "Kelishilmoqda . . . . .!":
-                        if order[13] != "Rad etildi":
-                            yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-                            yolovchi_id = yolovchi[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                     callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishilmoqda...!", id=id)
-                            await call.message.answer(order[13], reply_markup=markup)
+                        await state.update_data({"msg_full": order[9]})
+                        chat_id = order[1]
+                        if order[9] != "Kelishilmoqda...!":
+                            if order[9] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Yubormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await call.message.answer(order[9], reply_markup=markup)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
 
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await call.message.answer(order[13], reply_markup=ortga)
-                        await asyncio.sleep(600)
-                        if order[13] == "Kelishilmoqda...!":
-                            await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishildi", id=id)
-                    await call.message.delete()
-                if first_data == "course:tayyortaksi":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(
-                        InlineKeyboardButton(text="Taxi bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
-                    await state.update_data({"msg_full": order[3]})
-                    chat_id = order[1]
-                    if order[3] != "Kelishilmoqda . . . . .!":
-                        if order[3] != "Rad etildi":
-                            yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-                            yolovchi_id = yolovchi[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                     callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await db.update_tayyor_taxi(tayyor_taxi_full="Kelishilmoqda...!", id=id)
-                            await call.message.answer(order[3], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[9], reply_markup=markup)
+                            await asyncio.sleep(600)
+                            if order[9] == "Kelishilmoqda...!":
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishildi", id=id)
+                    if first_data == "course:tayyorpochtamashinasi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[17]})
+                        chat_id = order[1]
+                        if order[17] != "Kelishilmoqda . . . . .!":
+                            if order[17] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishilmoqda...!",
+                                                                      id=id)
+                                await call.message.answer(order[17], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[17], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[17] == "Kelishilmoqda...!":
+                                await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyoryuk":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Yuk yuborilmaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[11]})
+                        chat_id = order[1]
+                        if order[11] != "Kelishilmoqda...!":
+                            if order[11] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Yuk  yubormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[11], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[11], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[11] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yuk(tayyor_yuk_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyoryukmashinasi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik  🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[13]})
+                        chat_id = order[1]
+                        if order[13] != "Kelishilmoqda . . . . .!":
+                            if order[13] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishilmoqda...!",
+                                                                     id=id)
+                                await call.message.answer(order[13], reply_markup=markup)
 
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await call.message.answer(order[3], reply_markup=ortga)
-                        await asyncio.sleep(600)
-                        if order[3] == "Kelishilmoqda...!":
-                            await db.update_tayyor_taxi(tayyor_taxi_full="Kelishildi", id=id)
-                    await call.message.delete()
-                if first_data == "course:tayyorsayohatchi":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(InlineKeyboardButton(text="Sayohatchi bormaydigan bo'libdi",
-                                                       callback_data="Mijozbormaydiganbolibdi"))
-                    await state.update_data({"msg_full": order[19]})
-                    chat_id = order[1]
-                    if order[19] != "Kelishilmoqda...!":
-                        if order[19] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
-                            driver_id = driver[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                     callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
-                            await call.message.answer(order[19], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[13], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[13] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyortaksi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Taxi bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[3]})
+                        chat_id = order[1]
+                        if order[3] != "Kelishilmoqda . . . . .!":
+                            if order[3] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_taxi(tayyor_taxi_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[3], reply_markup=markup)
 
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await call.message.answer(order[19], reply_markup=ortga)
-                        await asyncio.sleep(600)
-                        if order[19] == "Kelishilmoqda...!":
-                            await db.update_tayyor_sayohatchi(tayyor_sayohatchi_full="Kelishildi", id=id)
-                    await call.message.delete()
-                if first_data == "course:tayyorsayohatgamashina":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(
-                        InlineKeyboardButton(text="Mashina bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
-                    await state.update_data({"msg_full": order[21]})
-                    chat_id = order[1]
-                    if order[21] != "Kelishilmoqda...!":
-                        if order[21] != "Rad etildi":
-                            yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-                            yolovchi_id = yolovchi[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                                 callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await db.update_tayyor_sayohatchi_mashina(
-                                tayyor_sayohatchi_full_mashina="Kelishilmoqda . . . . .!", id=id)
-                            await call.message.answer(order[21], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[3], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[3] == "Kelishilmoqda...!":
+                                await db.update_tayyor_taxi(tayyor_taxi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorsayohatchi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(InlineKeyboardButton(text="Sayohatchi bormaydigan bo'libdi",
+                                                           callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[19]})
+                        chat_id = order[1]
+                        if order[19] != "Kelishilmoqda...!":
+                            if order[19] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[19], reply_markup=markup)
 
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await call.message.answer(order[21], reply_markup=ortga)
-                        await asyncio.sleep(600)
-                        if order[21] == "Kelishilmoqda...!":
-                            await db.update_tayyor_sayohatchi_mashina(tayyor_sayohatchi_full_mashina="Kellishildi", id=id)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[19], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[19] == "Kelishilmoqda...!":
+                                await db.update_tayyor_sayohatchi(tayyor_sayohatchi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorsayohatgamashina":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[21]})
+                        chat_id = order[1]
+                        if order[21] != "Kelishilmoqda...!":
+                            if order[21] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                                     callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_sayohatchi_mashina(
+                                    tayyor_sayohatchi_full_mashina="Kelishilmoqda . . . . .!", id=id)
+                                await call.message.answer(order[21], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[21], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[21] == "Kelishilmoqda...!":
+                                await db.update_tayyor_sayohatchi_mashina(tayyor_sayohatchi_full_mashina="Kellishildi",
+                                                                          id=id)
+                        await call.message.delete()
                     await call.message.delete()
-                await call.message.delete()
             else:
-                await call.message.answer("Sizning kunlik ta'rif rejangiz nihooyasiga yetdi")
+                if len(count) < tarif[3]+1:
+
+                    data = await state.get_data()
+                    first_data = data.get("First_data")
+                    id = data.get("id")
+                    order = await db.select_order(id=id)
+                    if first_data == "course:tayyoryolovchi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[15]})
+                        chat_id = order[1]
+                        if order[15] != "Kelishilmoqda...!":
+                            if order[15] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await call.message.answer(order[15], reply_markup=markup)
+                                await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishilmoqda...!", id=id)
+                                ord = await db.select_order(id=id)
+                                print(ord[15])
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[15], reply_markup=markup)
+                            await asyncio.sleep(600)
+                            if order[15] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorpochta":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(InlineKeyboardButton(text="Pochta yuborilmaydigan bo'libdi",
+                                                           callback_data="Pochtayuborilmaydiganbolibdi'"))
+                        await call.message.answer(order[9], reply_markup=markup)
+                        await state.update_data({"msg_full": order[9]})
+                        chat_id = order[1]
+                        if order[9] != "Kelishilmoqda...!":
+                            if order[9] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Yubormaydigan bo'ldim", callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await call.message.answer(order[9], reply_markup=markup)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[9], reply_markup=markup)
+                            await asyncio.sleep(600)
+                            if order[9] == "Kelishilmoqda...!":
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishildi", id=id)
+                    if first_data == "course:tayyorpochtamashinasi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[17]})
+                        chat_id = order[1]
+                        if order[17] != "Kelishilmoqda . . . . .!":
+                            if order[17] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[17], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[17], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[17] == "Kelishilmoqda...!":
+                                await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyoryuk":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Yuk yuborilmaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[11]})
+                        chat_id = order[1]
+                        if order[11] != "Kelishilmoqda...!":
+                            if order[11] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Yuk  yubormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[11], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[11], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[11] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yuk(tayyor_yuk_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyoryukmashinasi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik  🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[13]})
+                        chat_id = order[1]
+                        if order[13] != "Kelishilmoqda . . . . .!":
+                            if order[13] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[13], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[13], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[13] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyortaksi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Taxi bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[3]})
+                        chat_id = order[1]
+                        if order[3] != "Kelishilmoqda . . . . .!":
+                            if order[3] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_taxi(tayyor_taxi_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[3], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[3], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[3] == "Kelishilmoqda...!":
+                                await db.update_tayyor_taxi(tayyor_taxi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorsayohatchi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(InlineKeyboardButton(text="Sayohatchi bormaydigan bo'libdi",
+                                                           callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[19]})
+                        chat_id = order[1]
+                        if order[19] != "Kelishilmoqda...!":
+                            if order[19] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[19], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[19], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[19] == "Kelishilmoqda...!":
+                                await db.update_tayyor_sayohatchi(tayyor_sayohatchi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorsayohatgamashina":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[21]})
+                        chat_id = order[1]
+                        if order[21] != "Kelishilmoqda...!":
+                            if order[21] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                                     callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_sayohatchi_mashina(
+                                    tayyor_sayohatchi_full_mashina="Kelishilmoqda . . . . .!", id=id)
+                                await call.message.answer(order[21], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[21], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[21] == "Kelishilmoqda...!":
+                                await db.update_tayyor_sayohatchi_mashina(tayyor_sayohatchi_full_mashina="Kellishildi", id=id)
+                        await call.message.delete()
+                    await call.message.delete()
+                else:
+                    await call.message.answer("Sizning kunlik ta'rif rejangiz nihoyasiga yetdi")
         if call.from_user.id in second:
             count = []
             for i in last_get_orders:
                 if i[1] == call.from_user.id:
                     count.append(i)
             tarif = await db.select_tarif(tarif_name="second")
+            if call.from_user.id in fourth:
+                tarif_4= await db.select_tarif(tarif_name="fourth")
+                if len(count) < tarif[3] + 1+tarif_4[3]:
+
+                    data = await state.get_data()
+                    first_data = data.get("First_data")
+                    id = data.get("id")
+                    order = await db.select_order(id=id)
+                    if first_data == "course:tayyoryolovchi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[15]})
+                        chat_id = order[1]
+                        if order[15] != "Kelishilmoqda...!":
+                            if order[15] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await call.message.answer(order[15], reply_markup=markup)
+                                await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishilmoqda...!", id=id)
+                                ord = await db.select_order(id=id)
+                                print(ord[15])
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[15], reply_markup=markup)
+                            await asyncio.sleep(600)
+                            if order[15] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorpochta":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(InlineKeyboardButton(text="Pochta yuborilmaydigan bo'libdi",
+                                                           callback_data="Pochtayuborilmaydiganbolibdi'"))
+                        await call.message.answer(order[9], reply_markup=markup)
+                        await state.update_data({"msg_full": order[9]})
+                        chat_id = order[1]
+                        if order[9] != "Kelishilmoqda...!":
+                            if order[9] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Yubormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await call.message.answer(order[9], reply_markup=markup)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[9], reply_markup=markup)
+                            await asyncio.sleep(600)
+                            if order[9] == "Kelishilmoqda...!":
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishildi", id=id)
+                    if first_data == "course:tayyorpochtamashinasi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[17]})
+                        chat_id = order[1]
+                        if order[17] != "Kelishilmoqda . . . . .!":
+                            if order[17] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishilmoqda...!",
+                                                                      id=id)
+                                await call.message.answer(order[17], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[17], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[17] == "Kelishilmoqda...!":
+                                await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyoryuk":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Yuk yuborilmaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[11]})
+                        chat_id = order[1]
+                        if order[11] != "Kelishilmoqda...!":
+                            if order[11] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Yuk  yubormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[11], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[11], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[11] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yuk(tayyor_yuk_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyoryukmashinasi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik  🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[13]})
+                        chat_id = order[1]
+                        if order[13] != "Kelishilmoqda . . . . .!":
+                            if order[13] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishilmoqda...!",
+                                                                     id=id)
+                                await call.message.answer(order[13], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[13], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[13] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyortaksi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Taxi bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[3]})
+                        chat_id = order[1]
+                        if order[3] != "Kelishilmoqda . . . . .!":
+                            if order[3] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_taxi(tayyor_taxi_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[3], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[3], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[3] == "Kelishilmoqda...!":
+                                await db.update_tayyor_taxi(tayyor_taxi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorsayohatchi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(InlineKeyboardButton(text="Sayohatchi bormaydigan bo'libdi",
+                                                           callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[19]})
+                        chat_id = order[1]
+                        if order[19] != "Kelishilmoqda...!":
+                            if order[19] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[19], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[19], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[19] == "Kelishilmoqda...!":
+                                await db.update_tayyor_sayohatchi(tayyor_sayohatchi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorsayohatgamashina":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[21]})
+                        chat_id = order[1]
+                        if order[21] != "Kelishilmoqda...!":
+                            if order[21] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                                     callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_sayohatchi_mashina(
+                                    tayyor_sayohatchi_full_mashina="Kelishilmoqda . . . . .!", id=id)
+                                await call.message.answer(order[21], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[21], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[21] == "Kelishilmoqda...!":
+                                await db.update_tayyor_sayohatchi_mashina(tayyor_sayohatchi_full_mashina="Kellishildi",
+                                                                          id=id)
+                        await call.message.delete()
+                    await call.message.delete()
+            else:
+                if len(count) < tarif[3]+1:
+
+                    data = await state.get_data()
+                    first_data = data.get("First_data")
+                    id = data.get("id")
+                    order = await db.select_order(id=id)
+                    if first_data == "course:tayyoryolovchi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[15]})
+                        chat_id = order[1]
+                        if order[15] != "Kelishilmoqda...!":
+                            if order[15] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await call.message.answer(order[15], reply_markup=markup)
+                                await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishilmoqda...!", id=id)
+                                ord = await db.select_order(id=id)
+                                print(ord[15])
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[15], reply_markup=markup)
+                            await asyncio.sleep(600)
+                            if order[15] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorpochta":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(InlineKeyboardButton(text="Pochta yuborilmaydigan bo'libdi",
+                                                           callback_data="Pochtayuborilmaydiganbolibdi'"))
+                        await call.message.answer(order[9], reply_markup=markup)
+                        await state.update_data({"msg_full": order[9]})
+                        chat_id = order[1]
+                        if order[9] != "Kelishilmoqda...!":
+                            if order[9] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Yubormaydigan bo'ldim", callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await call.message.answer(order[9], reply_markup=markup)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[9], reply_markup=markup)
+                            await asyncio.sleep(600)
+                            if order[9] == "Kelishilmoqda...!":
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishildi", id=id)
+                    if first_data == "course:tayyorpochtamashinasi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[17]})
+                        chat_id = order[1]
+                        if order[17] != "Kelishilmoqda . . . . .!":
+                            if order[17] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[17], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[17], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[17] == "Kelishilmoqda...!":
+                                await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyoryuk":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Yuk yuborilmaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[11]})
+                        chat_id = order[1]
+                        if order[11] != "Kelishilmoqda...!":
+                            if order[11] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Yuk  yubormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[11], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[11], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[11] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yuk(tayyor_yuk_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyoryukmashinasi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik  🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[13]})
+                        chat_id = order[1]
+                        if order[13] != "Kelishilmoqda . . . . .!":
+                            if order[13] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[13], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[13], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[13] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyortaksi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Taxi bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[3]})
+                        chat_id = order[1]
+                        if order[3] != "Kelishilmoqda . . . . .!":
+                            if order[3] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_taxi(tayyor_taxi_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[3], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[3], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[3] == "Kelishilmoqda...!":
+                                await db.update_tayyor_taxi(tayyor_taxi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorsayohatchi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(InlineKeyboardButton(text="Sayohatchi bormaydigan bo'libdi",
+                                                           callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[19]})
+                        chat_id = order[1]
+                        if order[19] != "Kelishilmoqda...!":
+                            if order[19] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[19], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[19], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[19] == "Kelishilmoqda...!":
+                                await db.update_tayyor_sayohatchi(tayyor_sayohatchi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorsayohatgamashina":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[21]})
+                        chat_id = order[1]
+                        if order[21] != "Kelishilmoqda...!":
+                            if order[21] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                                     callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_sayohatchi_mashina(
+                                    tayyor_sayohatchi_full_mashina="Kelishilmoqda . . . . .!", id=id)
+                                await call.message.answer(order[21], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[21], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[21] == "Kelishilmoqda...!":
+                                await db.update_tayyor_sayohatchi_mashina(tayyor_sayohatchi_full_mashina="Kellishildi", id=id)
+                        await call.message.delete()
+                    await call.message.delete()
+                else:
+                    await call.message.answer("Sizning kunlik ta'rif rejangiz nihoyasiga yetdi")
             if len(count) < tarif[3] + 1:
 
                 data = await state.get_data()
@@ -816,7 +1659,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[15] != "Kelishilmoqda...!":
                         if order[15] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -850,7 +1693,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[9] != "Kelishilmoqda...!":
                         if order[9] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -914,7 +1757,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[11] != "Kelishilmoqda...!":
                         if order[11] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -1010,7 +1853,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[19] != "Kelishilmoqda...!":
                         if order[19] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -1081,7 +1924,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[15] != "Kelishilmoqda...!":
                         if order[15] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -1115,7 +1958,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[9] != "Kelishilmoqda...!":
                         if order[9] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -1176,7 +2019,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[11] != "Kelishilmoqda...!":
                         if order[11] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -1271,7 +2114,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[19] != "Kelishilmoqda...!":
                         if order[19] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
                             driver_id = driver[0]
                             markup_1 = InlineKeyboardMarkup(row_width=2)
                             markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
@@ -1332,266 +2175,585 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                 if i[1] == call.from_user.id:
                     count.append(i)
             tarif = await db.select_tarif(tarif_name="third")
-            if len(count) < tarif[3]+1:
-                data = await state.get_data()
-                first_data = data.get("First_data")
-                id = data.get("id")
-                order = await db.select_order(id=id)
-                if first_data == "course:tayyoryolovchi":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(
-                        InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
-                    await state.update_data({"msg_full": order[15]})
-                    chat_id = order[1]
-                    if order[15] != "Kelishilmoqda...!":
-                        if order[15] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
-                            driver_id = driver[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                     callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
+            if call.from_user.id in fourth:
+                tarif_4 = await db.select_tarif(tarif_name="fourth")
+                if len(count) < tarif[3] + 1 + tarif_4[3]:
+
+                    data = await state.get_data()
+                    first_data = data.get("First_data")
+                    id = data.get("id")
+                    order = await db.select_order(id=id)
+                    if first_data == "course:tayyoryolovchi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[15]})
+                        chat_id = order[1]
+                        if order[15] != "Kelishilmoqda...!":
+                            if order[15] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await call.message.answer(order[15], reply_markup=markup)
+                                await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishilmoqda...!", id=id)
+                                ord = await db.select_order(id=id)
+                                print(ord[15])
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
                             await call.message.answer(order[15], reply_markup=markup)
-                            await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishilmoqda...!", id=id)
-                            ord = await db.select_order(id=id)
-                            print(ord[15])
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await call.message.answer(order[15], reply_markup=markup)
-                        await asyncio.sleep(600)
-                        if order[15] == "Kelishilmoqda...!":
-                            await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishildi", id=id)
-                    await call.message.delete()
-                if first_data == "course:tayyorpochta":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(InlineKeyboardButton(text="Pochta yuborilmaydigan bo'libdi",
-                                                       callback_data="Pochtayuborilmaydiganbolibdi'"))
-                    await call.message.answer(order[9], reply_markup=markup)
-                    await state.update_data({"msg_full": order[9]})
-                    chat_id = order[1]
-                    if order[9] != "Kelishilmoqda...!":
-                        if order[9] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
-                            driver_id = driver[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Yubormaydigan bo'ldim", callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await call.message.answer(order[9], reply_markup=markup)
-                            await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
-
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await asyncio.sleep(600)
+                            if order[15] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorpochta":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(InlineKeyboardButton(text="Pochta yuborilmaydigan bo'libdi",
+                                                           callback_data="Pochtayuborilmaydiganbolibdi'"))
                         await call.message.answer(order[9], reply_markup=markup)
-                        await asyncio.sleep(600)
-                        if order[9] == "Kelishilmoqda...!":
-                            await db.update_tayyor_pochta(tayyor_pochta_full="Kelishildi", id=id)
-                if first_data == "course:tayyorpochtamashinasi":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(
-                        InlineKeyboardButton(text="Mashina bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
-                    await state.update_data({"msg_full": order[17]})
-                    chat_id = order[1]
-                    if order[17] != "Kelishilmoqda . . . . .!":
-                        if order[17] != "Rad etildi":
-                            yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-                            yolovchi_id = yolovchi[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                     callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishilmoqda...!", id=id)
-                            await call.message.answer(order[17], reply_markup=markup)
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await call.message.answer(order[17], reply_markup=ortga)
-                        await asyncio.sleep(600)
-                        if order[17] == "Kelishilmoqda...!":
-                            await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishildi", id=id)
-                    await call.message.delete()
-                if first_data == "course:tayyoryuk":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(
-                        InlineKeyboardButton(text="Yuk yuborilmaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
-                    await state.update_data({"msg_full": order[11]})
-                    chat_id = order[1]
-                    if order[11] != "Kelishilmoqda...!":
-                        if order[11] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
-                            driver_id = driver[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Yuk  yubormaydigan bo'ldim",
-                                                     callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
-                            await call.message.answer(order[11], reply_markup=markup)
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await call.message.answer(order[11], reply_markup=ortga)
-                        await asyncio.sleep(600)
-                        if order[11] == "Kelishilmoqda...!":
-                            await db.update_tayyor_yuk(tayyor_yuk_full="Kelishildi", id=id)
-                    await call.message.delete()
-                if first_data == "course:tayyoryukmashinasi":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik  🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(
-                        InlineKeyboardButton(text="Mashina bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
-                    await state.update_data({"msg_full": order[13]})
-                    chat_id = order[1]
-                    if order[13] != "Kelishilmoqda . . . . .!":
-                        if order[13] != "Rad etildi":
-                            yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-                            yolovchi_id = yolovchi[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                     callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishilmoqda...!", id=id)
-                            await call.message.answer(order[13], reply_markup=markup)
+                        await state.update_data({"msg_full": order[9]})
+                        chat_id = order[1]
+                        if order[9] != "Kelishilmoqda...!":
+                            if order[9] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Yubormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await call.message.answer(order[9], reply_markup=markup)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
 
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await call.message.answer(order[13], reply_markup=ortga)
-                        await asyncio.sleep(600)
-                        if order[13] == "Kelishilmoqda...!":
-                            await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishildi", id=id)
-                    await call.message.delete()
-                if first_data == "course:tayyortaksi":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(
-                        InlineKeyboardButton(text="Taxi bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
-                    await state.update_data({"msg_full": order[3]})
-                    chat_id = order[1]
-                    if order[3] != "Kelishilmoqda . . . . .!":
-                        if order[3] != "Rad etildi":
-                            yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-                            yolovchi_id = yolovchi[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                     callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await db.update_tayyor_taxi(tayyor_taxi_full="Kelishilmoqda...!", id=id)
-                            await call.message.answer(order[3], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[9], reply_markup=markup)
+                            await asyncio.sleep(600)
+                            if order[9] == "Kelishilmoqda...!":
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishildi", id=id)
+                    if first_data == "course:tayyorpochtamashinasi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[17]})
+                        chat_id = order[1]
+                        if order[17] != "Kelishilmoqda . . . . .!":
+                            if order[17] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishilmoqda...!",
+                                                                      id=id)
+                                await call.message.answer(order[17], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[17], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[17] == "Kelishilmoqda...!":
+                                await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyoryuk":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Yuk yuborilmaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[11]})
+                        chat_id = order[1]
+                        if order[11] != "Kelishilmoqda...!":
+                            if order[11] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Yuk  yubormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[11], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[11], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[11] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yuk(tayyor_yuk_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyoryukmashinasi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik  🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[13]})
+                        chat_id = order[1]
+                        if order[13] != "Kelishilmoqda . . . . .!":
+                            if order[13] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishilmoqda...!",
+                                                                     id=id)
+                                await call.message.answer(order[13], reply_markup=markup)
 
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await call.message.answer(order[3], reply_markup=ortga)
-                        await asyncio.sleep(600)
-                        if order[3] == "Kelishilmoqda...!":
-                            await db.update_tayyor_taxi(tayyor_taxi_full="Kelishildi", id=id)
-                    await call.message.delete()
-                if first_data == "course:tayyorsayohatchi":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(InlineKeyboardButton(text="Sayohatchi bormaydigan bo'libdi",
-                                                       callback_data="Mijozbormaydiganbolibdi"))
-                    await state.update_data({"msg_full": order[19]})
-                    chat_id = order[1]
-                    if order[19] != "Kelishilmoqda...!":
-                        if order[19] != "Rad etildi":
-                            driver = await db.select_driver(telegram_id=call.from_user.id)
-                            driver_id = driver[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                     callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
-                            await call.message.answer(order[19], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[13], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[13] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyortaksi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Taxi bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[3]})
+                        chat_id = order[1]
+                        if order[3] != "Kelishilmoqda . . . . .!":
+                            if order[3] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_taxi(tayyor_taxi_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[3], reply_markup=markup)
 
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await call.message.answer(order[19], reply_markup=ortga)
-                        await asyncio.sleep(600)
-                        if order[19] == "Kelishilmoqda...!":
-                            await db.update_tayyor_sayohatchi(tayyor_sayohatchi_full="Kelishildi", id=id)
-                    await call.message.delete()
-                if first_data == "course:tayyorsayohatgamashina":
-                    markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                    markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                    markup.insert(
-                        InlineKeyboardButton(text="Mashina bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
-                    await state.update_data({"msg_full": order[21]})
-                    chat_id = order[1]
-                    if order[21] != "Kelishilmoqda...!":
-                        if order[21] != "Rad etildi":
-                            yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-                            yolovchi_id = yolovchi[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                                 callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await db.update_tayyor_sayohatchi_mashina(
-                                tayyor_sayohatchi_full_mashina="Kelishilmoqda . . . . .!", id=id)
-                            await call.message.answer(order[21], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[3], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[3] == "Kelishilmoqda...!":
+                                await db.update_tayyor_taxi(tayyor_taxi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorsayohatchi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(InlineKeyboardButton(text="Sayohatchi bormaydigan bo'libdi",
+                                                           callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[19]})
+                        chat_id = order[1]
+                        if order[19] != "Kelishilmoqda...!":
+                            if order[19] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[19], reply_markup=markup)
 
-                    else:
-                        ortga = InlineKeyboardMarkup()
-                        ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await call.message.answer(order[21], reply_markup=ortga)
-                        await asyncio.sleep(600)
-                        if order[21] == "Kelishilmoqda...!":
-                            await db.update_tayyor_sayohatchi_mashina(tayyor_sayohatchi_full_mashina="Kellishildi", id=id)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[19], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[19] == "Kelishilmoqda...!":
+                                await db.update_tayyor_sayohatchi(tayyor_sayohatchi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorsayohatgamashina":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[21]})
+                        chat_id = order[1]
+                        if order[21] != "Kelishilmoqda...!":
+                            if order[21] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                                     callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_sayohatchi_mashina(
+                                    tayyor_sayohatchi_full_mashina="Kelishilmoqda . . . . .!", id=id)
+                                await call.message.answer(order[21], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[21], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[21] == "Kelishilmoqda...!":
+                                await db.update_tayyor_sayohatchi_mashina(tayyor_sayohatchi_full_mashina="Kellishildi",
+                                                                          id=id)
+                        await call.message.delete()
                     await call.message.delete()
-                await call.message.delete()
+            else:
+                if len(count) < tarif[3] + 1:
+
+                    data = await state.get_data()
+                    first_data = data.get("First_data")
+                    id = data.get("id")
+                    order = await db.select_order(id=id)
+                    if first_data == "course:tayyoryolovchi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[15]})
+                        chat_id = order[1]
+                        if order[15] != "Kelishilmoqda...!":
+                            if order[15] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await call.message.answer(order[15], reply_markup=markup)
+                                await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishilmoqda...!", id=id)
+                                ord = await db.select_order(id=id)
+                                print(ord[15])
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[15], reply_markup=markup)
+                            await asyncio.sleep(600)
+                            if order[15] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yolovchi(tayyor_yolovchi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorpochta":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(InlineKeyboardButton(text="Pochta yuborilmaydigan bo'libdi",
+                                                           callback_data="Pochtayuborilmaydiganbolibdi'"))
+                        await call.message.answer(order[9], reply_markup=markup)
+                        await state.update_data({"msg_full": order[9]})
+                        chat_id = order[1]
+                        if order[9] != "Kelishilmoqda...!":
+                            if order[9] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Yubormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await call.message.answer(order[9], reply_markup=markup)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[9], reply_markup=markup)
+                            await asyncio.sleep(600)
+                            if order[9] == "Kelishilmoqda...!":
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishildi", id=id)
+                    if first_data == "course:tayyorpochtamashinasi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[17]})
+                        chat_id = order[1]
+                        if order[17] != "Kelishilmoqda . . . . .!":
+                            if order[17] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishilmoqda...!",
+                                                                      id=id)
+                                await call.message.answer(order[17], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[17], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[17] == "Kelishilmoqda...!":
+                                await db.update_tayyor_pochta_mashina(tayyor_pochta_mashina_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyoryuk":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Yuk yuborilmaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[11]})
+                        chat_id = order[1]
+                        if order[11] != "Kelishilmoqda...!":
+                            if order[11] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Yuk  yubormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[11], reply_markup=markup)
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[11], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[11] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yuk(tayyor_yuk_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyoryukmashinasi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik  🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[13]})
+                        chat_id = order[1]
+                        if order[13] != "Kelishilmoqda . . . . .!":
+                            if order[13] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishilmoqda...!",
+                                                                     id=id)
+                                await call.message.answer(order[13], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[13], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[13] == "Kelishilmoqda...!":
+                                await db.update_tayyor_yuk_mashinasi(tayyor_yuk_haydovchisi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyortaksi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Taxi bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[3]})
+                        chat_id = order[1]
+                        if order[3] != "Kelishilmoqda . . . . .!":
+                            if order[3] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_taxi(tayyor_taxi_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[3], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[3], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[3] == "Kelishilmoqda...!":
+                                await db.update_tayyor_taxi(tayyor_taxi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorsayohatchi":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(InlineKeyboardButton(text="Sayohatchi bormaydigan bo'libdi",
+                                                           callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[19]})
+                        chat_id = order[1]
+                        if order[19] != "Kelishilmoqda...!":
+                            if order[19] != "Rad etildi":
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_pochta(tayyor_pochta_full="Kelishilmoqda...!", id=id)
+                                await call.message.answer(order[19], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[19], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[19] == "Kelishilmoqda...!":
+                                await db.update_tayyor_sayohatchi(tayyor_sayohatchi_full="Kelishildi", id=id)
+                        await call.message.delete()
+                    if first_data == "course:tayyorsayohatgamashina":
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                        markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                        markup.insert(
+                            InlineKeyboardButton(text="Mashina bormaydigan bo'libdi",
+                                                 callback_data="Mijozbormaydiganbolibdi"))
+                        await state.update_data({"msg_full": order[21]})
+                        chat_id = order[1]
+                        if order[21] != "Kelishilmoqda...!":
+                            if order[21] != "Rad etildi":
+                                yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+                                yolovchi_id = yolovchi[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                                     callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {yolovchi_id} - raqamli yo'lovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await db.update_tayyor_sayohatchi_mashina(
+                                    tayyor_sayohatchi_full_mashina="Kelishilmoqda . . . . .!", id=id)
+                                await call.message.answer(order[21], reply_markup=markup)
+
+                        else:
+                            ortga = InlineKeyboardMarkup()
+                            ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await call.message.answer(order[21], reply_markup=ortga)
+                            await asyncio.sleep(600)
+                            if order[21] == "Kelishilmoqda...!":
+                                await db.update_tayyor_sayohatchi_mashina(tayyor_sayohatchi_full_mashina="Kellishildi",
+                                                                          id=id)
+                        await call.message.delete()
+                    await call.message.delete()
+                else:
+                    await call.message.answer("Sizning kunlik ta'rif rejangiz nihoyasiga yetdi")
         if call.from_user.id not in fourth:
             if call.from_user.id not in fifth:
                 if call.from_user.id not in third:

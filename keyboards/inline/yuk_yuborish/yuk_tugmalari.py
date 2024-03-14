@@ -10,7 +10,6 @@ viloyat = {
     "Farg'ona":"333",
     "Buxoro":"4444",
     "Toshkent":"5555",
-    "Toshkent shahar":"kent shahar",
     "Sirdaryo":"6666",
     "Surxondaryo":"7777",
     "Qashqadaryo":"8888",

@@ -8,7 +8,6 @@ viloyat = {
     "Namangan":"dva",
     "Farg'ona":"tri",
     "Buxoro":"chitiri",
-    "Toshkent shahar":"kent shahar",
     "Toshkent":"pyat",
     "Sirdaryo":"shest",
     "Surxondaryo":"sem",

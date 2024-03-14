@@ -1,4 +1,7 @@
-a = 'ksdk1jsfjkskhdf'
-b = '6545465465'
-print(a.isalpha())
-print(a.isdigit())
+offset = 0
+while True:
+    offset+=1
+    print(offset)
+
+    if offset>10:
+        break

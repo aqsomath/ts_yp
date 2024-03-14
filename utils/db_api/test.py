@@ -11,20 +11,26 @@ async def test():
     await db.create_table_orders()
     await db.create_table_driver()
     await db.create_table_haydovchi()
-    await db.add_haydovchi("odam",
-                                   87456656565,
+    await db.add_driver("odam",
+                                   "sdsjskjdkjshdf",
+                                   "200000",
                                    200000,
+                                   "kjhdkjsds",
 
 
                              )
+    await db.add_driver("odam",
+                        "sdsjskjdkjshdf",
+                        "200000",
+                        6546465,
+                        "kjhdkjsds",
 
+                      )
+    offset = -28
+    limit = 28
+    while True:
+        offset+=limit
+        drivers = await db.select_all_drivers(limit=limit,offset=offset)
+        print(drivers)
 
-
-    driver = await db.select_driver(id=1)
-    print(driver)
-    print(driver[3])
-    await db.update_balans(5,87456656565)
-    driver = await db.select_driver(id=1)
-    print(driver)
-    print(driver[3])
 asyncio.run(test())

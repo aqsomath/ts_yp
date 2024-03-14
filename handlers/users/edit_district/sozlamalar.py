@@ -19,9 +19,7 @@ class SozlamalarStates(StatesGroup):
 @dp.callback_query_handler(kirish_callback.filter(item_name='haydovchi6656'))
 async def haydovchif(call:CallbackQuery):
     
-        await db.add_haydovchi(username=call.from_user.username,telegram_id=call.from_user.id,balans=0)
-        await db.add_driver(tashiman_odam="odam", tashiman_pochta='pochta', tashiman_yuk='yuk', sayohatchi_tashiman='sayohat',
-                            telegram_id=call.from_user.id)
+
 
 
         #QORAQALPOQ
@@ -747,7 +745,7 @@ async def katta_filtr(call:CallbackQuery,state:FSMContext):
 @dp.callback_query_handler(text="meningmalumotlarim",state=SozlamalarStates.kirish)
 async def my_report(call:CallbackQuery,state:FSMContext):
     try:
-        driver = await db.select_driver(telegram_id=call.from_user.id)
+        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
         balans = driver[3]
         msg=(f"<b>Sizning ma'lumotlaringiz </b>\n\n"
              f"Haydovchi nomi :\n{call.from_user.full_name}\n\n"

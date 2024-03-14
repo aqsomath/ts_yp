@@ -38,7 +38,7 @@ async def balans_id(message:Message,state:FSMContext):
     if message.text.isdigit():
         data = await state.get_data()
         id=data.get("id")
-        d=await db.select_driver(id=id)
+        d=await db.select_haydovchi(id=id)
         await db.update_balans(telegram_id=d[2],balans=int(message.text))
         print(d)
         await message.answer("Balans to'ldirildi")
