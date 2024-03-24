@@ -259,6 +259,11 @@ async def tarif_1_id(message:Message,state:FSMContext):
             await state.finish()
             await asyncio.sleep(30*24*60*60)
             if user[3] in first:
+                haydovchi = await db.select_haydovchi(telegram_id=user[3])
+                haydovchi_balansi = haydovchi[3]
+                tarif = await db.select_tarif(tarif_name='first')
+                if haydovchi_balansi>=tarif[3]:
+                    await db.update_balans(balans=haydovchi_balansi-tarif[3],telegram_id=user[3])
                 first.remove(user[3])
         except TypeError:
             await message.answer("Bu ID da foydalanuvchi mavjud emas . ")
