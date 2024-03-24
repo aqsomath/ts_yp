@@ -20,6 +20,43 @@ class UnBanStatesGroup(StatesGroup):
 class BalansToldirish(StatesGroup):
     id = State()
     money = State()
+
+class BalansAyirish(StatesGroup):
+    id = State()
+    money = State()
+
+
+@dp.message_handler(commands=['admin'])
+async def admin_panel_commands(message:Message,state:FSMContext):
+    one = await db.select_tarif(tarif_name='first')
+    msg_1 = f"Kuniga {one[3]} ta qabul qilish, oyiga - > {one[2]}"
+    two = await db.select_tarif(tarif_name='second')
+    msg_2 = f"Kuniga {two[3]} ta qabul qilish, oyiga - > {two[2]}"
+    three = await db.select_tarif(tarif_name='third')
+    msg_3 = f"Kuniga {three[3]} ta qabul qilish, oyiga - > {three[2]}"
+    four = await db.select_tarif(tarif_name='fourth')
+    msg_4 = f"Kuniga {four[3]} ta qabul qilish, oyiga - > {four[2]} "
+    five = await db.select_tarif(tarif_name='fifth')
+    msg_5 = f"/start bosilishiga {five[3]} kun bepul qilish "
+    if message.from_user.id in admin_ids:
+        list_of_commands = (f"/start --> Botni ishga tushirish\n"
+                            f"/help --> Yordam\n"
+                            f"/statics --> Statistika\n"
+                            f"/ban --> Foydalanuvchini blok qilish\n"
+                            f"/unban --> Foydalanuvchini blokdan chiqarish\n"
+                            f"/first_type --> {msg_1}\n"
+                            f"/second_type --> {msg_2}\n"
+                            f"/third_type --> {msg_3}\n"
+                            f"/hammaga_bepul_qilish --> {msg_4}\n"
+                            f"/fifth_type --> {msg_5}\n"
+                            f"/tarif_sozlamalari --> Tarif summasi va limitini o'zgartirish\n"
+                            f"/filter --> Sozlamalar bo'limi\n"
+                            f"/balans_toldirish --> Haydovchi balansini to'ldirish\n"
+                            f"/balans_ayirish --> Haydovchi balansini ayirish\n"
+                            f"/hammaga_pullik_qilish -- > Hamma uchun pullik qilish")
+        await message.answer(list_of_commands)
+
+
 @dp.message_handler(commands=['balans_toldirish'])
 async def pay_balans(message:Message,state:FSMContext):
     await message.answer("Foydalanuvchining ID sini kiriting :")
@@ -42,6 +79,32 @@ async def balans_id(message:Message,state:FSMContext):
         await db.update_balans(telegram_id=d[2],balans=int(message.text))
         print(d)
         await message.answer("Balans to'ldirildi")
+        await message.delete()
+        await state.finish()
+
+
+@dp.message_handler(commands=['balans_ayirish'])
+async def pay_balans(message:Message,state:FSMContext):
+    await message.answer("Foydalanuvchining ID sini kiriting :")
+    await BalansAyirish.id.set()
+
+@dp.message_handler(state=BalansAyirish.id)
+async def balans_id(message:Message,state:FSMContext):
+    if message.text.isdigit():
+        id = int(message.text)
+        await state.update_data({"id":id})
+        await message.answer("Qanchaga kamaytirilisin. Son bilan to'liq kirgizing.")
+        await message.delete()
+        await BalansAyirish.money.set()
+@dp.message_handler(state=BalansAyirish.money)
+async def balans_id(message:Message,state:FSMContext):
+    if message.text.isdigit():
+        data = await state.get_data()
+        id=data.get("id")
+        d=await db.select_haydovchi(id=id)
+        await db.update_balans(telegram_id=d[2],balans=d[3]-int(message.text))
+        print(d)
+        await message.answer(f"Balans {message.text} ga o'zgartirildi")
         await message.delete()
         await state.finish()
 @dp.message_handler(commands=['ban'])
@@ -364,24 +427,5 @@ async def umumiy_statistika(message:Message,state:FSMContext):
                          f"<code>    Bugungi- {len(bugun_sayohatchi_mashina)}</code>\n"
                          )
 
-@dp.message_handler(commands=['tarif_1'])
-async def tarif_1_ga_otkazish(message:Message,state:FSMContext):
-    await message.answer("1 - ta'rifga o'tkaziladigan haydovchi ID sini kiriting")
-
-@dp.message_handler(commands=['tarif_2'])
-async def tarif_1_ga_otkazish(message:Message,state:FSMContext):
-    await message.answer("1 - ta'rifga o'tkaziladigan haydovchi ID sini kiriting")
-
-@dp.message_handler(commands=['tarif_3'])
-async def tarif_1_ga_otkazish(message:Message,state:FSMContext):
-    await message.answer("1 - ta'rifga o'tkaziladigan haydovchi ID sini kiriting")
-
-@dp.message_handler(commands=['tarif_4'])
-async def tarif_1_ga_otkazish(message:Message,state:FSMContext):
-    await message.answer("1 - ta'rifga o'tkaziladigan haydovchi ID sini kiriting")
-
-@dp.message_handler(commands=['tarif_5'])
-async def tarif_1_ga_otkazish(message:Message,state:FSMContext):
-    await message.answer("1 - ta'rifga o'tkaziladigan haydovchi ID sini kiriting")
 
 

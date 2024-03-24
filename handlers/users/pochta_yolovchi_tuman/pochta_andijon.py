@@ -1013,7 +1013,7 @@ async def oxirgi(call:CallbackQuery,state:FSMContext):
                     async with limiter:
                         markup = InlineKeyboardMarkup(row_width=2)
                         markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
-                        await bot.send_message(chat_id=driver[4], text=msg, reply_markup=markup)
+                        await bot.send_message(chat_id=driver[4], text=m, reply_markup=markup)
             await call.message.delete()
             await state.finish()
 

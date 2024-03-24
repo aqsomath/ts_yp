@@ -2,7 +2,7 @@ from aiogram import Bot, Dispatcher, executor, types
 from loader import dp, db, bot
 import middlewares, filters, handlers
 from utils.notify_admins import on_startup_notify
-# from utils.set_bot_commands import set_default_commands
+from utils.set_bot_commands import set_default_commands
 
 
 async def on_startup(dispatcher):
@@ -10,6 +10,7 @@ async def on_startup(dispatcher):
         await db.create()
         await db.create_qoshimcha_tumanlar()
         # await db.drop_qoshimcha_tumanlar()
+        # await db.drop_driver()
         await db.drop_driver()
         await db.drop_last_tarif()
         await db.drop_yoldan_odam_info()
@@ -36,7 +37,7 @@ async def on_startup(dispatcher):
         await db.create_table_yolovchi()
         await db.create_table_count_last_get_orders()
         await on_startup_notify(dispatcher)
-        # await set_default_commands(dispatcher)
+        await set_default_commands(dispatcher)
 
 
 if __name__ == '__main__':

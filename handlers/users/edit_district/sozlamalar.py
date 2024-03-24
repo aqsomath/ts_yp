@@ -1,7 +1,6 @@
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, Message
 from aiogram.dispatcher.filters.state import StatesGroup, State
-from handlers.statics.tariflar import first,second,third,fifth,fourth
 from keyboards.inline.yolovchi.callback_data import kirish_callback, viloyatlar_callback,menu_callback
 from keyboards.inline.yolovchi.viloyatlar import viloyatlar
 from loader import dp,db
@@ -15,13 +14,16 @@ class SozlamalarStates(StatesGroup):
     tarifni_almashtirish=State()
     tarifni_tanlash=State()
 
-
+haydovchilar_royxati = []
 @dp.callback_query_handler(kirish_callback.filter(item_name='haydovchi6656'))
 async def haydovchif(call:CallbackQuery):
-    
+        haydovchilar_royxati.append(call.from_user.id)
 
+        await db.add_haydovchi(username=call.from_user.username, telegram_id=call.from_user.id, balans=0)
 
-
+        await db.add_driver(tashiman_odam="odam", tashiman_pochta='pochta', tashiman_yuk='yuk',
+                            sayohatchi_tashiman='sayohat',
+                            telegram_id=call.from_user.id)
         #QORAQALPOQ
         await db.add_driver_info(viloyat="Qoraqalpog'iston", tuman="Nukus shahar", telegram_id=call.from_user.id)
         await db.add_driver_info(viloyat="Qoraqalpog'iston", tuman="Amudaryo tumani", telegram_id=call.from_user.id)
@@ -791,118 +793,5 @@ async def balans_toldirish(call:CallbackQuery,state:FSMContext):
                               reply_markup=markup)
     await call.message.delete()
     await SozlamalarStates.tarifni_almashtirish.set()
-@dp.callback_query_handler(state=SozlamalarStates.tarifni_almashtirish)
-async def change_tarif(call:CallbackQuery,state:FSMContext):
-
-    if call.data=='changebirinchitarif':
-        tarif_first = await db.select_tarif(tarif_name="first")
-        driver = await db.select_driver(telegram_id=call.from_user.id)
-        balans = driver[3]
-        if balans>=tarif_first[2]:
-            await db.update_balans(balans=balans-tarif_first[3], telegram_id=call.from_user.id)
-            if call.from_user.id in fourth:
-                fourth.remove(call.from_user.id)
-            if call.from_user.id in fifth:
-                fifth.remove(call.from_user.id)
-            if call.from_user.id in third:
-                third.remove(call.from_user.id)
-            if call.from_user.id in second:
-                second.remove(call.from_user.id)
-            first.append(call.from_user.id)
-            await call.message.answer("Tarif muvofaqqiyatli o'zgartirildi .")
-            await call.message.delete()
-            await state.finish()
-
-        else:
-            await call.message.answer("Balansda pul yetarli emas !!!\nIltimos hisobingizni to'ldiring.")
-            await call.message.delete()
-            await state.finish()
-
-    if call.data == "changeikkinchitarif":
-        tarif_second = await db.select_tarif(tarif_name="second")
-        driver = await db.select_driver(telegram_id=call.from_user.id)
-        balans = driver[3]
-        if balans >= tarif_second[2]:
-            await db.update_balans(balans=balans - tarif_second[3], telegram_id=call.from_user.id)
-            if call.from_user.id in fourth:
-                fourth.remove(call.from_user.id)
-            if call.from_user.id in fifth:
-                fifth.remove(call.from_user.id)
-            if call.from_user.id in third:
-                third.remove(call.from_user.id)
-            if call.from_user.id in first:
-                first.remove(call.from_user.id)
-            second.append(call.from_user.id)
-            await call.message.answer("Tarif muvofaqqiyatli o'zgartirildi .")
-            await call.message.delete()
-            await state.finish()
-
-        else:
-            await call.message.answer("Balansda pul yetarli emas !!!\nIltimos hisobingizni to'ldiring.")
-            await call.message.delete()
-            await state.finish()
-
-    if call.data == "changeuchinchitarif":
-        tarif_third = await db.select_tarif(tarif_name="third")
-        driver = await db.select_driver(telegram_id=call.from_user.id)
-        balans = driver[3]
-        if balans >= tarif_third[2]:
-            await db.update_balans(balans=balans - tarif_third[3], telegram_id=call.from_user.id)
-            if call.from_user.id in fourth:
-                fourth.remove(call.from_user.id)
-            if call.from_user.id in fifth:
-                fifth.remove(call.from_user.id)
-            if call.from_user.id in second:
-                second.remove(call.from_user.id)
-            if call.from_user.id in first:
-                first.remove(call.from_user.id)
-            third.append(call.from_user.id)
-            await call.message.answer("Tarif muvofaqqiyatli o'zgartirildi .")
-            await call.message.delete()
-            await state.finish()
-        else:
-            await call.message.answer("Balansda pul yetarli emas !!!\nIltimos hisobingizni to'ldiring.")
-            await call.message.delete()
-            await state.finish()
-
-
-@dp.callback_query_handler(text="boshmenu",state=SozlamalarStates.my_info)
-async def nazad_and_headmenu(call:CallbackQuery,state:FSMContext):
-    
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await state.finish()
-        await call.message.delete()
-
-@dp.callback_query_handler(text="ortga",state=SozlamalarStates.my_info)
-async def nazad_and_headmenu(call:CallbackQuery,state:FSMContext):
-    
-        marrk = InlineKeyboardMarkup(row_width=2)
-        marrk.insert(InlineKeyboardButton(text='Filtrlash', callback_data='filtrlash'))
-        marrk.insert(InlineKeyboardButton(text="Mening ma'lumotlarim", callback_data='meningmalumotlarim'))
-        marrk.insert(InlineKeyboardButton(text='Ortga ', callback_data='headmenu'))
-        marrk.insert(InlineKeyboardButton(text='Bosh menu ', callback_data='headmenu'))
-        await call.message.answer("Sozlamalar bo'limi ", reply_markup=marrk)
-        await SozlamalarStates.kirish.set()
-        await call.message.delete()
-
-
 
 

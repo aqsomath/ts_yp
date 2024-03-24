@@ -628,17 +628,8 @@ async def sqsdsx(call: CallbackQuery, state: FSMContext):
         await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
                                   "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu_1
                                   )
-        offset = -28
-        limit = 28
-        while True:
-            offset += limit
-            drivers = await db.select_all_drivers(limit=limit, offset=offset)
-            await asyncio.sleep(1)
-            for driver in drivers:
-                if driver[3]=='pochta':
-                    await bot.send_message(chat_id=driver[4],text=msg)
-            await call.message.delete()
-            await state.finish()
+
+        await state.finish()
 
 @dp.callback_query_handler(text='nott', state=Reys_pochta_andijon.tasdiqlash)
 async def asasxxxx(call: CallbackQuery, state: FSMContext):

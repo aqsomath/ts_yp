@@ -7,30 +7,30 @@ async def test():
     db = Database()
 
     await db.create()
-    await db.drop_orders()
     await db.create_table_orders()
-    await db.create_table_driver()
-    await db.create_table_haydovchi()
-    await db.add_driver("odam",
-                                   "sdsjskjdkjshdf",
-                                   "200000",
-                                   200000,
-                                   "kjhdkjsds",
-
-
-                             )
-    await db.add_driver("odam",
-                        "sdsjskjdkjshdf",
-                        "200000",
-                        6546465,
-                        "kjhdkjsds",
-
-                      )
-    offset = -28
-    limit = 28
-    while True:
-        offset+=limit
-        drivers = await db.select_all_drivers(limit=limit,offset=offset)
-        print(drivers)
-
+    await db.add_order_tayyor_taxi(
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        54654654654,
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        "asdasda",
+        "asdasda",
+    )
+    orders = await db.select_all_orders()
+    print(orders)
 asyncio.run(test())

@@ -632,6 +632,8 @@ async def y_n(call: CallbackQuery, state: FSMContext):
         await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
                                   "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
                                   )
+        orders = await db.select_order( tayyor_yolovchi_full=msg)
+        print(orders)
         offset = -28
         limit = 28
         while True:
@@ -643,7 +645,7 @@ async def y_n(call: CallbackQuery, state: FSMContext):
                     async with limiter:
                         markup = InlineKeyboardMarkup(row_width=2)
                         markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
-                        await bot.send_message(chat_id=driver[4], text=msg, reply_markup=markup)
+                        await bot.send_message(chat_id=driver[4], text=m, reply_markup=markup)
             await call.message.delete()
             await state.finish()
 @dp.callback_query_handler(text='nott', state=Yolovchi_andijon.tasdiqlash)
