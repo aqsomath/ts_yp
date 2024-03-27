@@ -30,6 +30,26 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
             if call.from_user.id in third:
                 limit+=tarif3[3]
             if len(count)<limit+1:
+                if call.data.startswith("qabul_flkk_"):
+                    id = int(call.data.split("_")[2])
+                    msg = await db.select_orders(id=id)
+                    if msg[3] is not None:
+                        await call.message.answer(msg[3])
+                    if msg[9] is not None:
+                        await call.message.answer(msg[9])
+                    if msg[11] is not None:
+                        await call.message.answer(msg[11])
+                    if msg[13] is not None:
+                        await call.message.answer(msg[13])
+                    if msg[15] is not None:
+                        await call.message.answer(msg[15])
+                    if msg[17] is not None:
+                        await call.message.answer(msg[17])
+                    if msg[19] is not None:
+                        await call.message.answer(msg[19])
+                    if msg[21] is not None:
+                        await call.message.answer(msg[21])
+
                 data=await state.get_data()
                 id = data.get("id")
                 order = await db.select_order(id=id)
@@ -38,23 +58,25 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                 markup.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
                 markup.insert(InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi", callback_data="Mijozbormaydiganbolibdi"))
                 markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                await state.update_data({"msg_full":order[15]})
                 chat_id = order[1]
                 if order[23] == False:
                     if order[25] == False:
-                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                        driver_id = driver[0]
-                        markup_1 = InlineKeyboardMarkup(row_width=2)
-                        markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                        markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                        markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim", callback_data="Mijozbormaydiganbolibdi"))
-                        markup_1.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
-                        await bot.send_message(text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                               chat_id=chat_id, reply_markup=markup_1)
-                        await call.message.answer(order[15], reply_markup=markup)
-                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=id)
-                        ord = await db.select_order(id=id)
-                        print(ord[15])
+                        try:
+                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                            driver_id = driver[0]
+                            markup_1 = InlineKeyboardMarkup(row_width=2)
+                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                            markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim", callback_data="Mijozbormaydiganbolibdi"))
+                            markup_1.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
+                            await bot.send_message(text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                                   chat_id=chat_id, reply_markup=markup_1)
+                            await call.message.answer(order[15], reply_markup=markup)
+                            await db.kelishilmoqda_orders(kelishilmoqda=True, id=id)
+                            ord = await db.select_order(id=id)
+                            print(ord[15])
+                        except TypeError:
+                            await call.message.answer("Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
                 else:
                     ortga=InlineKeyboardMarkup()
                     ortga.insert(InlineKeyboardButton(text="Bosh menu",callback_data="ogirilish"))
@@ -85,21 +107,24 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     chat_id = order[1]
                     if order[23]== False:
                         if order[25]==False:
-                            driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                            driver_id = driver[0]
-                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-                            markup_1.insert(
-                                InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                     callback_data="Mijozbormaydiganbolibdi"))
-                            await bot.send_message(
-                                text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                chat_id=chat_id, reply_markup=markup_1)
-                            await call.message.answer(order[15], reply_markup=markup)
-                            await db.kelishilmoqda_orders(kelishilmoqda=True, id=id)
-                            ord = await db.select_order(id=id)
-                            print(ord[15])
+                            try:
+                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
+                                driver_id = driver[0]
+                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+                                markup_1.insert(
+                                    InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                         callback_data="Mijozbormaydiganbolibdi"))
+                                await bot.send_message(
+                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
+                                    chat_id=chat_id, reply_markup=markup_1)
+                                await call.message.answer(order[15], reply_markup=markup)
+                                await db.kelishilmoqda_orders(kelishilmoqda=True, id=id)
+                                ord = await db.select_order(id=id)
+                                print(ord[15])
+                            except TypeError:
+                                await call.message.answer("Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
                     else:
                         ortga = InlineKeyboardMarkup()
                         ortga.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
@@ -351,5 +376,4 @@ async def bormaydigan_bolish_1(call:CallbackQuery,state:FSMContext):
     markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="ogirilish"))
     await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
     await call.message.delete()
-
 

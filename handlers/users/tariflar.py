@@ -30,12 +30,13 @@ async def tarif_conf(message:Message):
 
 @dp.callback_query_handler(text="skldjuiuiuiuiererere")
 async def menuu(call:CallbackQuery):
-    if call.message.from_user.id in yolovchilar_royxati:
+    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
+    if yolovchi is not None:
         await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
         await call.message.delete()
 
 
-    elif call.message.from_user.id in haydovchilar_royxati:
+    else:
         driver = {
             "Haydovchi reys belgilash": 'yolovchikerak',
             "Tayyor yo'lovchi": 'tayyoryolovchi',

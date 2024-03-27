@@ -199,8 +199,8 @@ class Database:
         sql = "SELECT * FROM Users WHERE "
         sql, parameters = self.format_args(sql, parameters=kwargs)
         return await self.execute(sql, *parameters, fetchrow=True)
-    async def delete_orders(self, **kwargs):
-        sql = "DELETE  FROM Orders WHERE "
+    async def select_orders(self, **kwargs):
+        sql = "SELECT * FROM Orders WHERE "
         sql, parameters = self.format_args(sql, parameters=kwargs)
         return await self.execute(sql, *parameters, fetchrow=True)
     async def select_all_users(self):
@@ -254,7 +254,7 @@ class Database:
             sql = "SELECT region,tayyor_pochta,tayyor_pochta_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi FROM Orders"
             return await self.execute(sql, fetch=True)
     async def select_tayyor_yuk(self):
-        sql = "SELECT region,tayyor_yuk,tayyor_yuk_full,viloyatga,tumanga,viloyat ,id,,kelishildi,rad_etildi FROM Orders"
+        sql = "SELECT region,tayyor_yuk,tayyor_yuk_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi FROM Orders"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_yolovchi(self):
         sql = "SELECT region,tayyor_yolovchi,tayyor_yolovchi_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi FROM Orders"
@@ -345,6 +345,10 @@ class Database:
          WHERE last_interaction >= NOW() - INTERVAL '1 day';
          """
         return await self.execute(sql, fetch=True)
+    async def select_driver(self, **kwargs):
+        sql = "SELECT * FROM Driver WHERE "
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return await self.execute(sql, *parameters, fetchrow=True)
     async def add_driver(self, tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id,sayohatchi_tashiman):
         sql = "INSERT INTO driver (tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id,sayohatchi_tashiman) VALUES($1, $2, $3, $4,$5) returning *"
         return await self.execute(sql, tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id,sayohatchi_tashiman, fetchrow=True)

@@ -17,8 +17,8 @@ async def bot_start(message: types.Message):
     else:
         await db.add_user(full_name=message.from_user.full_name, username=message.from_user.username,
                           telegram_id=message.from_user.id)
-
-    if message.from_user.id in yolovchilar_royxati:
+    yolovchi = await db.select_yolovchi(telegram_id=message.from_user.id)
+    if yolovchi is not None:
         await message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
         await message.delete()
 
