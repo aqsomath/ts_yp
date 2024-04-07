@@ -34,6 +34,6 @@ soat = {
 
 time = InlineKeyboardMarkup(row_width=6)
 for key,value in soat.items():
-    time.insert(InlineKeyboardButton(text=key, callback_data=time_callback.new(item_name=value)))
+    time.insert(InlineKeyboardButton(text=key, callback_data=value))
 time.insert(InlineKeyboardButton(text='Buyurtmani bekor qilish',callback_data='atmen'))
 time.insert(InlineKeyboardButton(text='Ortga',callback_data='ortga'))

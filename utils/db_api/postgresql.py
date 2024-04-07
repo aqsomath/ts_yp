@@ -98,8 +98,9 @@ class Database:
         last_interaction TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP ,
         kelishilmoqda BOOLEAN NOT NULL DEFAULT FALSE,
         kelishildi BOOLEAN NOT NULL DEFAULT FALSE,
-        rad_etildi BOOLEAN NOT NULL DEFAULT FALSE
-
+        rad_etildi BOOLEAN NOT NULL DEFAULT FALSE,
+        bormaydi BOOLEAN NOT NULL DEFAULT FALSE,
+        event_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         
         );
         """
@@ -126,7 +127,8 @@ class Database:
                                     tayyor_sayohatchi,
                                     tayyor_sayohatchi_full,
                                     tayyor_sayohatchi_mashina,
-                                    tayyor_sayohatchi_full_mashina):
+                                    tayyor_sayohatchi_full_mashina,
+                                    event_time):
         sql = "INSERT INTO orders (" \
               "tayyor_taxi," \
               "tayyor_taxi_full, " \
@@ -148,9 +150,10 @@ class Database:
               "tayyor_sayohatchi," \
               "tayyor_sayohatchi_full," \
               "tayyor_sayohatchi_mashina,"\
-              "tayyor_sayohatchi_full_mashina" \
+              "tayyor_sayohatchi_full_mashina," \
+              "event_time" \
               ") VALUES(" \
-              "$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12 , $13, $14, $15, $16, $17, $18, $19, $20, $21" \
+              "$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12 , $13, $14, $15, $16, $17, $18, $19, $20, $21,$22" \
               ") " \
               "returning *"
         return await self.execute(
@@ -175,6 +178,7 @@ class Database:
             tayyor_sayohatchi_full,
             tayyor_sayohatchi_mashina,
             tayyor_sayohatchi_full_mashina,
+            event_time,
             fetchrow=True
         )
 
@@ -201,6 +205,10 @@ class Database:
         return await self.execute(sql, *parameters, fetchrow=True)
     async def select_orders(self, **kwargs):
         sql = "SELECT * FROM Orders WHERE "
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return await self.execute(sql, *parameters, fetchrow=True)
+    async def delete_orders(self, **kwargs):
+        sql = "DELETE FROM Orders WHERE "
         sql, parameters = self.format_args(sql, parameters=kwargs)
         return await self.execute(sql, *parameters, fetchrow=True)
     async def select_all_users(self):
@@ -239,28 +247,28 @@ class Database:
         sql = "SELECT region,tayyor_sayohatchi_mashina, tayyor_sayohatchi_full_mashina, viloyatga FROM Orders"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_taxi(self):
-        sql = "SELECT region,tayyor_taxi,tayyor_taxi_full,viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi  FROM Orders"
+        sql = "SELECT region,tayyor_taxi,tayyor_taxi_full,viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi,event_time FROM Orders"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_sayohatchi(self):
-        sql = "SELECT region,tayyor_sayohatchi,tayyor_sayohatchi_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi FROM Orders"
+        sql = "SELECT region,tayyor_sayohatchi,tayyor_sayohatchi_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_sayohatchi_mashina(self):
-        sql = "SELECT region,tayyor_sayohatchi_mashina,tayyor_sayohatchi_full_mashina,viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi  FROM Orders"
+        sql = "SELECT region,tayyor_sayohatchi_mashina,tayyor_sayohatchi_full_mashina,viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi,event_time  FROM Orders"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_pochta_mashina(self):
-        sql = "SELECT region,tayyor_pochta_mashina,tayyor_pochta_mashina_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi FROM Orders"
+        sql = "SELECT region,tayyor_pochta_mashina,tayyor_pochta_mashina_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_pochta(self):
-            sql = "SELECT region,tayyor_pochta,tayyor_pochta_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi FROM Orders"
+            sql = "SELECT region,tayyor_pochta,tayyor_pochta_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders"
             return await self.execute(sql, fetch=True)
     async def select_tayyor_yuk(self):
-        sql = "SELECT region,tayyor_yuk,tayyor_yuk_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi FROM Orders"
+        sql = "SELECT region,tayyor_yuk,tayyor_yuk_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_yolovchi(self):
-        sql = "SELECT region,tayyor_yolovchi,tayyor_yolovchi_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi FROM Orders"
+        sql = "SELECT region,tayyor_yolovchi,tayyor_yolovchi_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_yuk_haydovchi(self):
-        sql = "SELECT region,tayyor_yuk_haydovchisi,tayyor_yuk_haydovchisi_full,viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi  FROM Orders"
+        sql = "SELECT region,tayyor_yuk_haydovchisi,tayyor_yuk_haydovchisi_full,viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi,event_time  FROM Orders"
         return await self.execute(sql, fetch=True)
     async def select_order(self, **kwargs):
         sql = "SELECT * FROM Orders WHERE "
@@ -288,6 +296,12 @@ class Database:
            UPDATE Orders SET kelishilmoqda=$1 WHERE id=$2
            """
         return await self.execute(sql, kelishilmoqda, id, execute=True)
+
+    async def bormaydi_update(self,bormaydi,id):
+        sql = """
+           UPDATE Orders SET bormaydi=$1 WHERE id=$2
+           """
+        return await self.execute(sql, bormaydi, id, execute=True)
 
     async def update_user_tayyor_taxi(self, tayyor_taxi, telegram_id):
         sql = "UPDATE Users SET tayyor_taxi=$1 WHERE telegram_id=$2"

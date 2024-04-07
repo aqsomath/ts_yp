@@ -1,8 +1,11 @@
+import datetime
+
 import aiogram.types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
 from keyboards.default.location import phone_number
 from keyboards.inline.haydovchi_reys.haydovchi_reys_tugmalar import reys_ortgaa
+from keyboards.inline.haydovchi_reys.haydovchi_sayohatchi_reys import taxi_sayohat_callback, tax_say_vil
 from keyboards.inline.haydovchi_reys.haydovchi_sayohatchi_reys import taxi_sayohat_callback, tax_say_vil
 from keyboards.inline.yolovchi.andtuman import andijon_yol, qoraqalpogiston_yol, tosh_shsha
 from keyboards.inline.yolovchi.buxtuman import buxoro_yol
@@ -464,18 +467,18 @@ async def taqas(call: CallbackQuery, state: FSMContext):
 async def qolda_yozing(call: CallbackQuery, state: FSMContext):
     
         markup = InlineKeyboardMarkup(row_width=6)
-        markup.insert(InlineKeyboardButton(text="Yanvar", callback_data="Yanvar"))
-        markup.insert(InlineKeyboardButton(text="Fevral", callback_data="Fevral"))
-        markup.insert(InlineKeyboardButton(text="Mart", callback_data="Mart"))
-        markup.insert(InlineKeyboardButton(text="Aprel", callback_data="Aprel"))
-        markup.insert(InlineKeyboardButton(text="May", callback_data="May"))
-        markup.insert(InlineKeyboardButton(text="Iyun", callback_data="Iyun"))
-        markup.insert(InlineKeyboardButton(text="Iyul", callback_data="Iyul"))
-        markup.insert(InlineKeyboardButton(text="Avgust", callback_data="Avgust"))
-        markup.insert(InlineKeyboardButton(text="Sentabr", callback_data="Sentabr"))
-        markup.insert(InlineKeyboardButton(text="Oktabr", callback_data="Oktabr"))
-        markup.insert(InlineKeyboardButton(text="Noyabr", callback_data="Noyabr"))
-        markup.insert(InlineKeyboardButton(text="Dekabr", callback_data="Dekabr"))
+        markup.insert(InlineKeyboardButton(text="Yanvar", callback_data="1"))
+        markup.insert(InlineKeyboardButton(text="Fevral", callback_data="2"))
+        markup.insert(InlineKeyboardButton(text="Mart", callback_data="3"))
+        markup.insert(InlineKeyboardButton(text="Aprel", callback_data="4"))
+        markup.insert(InlineKeyboardButton(text="May", callback_data="5"))
+        markup.insert(InlineKeyboardButton(text="Iyun", callback_data="6"))
+        markup.insert(InlineKeyboardButton(text="Iyul", callback_data="7"))
+        markup.insert(InlineKeyboardButton(text="Avgust", callback_data="8"))
+        markup.insert(InlineKeyboardButton(text="Sentabr", callback_data="9"))
+        markup.insert(InlineKeyboardButton(text="Oktabr", callback_data="10"))
+        markup.insert(InlineKeyboardButton(text="Noyabr", callback_data="11"))
+        markup.insert(InlineKeyboardButton(text="Dekabr", callback_data="12"))
         markup.insert(InlineKeyboardButton(text="Ortga", callback_data="Ortga"))
         markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
         await call.message.answer("Qaysi oyda yo'lga chiqasiz ?", reply_markup=markup)
@@ -531,18 +534,18 @@ async def bosh(call: CallbackQuery, state: FSMContext):
 async def qayyt(call: CallbackQuery, state: FSMContext):
     
         markup = InlineKeyboardMarkup(row_width=6)
-        markup.insert(InlineKeyboardButton(text="Yanvar", callback_data="Yanvar"))
-        markup.insert(InlineKeyboardButton(text="Fevral", callback_data="Qoldakiritish"))
-        markup.insert(InlineKeyboardButton(text="Mart", callback_data="Mart"))
-        markup.insert(InlineKeyboardButton(text="Aprel", callback_data="Aprel"))
-        markup.insert(InlineKeyboardButton(text="May", callback_data="May"))
-        markup.insert(InlineKeyboardButton(text="Iyun", callback_data="Iyun"))
-        markup.insert(InlineKeyboardButton(text="Iyul", callback_data="Iyul"))
-        markup.insert(InlineKeyboardButton(text="Avgust", callback_data="Avgust"))
-        markup.insert(InlineKeyboardButton(text="Sentabr", callback_data="Sentabr"))
-        markup.insert(InlineKeyboardButton(text="Oktabr", callback_data="Oktabr"))
-        markup.insert(InlineKeyboardButton(text="Noyabr", callback_data="Noyabr"))
-        markup.insert(InlineKeyboardButton(text="Dekabr", callback_data="Dekabr"))
+        markup.insert(InlineKeyboardButton(text="Yanvar", callback_data="1"))
+        markup.insert(InlineKeyboardButton(text="Fevral", callback_data="2"))
+        markup.insert(InlineKeyboardButton(text="Mart", callback_data="3"))
+        markup.insert(InlineKeyboardButton(text="Aprel", callback_data="4"))
+        markup.insert(InlineKeyboardButton(text="May", callback_data="5"))
+        markup.insert(InlineKeyboardButton(text="Iyun", callback_data="6"))
+        markup.insert(InlineKeyboardButton(text="Iyul", callback_data="7"))
+        markup.insert(InlineKeyboardButton(text="Avgust", callback_data="8"))
+        markup.insert(InlineKeyboardButton(text="Sentabr", callback_data="9"))
+        markup.insert(InlineKeyboardButton(text="Oktabr", callback_data="10"))
+        markup.insert(InlineKeyboardButton(text="Noyabr", callback_data="11"))
+        markup.insert(InlineKeyboardButton(text="Dekabr", callback_data="12"))
         markup.insert(InlineKeyboardButton(text="Ortga", callback_data="Ortga"))
         markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
         await call.message.answer("Qaysi oyda yo'lga chiqasiz ?", reply_markup=markup)
@@ -553,7 +556,7 @@ async def qayyt(call: CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(state=Hay_say_andijon.kunini_kiritsh)
 async def kunini(call: CallbackQuery, state: FSMContext):
     
-        await state.update_data({"sanasi": call.data})
+        await state.update_data({"kuni": call.data})
         await call.message.answer("Soat nechchida yo'lga chiqasiz ? ", reply_markup=time)
         await Hay_say_andijon.soat.set()
         await call.message.delete()
@@ -563,15 +566,24 @@ async def kunini(call: CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(text='Ertaga', state=Hay_say_andijon.kuni)
 @dp.callback_query_handler(text='Indinga', state=Hay_say_andijon.kuni)
 async def oy(call: CallbackQuery, state: FSMContext):
-    
-        await state.update_data(
-            {
-                "kuni": call.data
-            }
-        )
-        await call.message.answer("Soat nechchida yo'lga chiqasiz ? ", reply_markup=time)
-        await Hay_say_andijon.soat.set()
-        await call.message.delete()
+    if call.data == 'Bugun':
+        today = datetime.date.today().day
+        oyi = datetime.date.today().month
+        await state.update_data({"oyi": oyi})
+        await state.update_data({"kuni": today})
+    if call.data == 'Ertaga':
+        today = datetime.date.today() + datetime.timedelta(days=1)
+        await state.update_data({"kuni": today.day})
+        oyi = datetime.date.today().month
+        await state.update_data({"oyi": oyi})
+    if call.data == 'Indinga':
+        today = datetime.date.today() + datetime.timedelta(days=2)
+        await state.update_data({"kuni": today.day})
+        oyi = datetime.date.today().month
+        await state.update_data({"oyi": oyi})
+    await call.message.answer("Soat nechchida yo'lga chiqasiz ? ", reply_markup=time)
+    await Hay_say_andijon.soat.set()
+    await call.message.delete()
 
 
 @dp.callback_query_handler(text='qaytish', state=Hay_say_andijon.aniq_kuni)
@@ -710,20 +722,19 @@ async def saybosh_qosh(message: Message, state: FSMContext):
         sayohat = data.get("sayohat")
         oy = data.get('oyi')
         kuni = data.get('kuni')
-        sanasi = data.get('sanasi')
         soat = data.get('soat')
         phone = data.get('phone')
         xabar= f"🏢 <b>Qaysi viloyatlarga boriladi :</b>\n" + ",".join(sayohat)+"\nViloyatlariga boruvchi sayohat mashinasi\n"
         if oy is not None:
             m = f"🚕<b>SAYOHAT AVTO</b>\n<b> 🏢 {viloyat} viloyati</b>\n" \
                 f"🏤 <b>{tuman} tumanidan</b> \n" \
-                f"📆 <b>Sanasi : {sanasi}-{oy}</b>\n" \
+                f"📆 <b>kuni : {kuni}.{oy}</b>\n" \
                 f"⏱ <b>{soat}</b>\n" \
                 f"🏢 <b>Qaysi viloyatlarga boriladi :</b>\n" + ",".join(sayohat)+"\nViloyatlariga boruvchi sayohat mashinasi\n"
 
             msg = f"🚕<b>SAYOHAT AVTO</b>\n<b> 🏢 {viloyat} viloyati</b>\n" \
                   f"🏤<b> {tuman} tumanidan</b> \n" \
-                  f"📆 <b>Qachon yo'lga chiqadi : {sanasi}-{oy}</b>\n" \
+                  f"📆 <b>Qachon yo'lga chiqadi :{kuni}.{oy}</b>\n" \
                   f"⏱ <b>{soat}\n</b>" \
                   f"📞 <b>Tel : {phone}</b>\n"\
                   f"🏢 <b>Qaysi viloyatlarga boriladi :</b>\n" + ",".join(sayohat)+"\nViloyatlariga boruvchi sayohat mashinasi\n"
@@ -736,12 +747,12 @@ async def saybosh_qosh(message: Message, state: FSMContext):
             m = f"🚕<b>SAYOHAT AVTO</b>\n🏢 <b>{viloyat} viloyati\n</b>" \
                 f"🏤 <b>{tuman} tumanidan </b>\n" \
                 f"{xabar}"\
-                f"📆 <b>Sanasi : {kuni}</b>\n" \
+                f"📆 <b>kuni :{kuni}.{oy}</b>\n" \
                 f"⏱ <b>{soat}</b>\n"
             msg = f"🚕<b>SAYOHAT AVTO</b>\n🏢 <b>{viloyat} viloyati</b>\n" \
                   f"🏤 <b>{tuman} tumanidan \n</b>" \
                   f"{xabar}\n"\
-                  f"📆 <b>Qachon yo'lga chiqadi :  {kuni}</b>\n" \
+                  f"📆 <b>Qachon yo'lga chiqadi : {kuni}.{oy}</b>\n" \
                   f"⏱ <b>{soat}\n</b>" \
                   f"📞 <b>Tel : {phone}\n</b>"
             await state.update_data(
@@ -781,37 +792,51 @@ async def bazaas(call: CallbackQuery, state: FSMContext):
         msg = data.get("msg")
         m = data.get("m")
         telegram_id = call.from_user.id
-        print(telegram_id)
-        await db.add_order_tayyor_taxi(
-            tayyor_taxi=None,
-            tayyor_taxi_full=None,
-            tayyor_yolovchi=None,
-            tayyor_yolovchi_full=None,
-            viloyat=viloyat,
-            region=tuman,
-            telegram_id=telegram_id,
-            viloyatga=",".join(baza),
-            tumanga=tumaniga,
-            tayyor_pochta=None,
-            tayyor_pochta_full=None,
-            tayyor_yuk=None,
-            tayyor_yuk_full=None,
-            tayyor_yuk_haydovchisi=None,
-            tayyor_yuk_haydovchisi_full=None,
-            tayyor_pochta_mashina=None,
-            tayyor_pochta_mashina_full=None,
-            tayyor_sayohatchi=None,
-            tayyor_sayohatchi_full=None,
-            tayyor_sayohatchi_mashina=m,
-            tayyor_sayohatchi_full_mashina=msg
+        now = datetime.datetime.now()
+        oy = int(data.get('oyi'))
+        kuni = int(data.get('kuni'))
+        soat = int(data.get('soat'))
+        year = datetime.datetime.now().year
+        start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)
+        end_time = datetime.datetime(year, oy, kuni, soat, 0, 0)
+        time_difference = end_time - start_time
+        time_difference_seconds = time_difference.total_seconds()
+        if time_difference_seconds > 0:
+            await db.add_order_tayyor_taxi(
+                tayyor_taxi=None,
+                tayyor_taxi_full=None,
+                tayyor_yolovchi=None,
+                tayyor_yolovchi_full=None,
+                viloyat=viloyat,
+                region=tuman,
+                telegram_id=telegram_id,
+                viloyatga=baza,
+                tumanga=tumaniga,
+                tayyor_pochta=None,
+                tayyor_pochta_full=None,
+                tayyor_yuk=None,
+                tayyor_yuk_full=None,
+                tayyor_yuk_haydovchisi=None,
+                tayyor_yuk_haydovchisi_full=None,
+                tayyor_pochta_mashina=None,
+                tayyor_pochta_mashina_full=None,
+                tayyor_sayohatchi=None,
+                tayyor_sayohatchi_full=None,
+                tayyor_sayohatchi_mashina=m,
+                tayyor_sayohatchi_full_mashina=msg,
+                event_time=end_time
 
-        )
-        print("Qo'shildi")
-        order = await db.select_tayyor_pochta_mashina()
-        print(order)
-        await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
-                                  "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu_1
-                                  )
+            )
+
+            await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
+                                      "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu_1
+                                      )
+
+            await state.finish()
+        else:
+            await call.message.answer(
+                "Kechirasiz siz o'tib ketgan vaqtni belgiladingiz, vaqt belgilashda xatolikka yo'l qo'yilgan. Tekshirib qaytadan kiriting")
+            await state.finish()
         list_1 = []
         viloyat_jami = await db.select_all_sayohat_info()
         for i in viloyat_jami:
@@ -3594,36 +3619,51 @@ async def oxirgi(call: CallbackQuery, state: FSMContext):
     msg = data.get("msg_full")
     m = data.get("m")
     telegram_id = call.from_user.id
-    print(telegram_id)
-    await db.add_order_tayyor_taxi(tayyor_taxi=None,
-                                   tayyor_taxi_full=None,
-                                   tayyor_yolovchi=None,
-                                   tayyor_yolovchi_full=None,
-                                   viloyat=viloyat,
-                                   region=tuman,
-                                   telegram_id=telegram_id,
-                                   viloyatga=baza,
-                                   tumanga=tumaniga,
-                                   tayyor_pochta=None,
-                                   tayyor_pochta_full=None,
-                                   tayyor_yuk=None,
-                                   tayyor_yuk_full=None,
-                                   tayyor_yuk_haydovchisi=None,
-                                   tayyor_yuk_haydovchisi_full=None,
-                                   tayyor_pochta_mashina=m,
-                                   tayyor_pochta_mashina_full=msg,
-                                   tayyor_sayohatchi=None,
-                                   tayyor_sayohatchi_full=None,
-                                   tayyor_sayohatchi_mashina=None,
-                                   tayyor_sayohatchi_full_mashina=None
-                                   )
-    print("Qo'shildi")
-    await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
-                              "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu_1
-                              )
-    await call.message.delete()
-    await state.finish()
+    now = datetime.datetime.now()
+    oy = int(data.get('oyi'))
+    kuni = int(data.get('kuni'))
+    soat = int(data.get('soat'))
+    year = datetime.datetime.now().year
+    start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)
+    end_time = datetime.datetime(year, oy, kuni, soat, 0, 0)
+    time_difference = end_time - start_time
+    time_difference_seconds = time_difference.total_seconds()
+    if time_difference_seconds > 0:
+        await db.add_order_tayyor_taxi(
+            tayyor_taxi=None,
+            tayyor_taxi_full=None,
+            tayyor_yolovchi=None,
+            tayyor_yolovchi_full=None,
+            viloyat=viloyat,
+            region=tuman,
+            telegram_id=telegram_id,
+            viloyatga=baza,
+            tumanga=tumaniga,
+            tayyor_pochta=None,
+            tayyor_pochta_full=None,
+            tayyor_yuk=None,
+            tayyor_yuk_full=None,
+            tayyor_yuk_haydovchisi=None,
+            tayyor_yuk_haydovchisi_full=None,
+            tayyor_pochta_mashina=None,
+            tayyor_pochta_mashina_full=None,
+            tayyor_sayohatchi=None,
+            tayyor_sayohatchi_full=None,
+            tayyor_sayohatchi_mashina=m,
+            tayyor_sayohatchi_full_mashina=msg,
+            event_time=end_time
 
+        )
+
+        await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
+                                  "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu_1
+                                  )
+
+        await state.finish()
+    else:
+        await call.message.answer(
+            "Kechirasiz siz o'tib ketgan vaqtni belgiladingiz, vaqt belgilashda xatolikka yo'l qo'yilgan. Tekshirib qaytadan kiriting")
+        await state.finish()
 
 @dp.callback_query_handler(text='UnConfirm', state=Hay_say_andijon.end)
 async def y_n(call: CallbackQuery, state: FSMContext):

@@ -1,3 +1,5 @@
+import datetime
+
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup,InlineKeyboardButton
 from handlers.ready_orders.dictionary import all_district, tumanlar_all, andijon_yol_1, viloyatlar_yol_2, andijon_yol_2, \
@@ -18,27 +20,75 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
     tayyor=[]
     orders=[]
     if call.data == "course:tayyoryolovchi":
+        orders_all = await db.select_tayyor_yolovchi()
+        for i in orders_all:
+            end_time = i[9]
+            sec = (end_time - datetime.datetime.now()).total_seconds()
+            if sec <= 0:
+                await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_yolovchi()
     if call.data == "course:tayyorpochta":
+        orders_all = await db.select_tayyor_pochta()
+        for i in orders_all:
+            end_time = i[9]
+            sec = (end_time - datetime.datetime.now()).total_seconds()
+            if sec <= 0:
+                await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_pochta()
     if call.data == "course:tayyorpochtamashinasi":
+        orders_all = await db.select_tayyor_pochta_mashina()
+        for i in orders_all:
+            end_time = i[9]
+            sec = (end_time - datetime.datetime.now()).total_seconds()
+            if sec <= 0:
+                await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_pochta_mashina()
     if call.data == "course:tayyoryuk":
+        orders_all = await db.select_tayyor_yuk()
+        for i in orders_all:
+            end_time = i[9]
+            sec = (end_time - datetime.datetime.now()).total_seconds()
+            if sec <= 0:
+                await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_yuk()
     if call.data == "course:tayyoryukmashinasi":
+        orders_all = await db.select_tayyor_yuk_haydovchi()
+        for i in orders_all:
+            end_time = i[9]
+            sec = (end_time - datetime.datetime.now()).total_seconds()
+            if sec <= 0:
+                await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_yuk_haydovchi()
     if call.data == "course:tayyortaksi":
+        orders_all = await db.select_tayyor_taxi()
+        for i in orders_all:
+            end_time = i[9]
+            sec = (end_time - datetime.datetime.now()).total_seconds()
+            if sec <= 0:
+                await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_taxi()
     if call.data == "course:tayyorsayohatchi":
+        orders_all = await db.select_tayyor_sayohatchi()
+        for i in orders_all:
+            end_time = i[9]
+            sec = (end_time - datetime.datetime.now()).total_seconds()
+            if sec <= 0:
+                await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_sayohatchi()
     if call.data == "course:tayyorsayohatgamashina":
+        orders_all = await db.select_tayyor_sayohatchi_mashina()
+        for i in orders_all:
+            end_time = i[9]
+            sec = (end_time - datetime.datetime.now()).total_seconds()
+            if sec <= 0:
+                await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_sayohatchi_mashina()
     for order in orders:
         if order[1] is not None:
             if order[2] is not None:
-                if order[7] ==False:
-                    if order[8] ==False:
                         tayyor.append(order)
+
+
     if len(tayyor) == 0:
         markup = InlineKeyboardMarkup(row_width=2)
         markup.insert(InlineKeyboardButton(text="Ortga", callback_data="osjdndi"))
@@ -135,13 +185,17 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
         orders=await db.select_tayyor_sayohatchi()
     if first_data=="course:tayyorsayohatgamashina":
         orders=await db.select_tayyor_sayohatchi_mashina()
-
     for order in orders:
         if order[1] is not None:
             if order[2] is not None:
-                if order[7] == False:
-                    if order[8] == False:
-                        tayyor.append(order)
+                tayyor.append(order)
+                for i in tayyor:
+                    end_time = i[9]
+                    sec = (end_time - datetime.datetime.now()).total_seconds()
+                    if sec <= 0:
+                        tayyor.remove(i)
+                        await db.delete_orders(id=i[6])
+
     if current_page < len(tayyor) - 1:
         current_page += 1
         markup = InlineKeyboardMarkup(row_width=2)
@@ -190,10 +244,13 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
     if first_data == "course:tayyorsayohatgamashina":
         orders = await db.select_tayyor_sayohatchi_mashina()
     for order in orders:
+        end_time = order[9]
+        sec = (end_time - datetime.datetime.now()).total_seconds()
+        if sec<=0:
+            await db.delete_orders(id=order[6])
+    for order in orders:
         if order[1] is not None:
             if order[2] is not None:
-                if order[7] == False:
-                    if order[8] == False:
                         tayyor.append(order)
     if current_page > 0:
         current_page -= 1
@@ -246,10 +303,13 @@ async def orttt(call:CallbackQuery,state:FSMContext):
     if first_data == "course:tayyorsayohatgamashina":
         orders = await db.select_tayyor_sayohatchi_mashina()
     for order in orders:
+        end_time = order[9]
+        sec = (end_time - datetime.datetime.now()).total_seconds()
+        if sec<=0:
+            await db.delete_orders(id=order[6])
+    for order in orders:
         if order[1] is not None:
             if order[2] is not None:
-                if order[7] == False:
-                    if order[8] == False:
                         tayyor.append(order)
     if len(tayyor) == 0:
         markup = InlineKeyboardMarkup(row_width=2)
@@ -312,11 +372,14 @@ async def filter(call:CallbackQuery,state:FSMContext):
     if first_data == "course:tayyorsayohatgamashina":
         orders = await db.select_tayyor_sayohatchi_mashina()
     for order in orders:
+        end_time = order[9]
+        sec = (end_time - datetime.datetime.now()).total_seconds()
+        if sec<=0:
+            await db.delete_orders(id=order[6])
+    for order in orders:
         if order[5] == call.data:
             if order[1] is not None:
                 if order[2] is not None:
-                    if order[7] == False:
-                        if order[8] == False:
                             tayyor.append(order)
     markup = InlineKeyboardMarkup(row_width=2)
     markup.insert(InlineKeyboardButton(text="Oldingisi", callback_data="dnckdhs01_0"))
@@ -354,11 +417,14 @@ async def viloyat_filter_1(call:CallbackQuery,state:FSMContext):
     if first_data=="course:tayyorsayohatgamashina":
         orders=await db.select_tayyor_sayohatchi_mashina()
     for order in orders:
+        end_time = order[9]
+        sec = (end_time - datetime.datetime.now()).total_seconds()
+        if sec<=0:
+            await db.delete_orders(id=order[6])
+    for order in orders:
         if order[5]==viloyat:
             if order[1] is not None:
                 if order[2] is not None:
-                    if order[7] == False:
-                        if order[8] == False:
                             list.append(order)
     if current_page <len(list)-1:
         current_page += 1
@@ -408,11 +474,14 @@ async def viloyat_filter_1(call:CallbackQuery,state:FSMContext):
     if first_data == "course:tayyorsayohatgamashina":
         orders = await db.select_tayyor_sayohatchi_mashina()
     for order in orders:
+        end_time = order[9]
+        sec = (end_time - datetime.datetime.now()).total_seconds()
+        if sec<=0:
+            await db.delete_orders(id=order[6])
+    for order in orders:
         if order[5]==viloyat:
             if order[1] is not None:
                 if order[2] is not None:
-                    if order[7] == False:
-                        if order[8] == False:
                             list.append(order)
     if current_page >0:
         current_page -= 1
@@ -499,11 +568,14 @@ async def filter_region(call:CallbackQuery,state:FSMContext):
     if first_data == "course:tayyorsayohatgamashina":
         orders = await db.select_tayyor_sayohatchi_mashina()
     for order in orders:
+        end_time = order[9]
+        sec = (end_time - datetime.datetime.now()).total_seconds()
+        if sec<=0:
+            await db.delete_orders(id=order[6])
+    for order in orders:
         if order[0] == call.data:
             if order[1] is not None:
                 if order[2] is not None:
-                    if order[7] == False:
-                        if order[8] == False:
                             tayyor.append(order)
     await state.update_data({"id": tayyor[0][6]})
     markup = InlineKeyboardMarkup(row_width=2)
@@ -574,11 +646,14 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
     if first_data == "course:tayyorsayohatgamashina":
         orders = await db.select_tayyor_sayohatchi_mashina()
     for order in orders:
+        end_time = order[9]
+        sec = (end_time - datetime.datetime.now()).total_seconds()
+        if sec<=0:
+            await db.delete_orders(id=order[6])
+    for order in orders:
         if order[0] == tuman:
             if order[1] is not None:
                 if order[2] is not None:
-                    if order[7] == False:
-                        if order[8] == False:
                             list.append(order)
     if current_page < len(list) - 1:
         current_page += 1
@@ -630,11 +705,14 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
     if first_data == "course:tayyorsayohatgamashina":
         orders = await db.select_tayyor_sayohatchi_mashina()
     for order in orders:
+        end_time = order[9]
+        sec = (end_time - datetime.datetime.now()).total_seconds()
+        if sec<=0:
+            await db.delete_orders(id=order[6])
+    for order in orders:
         if order[0] == tuman:
             if order[1] is not None:
                 if order[2] is not None:
-                    if order[7] == False:
-                        if order[8] == False:
                             list.append(order)
     if current_page >0:
         current_page -= 1
@@ -710,11 +788,14 @@ async def qayt_fil(call:CallbackQuery,state:FSMContext):
     if first_data == "course:tayyorsayohatgamashina":
         orders = await db.select_tayyor_sayohatchi_mashina()
     for order in orders:
+        end_time = order[9]
+        sec = (end_time - datetime.datetime.now()).total_seconds()
+        if sec<=0:
+            await db.delete_orders(id=order[6])
+    for order in orders:
         if order[0] == tuman:
             if order[1] is not None:
                 if order[2] is not None:
-                    if order[7] == False:
-                        if order[8] == False:
                             list.append(order)
     await state.update_data({"id": list[0][6]})
     markup = InlineKeyboardMarkup(row_width=2)
@@ -758,8 +839,6 @@ async def filter(call:CallbackQuery,state:FSMContext):
                 if call.data[1:] in order[3]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         markup = InlineKeyboardMarkup(row_width=2)
         markup.insert(InlineKeyboardButton(text="Oldingisi", callback_data="prev2_0"))
@@ -777,8 +856,6 @@ async def filter(call:CallbackQuery,state:FSMContext):
                 if call.data[1:] in order[3]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         markup = InlineKeyboardMarkup(row_width=2)
         markup.insert(InlineKeyboardButton(text="Oldingisi", callback_data="prev2_0"))
@@ -796,8 +873,6 @@ async def filter(call:CallbackQuery,state:FSMContext):
                 if order[3] == call.data[1:]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         await state.update_data({"id": list[0][6]})
         markup = InlineKeyboardMarkup(row_width=2)
@@ -816,8 +891,6 @@ async def filter(call:CallbackQuery,state:FSMContext):
                 if order[3] == call.data[1:]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         await state.update_data({"id": list[0][6]})
         markup = InlineKeyboardMarkup(row_width=2)
@@ -836,8 +909,6 @@ async def filter(call:CallbackQuery,state:FSMContext):
                 if order[3] == call.data[1:]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         await state.update_data({"id": list[0][6]})
         markup = InlineKeyboardMarkup(row_width=2)
@@ -856,8 +927,6 @@ async def filter(call:CallbackQuery,state:FSMContext):
                 if order[3] == call.data[1:]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         await state.update_data({"id": list[0][6]})
         markup = InlineKeyboardMarkup(row_width=2)
@@ -876,8 +945,6 @@ async def filter(call:CallbackQuery,state:FSMContext):
                 if order[3] == call.data[1:]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         await state.update_data({"id": list[0][6]})
         markup = InlineKeyboardMarkup(row_width=2)
@@ -896,8 +963,6 @@ async def filter(call:CallbackQuery,state:FSMContext):
                 if order[3] == call.data[1:]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         await state.update_data({"id": list[0][6]})
         markup = InlineKeyboardMarkup(row_width=2)
@@ -951,8 +1016,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                      list.append(order)
         if current_page < len(list) - 1:
             current_page += 1
@@ -985,8 +1048,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         if current_page < len(list) - 1:
             current_page += 1
@@ -1019,8 +1080,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                         list.append(order)
         if current_page < len(list) - 1:
             current_page += 1
@@ -1053,8 +1112,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         if current_page < len(list) - 1:
             current_page += 1
@@ -1087,8 +1144,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         if current_page < len(list) - 1:
             current_page += 1
@@ -1121,8 +1176,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         if current_page <len(list)-1:
             current_page += 1
@@ -1154,8 +1207,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if viloyatiga in order[3]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         if current_page < len(list) - 1:
             current_page += 1
@@ -1186,8 +1237,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if viloyatiga in order[3]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         if current_page < len(list) - 1:
             current_page += 1
@@ -1227,8 +1276,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if viloyatiga in order[3]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         if current_page > 0:
             current_page -= 1
@@ -1258,8 +1305,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if viloyatiga in order[3]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         if current_page > 0:
             current_page -= 1
@@ -1289,8 +1334,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                         list.append(order)
         if current_page > 0:
             current_page -= 1
@@ -1323,8 +1366,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         if current_page > 0:
             current_page -= 1
@@ -1357,8 +1398,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         if current_page > 0:
             current_page -= 1
@@ -1391,8 +1430,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         if current_page > 0:
             current_page -= 1
@@ -1425,8 +1462,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         if current_page > 0:
             current_page -= 1
@@ -1459,8 +1494,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         if current_page > 0:
             current_page -= 1
@@ -1534,8 +1567,6 @@ async def qayta(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         await state.update_data({"id": list[0][6]})
         markup = InlineKeyboardMarkup(row_width=2)
@@ -1554,8 +1585,6 @@ async def qayta(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                         list.append(order)
         await state.update_data({"id": list[0][6]})
         markup = InlineKeyboardMarkup(row_width=2)
@@ -1574,8 +1603,6 @@ async def qayta(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                         list.append(order)
         await state.update_data({"id": list[0][6]})
         markup = InlineKeyboardMarkup(row_width=2)
@@ -1594,8 +1621,6 @@ async def qayta(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         await state.update_data({"id": list[0][6]})
         markup = InlineKeyboardMarkup(row_width=2)
@@ -1614,10 +1639,6 @@ async def qayta(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
-                                    if order[7] == False:
-                                        if order[8] == False:
                                                 list.append(order)
         await state.update_data({"id": list[0][6]})
         markup = InlineKeyboardMarkup(row_width=2)
@@ -1636,8 +1657,6 @@ async def qayta(call:CallbackQuery,state:FSMContext):
                 if order[3] == viloyatiga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         await state.update_data({"id": list[0][6]})
         markup = InlineKeyboardMarkup(row_width=2)
@@ -1656,8 +1675,6 @@ async def qayta(call:CallbackQuery,state:FSMContext):
                 if viloyatiga in order[3]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                         list.append(order)
         await state.update_data({"id": list[0][6]})
         markup = InlineKeyboardMarkup(row_width=2)
@@ -1675,8 +1692,6 @@ async def qayta(call:CallbackQuery,state:FSMContext):
                 if viloyatiga in order[3]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
         await state.update_data({"id": list[0][6]})
         markup = InlineKeyboardMarkup(row_width=2)
@@ -1713,8 +1728,6 @@ async def filter_oxir(call:CallbackQuery,state:FSMContext):
                 if order[4]==call.data.capitalize()[:-1]:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                      list.append(order)
     await state.update_data({"id": list[0][6]})
     await state.update_data({"tumanga":call.data.capitalize()[:-1]})
@@ -1754,8 +1767,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if order[4] == tumaniga:
                     if order[1] is not None:
                         if order[2] is not None:
-                            if order[7] == False:
-                                if order[8] == False:
                                         list.append(order)
     if current_page <len(list)-1:
         current_page += 1
@@ -1807,8 +1818,6 @@ async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
                 if order[2] is not None:
                     if order[3] == viloyatiga:
                         if order[4] == tumaniga:
-                            if order[7] == False:
-                                if order[8] == False:
                                     list.append(order)
     if current_page > 0:
         current_page -= 1

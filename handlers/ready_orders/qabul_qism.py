@@ -50,139 +50,33 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                     ord_id = int(call.data.split("_")[2])
                     await state.update_data({"ord_id":ord_id})
                     msg = await db.select_orders(id=ord_id)
-                    if msg[3] is not None:
-                        if msg[23] == False:
-                            try:
-                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                driver_id = driver[0]
-                                await bot.send_message(
-                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                    chat_id=msg[1], reply_markup=markup_1)
-                                await call.message.answer(msg[3],reply_markup=markup_12)
-                                await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                            except TypeError:
-                                await call.message.answer(
-                                    "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                        else:
-                            await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-                    if msg[9] is not None:
-                        if msg[23] == False:
-                            try:
-                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                driver_id = driver[0]
+                    list = [3, 9, 11, 13, 15, 17, 19, 21]
+                    for i in list:
+                        if msg[i] is not None:
+                            if msg[23] == False:
+                                if msg[25] == False:
+                                    if msg[24] == False:
+                                        try:
+                                            driver = await db.select_user(telegram_id=call.from_user.id)
+                                            driver_id = driver[0]
+                                            await bot.send_message(
+                                                text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
+                                                chat_id=msg[1], reply_markup=markup_1)
+                                            await call.message.answer(msg[i], reply_markup=markup_12)
+                                            await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                        except TypeError:
+                                            await call.message.answer(
+                                                "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
+                                    else:
+                                        await call.message.answer(
+                                            "Afsus kech qoldingiz . Bu buyurtma qabul boshqa talabgor tomonidan qabul qilinib bo'ldi")
+                                else:
+                                    await call.message.answer("Bu buyurtma buyurtmachi tomonidan bekor qilindi ")
+                            else:
+                                await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
 
-                                await bot.send_message(
-                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                    chat_id=msg[1], reply_markup=markup_1)
-                                await call.message.answer(msg[9],reply_markup=markup_12)
-                                await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                            except TypeError:
-                                await call.message.answer(
-                                    "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                        else:
-                            await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                    if msg[11] is not None:
-                        if msg[23] == False:
-                            try:
-                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                driver_id = driver[0]
-
-                                await bot.send_message(
-                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                    chat_id=msg[1], reply_markup=markup_1)
-                                await call.message.answer(msg[11],reply_markup=markup_12)
-                                await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                            except TypeError:
-                                await call.message.answer(
-                                    "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                        else:
-                            await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                    if msg[13] is not None:
-                        if msg[23] == False:
-                            try:
-                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                driver_id = driver[0]
-                                await bot.send_message(
-                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                    chat_id=msg[1], reply_markup=markup_1)
-                                await call.message.answer(msg[13],reply_markup=markup_12)
-                                await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                            except TypeError:
-                                await call.message.answer(
-                                    "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                        else:
-                            await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                    if msg[15] is not None:
-                        if msg[23] == False:
-                            try:
-                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                driver_id = driver[0]
-
-                                await bot.send_message(
-                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                    chat_id=msg[1], reply_markup=markup_1)
-                                await call.message.answer(msg[15],reply_markup=markup_12)
-                                await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                            except TypeError:
-                                await call.message.answer(
-                                    "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                        else:
-                            await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                    if msg[17] is not None:
-                        if msg[23] == False:
-                            try:
-                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                driver_id = driver[0]
-                                await bot.send_message(
-                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                    chat_id=msg[1], reply_markup=markup_1)
-                                await call.message.answer(msg[17],reply_markup=markup_12)
-                                await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                            except TypeError:
-                                await call.message.answer(
-                                    "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                        else:
-                            await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                    if msg[19] is not None:
-                        if msg[23] == False:
-                            try:
-                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                driver_id = driver[0]
-
-                                await bot.send_message(
-                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                    chat_id=msg[1], reply_markup=markup_1)
-                                await call.message.answer(msg[19],reply_markup=markup_12)
-                                await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                            except TypeError:
-                                await call.message.answer(
-                                    "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                        else:
-                            await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                    if msg[21] is not None:
-                        if msg[23] == False:
-                            try:
-                                driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                driver_id = driver[0]
-                                await bot.send_message(
-                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                    chat_id=msg[1], reply_markup=markup_1)
-                                await call.message.answer(msg[21],reply_markup=markup_12)
-                                await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                            except TypeError:
-                                await call.message.answer(
-                                    "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                        else:
-                            await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-            else:
-                await call.message.answer("Sizning kunlik ta'rif rejangiz nihoyasiga yetdi")
         else:
+
             if call.from_user.id in fifth:
                 count = []
                 for i in last_get_orders:
@@ -194,139 +88,30 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                         ord_id = int(call.data.split("_")[2])
                         await state.update_data({"ord_id": ord_id})
                         msg = await db.select_orders(id=ord_id)
-                        if msg[3] is not None:
+                        list = [3, 9, 11, 13, 15, 17, 19, 21]
+                        for i in list:
+                         if msg[i] is not None:
                             if msg[23] == False:
-                                try:
-                                    driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                    driver_id = driver[0]
-                                    await bot.send_message(
-                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                        chat_id=msg[1], reply_markup=markup_1)
-                                    await call.message.answer(msg[3], reply_markup=markup_12)
-                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                except TypeError:
-                                    await call.message.answer(
-                                        "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                            else:
-                                await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-                        if msg[9] is not None:
-                            if msg[23] == False:
-                                try:
-                                    driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                    driver_id = driver[0]
-
-                                    await bot.send_message(
-                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                        chat_id=msg[1], reply_markup=markup_1)
-                                    await call.message.answer(msg[9], reply_markup=markup_12)
-                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                except TypeError:
-                                    await call.message.answer(
-                                        "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
+                                if msg[25]==False:
+                                    if msg[24]==False:
+                                        try:
+                                            driver = await db.select_user(telegram_id=call.from_user.id)
+                                            driver_id = driver[0]
+                                            await bot.send_message(
+                                                text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
+                                                chat_id=msg[1], reply_markup=markup_1)
+                                            await call.message.answer(msg[i], reply_markup=markup_12)
+                                            await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                        except TypeError:
+                                            await call.message.answer(
+                                                "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
+                                    else:
+                                        await call.message.answer("Afsus kech qoldingiz . Bu buyurtma qabul boshqa talabgor tomonidan qabul qilinib bo'ldi")
+                                else:
+                                    await call.message.answer("Bu buyurtma buyurtmachi tomonidan bekor qilindi ")
                             else:
                                 await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
 
-                        if msg[11] is not None:
-                            if msg[23] == False:
-                                try:
-                                    driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                    driver_id = driver[0]
-
-                                    await bot.send_message(
-                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                        chat_id=msg[1], reply_markup=markup_1)
-                                    await call.message.answer(msg[11], reply_markup=markup_12)
-                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                except TypeError:
-                                    await call.message.answer(
-                                        "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                            else:
-                                await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                        if msg[13] is not None:
-                            if msg[23] == False:
-                                try:
-                                    driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                    driver_id = driver[0]
-                                    await bot.send_message(
-                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                        chat_id=msg[1], reply_markup=markup_1)
-                                    await call.message.answer(msg[13], reply_markup=markup_12)
-                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                except TypeError:
-                                    await call.message.answer(
-                                        "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                            else:
-                                await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                        if msg[15] is not None:
-                            if msg[23] == False:
-                                try:
-                                    driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                    driver_id = driver[0]
-
-                                    await bot.send_message(
-                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                        chat_id=msg[1], reply_markup=markup_1)
-                                    await call.message.answer(msg[15], reply_markup=markup_12)
-                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                except TypeError:
-                                    await call.message.answer(
-                                        "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                            else:
-                                await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                        if msg[17] is not None:
-                            if msg[23] == False:
-                                try:
-                                    driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                    driver_id = driver[0]
-                                    await bot.send_message(
-                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                        chat_id=msg[1], reply_markup=markup_1)
-                                    await call.message.answer(msg[17], reply_markup=markup_12)
-                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                except TypeError:
-                                    await call.message.answer(
-                                        "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                            else:
-                                await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                        if msg[19] is not None:
-                            if msg[23] == False:
-                                try:
-                                    driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                    driver_id = driver[0]
-
-                                    await bot.send_message(
-                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                        chat_id=msg[1], reply_markup=markup_1)
-                                    await call.message.answer(msg[19], reply_markup=markup_12)
-                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                except TypeError:
-                                    await call.message.answer(
-                                        "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                            else:
-                                await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                        if msg[21] is not None:
-                            if msg[23] == False:
-                                try:
-                                    driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                    driver_id = driver[0]
-                                    await bot.send_message(
-                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                        chat_id=msg[1], reply_markup=markup_1)
-                                    await call.message.answer(msg[21], reply_markup=markup_12)
-                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                except TypeError:
-                                    await call.message.answer(
-                                        "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                            else:
-                                await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-                    await call.message.delete()
-                else:
-                    await call.message.answer("Sizning kunlik ta'rif rejangiz nihoyasiga yetdi")
             if call.from_user.id in first:
                 count = []
                 for i in last_get_orders:
@@ -341,138 +126,32 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                             ord_id = int(call.data.split("_")[2])
                             await state.update_data({"ord_id": ord_id})
                             msg = await db.select_orders(id=ord_id)
-                            if msg[3] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[3], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-                            if msg[9] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
+                            list = [3, 9, 11, 13, 15, 17, 19, 21]
+                            for i in list:
+                                if msg[i] is not None:
+                                    if msg[23] == False:
+                                        if msg[25] == False:
+                                            if msg[24] == False:
+                                                try:
+                                                    driver = await db.select_user(telegram_id=call.from_user.id)
+                                                    driver_id = driver[0]
+                                                    await bot.send_message(
+                                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
+                                                        chat_id=msg[1], reply_markup=markup_1)
+                                                    await call.message.answer(msg[i], reply_markup=markup_12)
+                                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                                except TypeError:
+                                                    await call.message.answer(
+                                                        "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
+                                            else:
+                                                await call.message.answer(
+                                                    "Afsus kech qoldingiz . Bu buyurtma qabul boshqa talabgor tomonidan qabul qilinib bo'ldi")
+                                        else:
+                                            await call.message.answer(
+                                                "Bu buyurtma buyurtmachi tomonidan bekor qilindi ")
+                                    else:
+                                        await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
 
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[9], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[11] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[11], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[13] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[13], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[15] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[15], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[17] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[17], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[19] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[19], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[21] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[21], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-                    else:
-                        await call.message.answer("Sizning kunlik ta'rif rejangiz nihoyasiga yetdi")
             if call.from_user.id in second:
                 count = []
                 for i in last_get_orders:
@@ -487,138 +166,31 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                             ord_id = int(call.data.split("_")[2])
                             await state.update_data({"ord_id": ord_id})
                             msg = await db.select_orders(id=ord_id)
-                            if msg[3] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[3], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-                            if msg[9] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[9], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[11] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[11], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[13] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[13], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[15] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[15], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[17] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[17], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[19] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[19], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[21] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[21], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-                    else:
-                        await call.message.answer("Sizning kunlik ta'rif rejangiz nihoyasiga yetdi")
+                            list = [3, 9, 11, 13, 15, 17, 19, 21]
+                            for i in list:
+                                if msg[i] is not None:
+                                    if msg[23] == False:
+                                        if msg[25] == False:
+                                            if msg[24] == False:
+                                                try:
+                                                    driver = await db.select_user(telegram_id=call.from_user.id)
+                                                    driver_id = driver[0]
+                                                    await bot.send_message(
+                                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
+                                                        chat_id=msg[1], reply_markup=markup_1)
+                                                    await call.message.answer(msg[i], reply_markup=markup_12)
+                                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                                except TypeError:
+                                                    await call.message.answer(
+                                                        "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
+                                            else:
+                                                await call.message.answer(
+                                                    "Afsus kech qoldingiz . Bu buyurtma qabul boshqa talabgor tomonidan qabul qilinib bo'ldi")
+                                        else:
+                                            await call.message.answer(
+                                                "Bu buyurtma buyurtmachi tomonidan bekor qilindi ")
+                                    else:
+                                        await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
             if call.from_user.id in third:
                 count = []
                 for i in last_get_orders:
@@ -633,138 +205,32 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                             ord_id = int(call.data.split("_")[2])
                             await state.update_data({"ord_id": ord_id})
                             msg = await db.select_orders(id=ord_id)
-                            if msg[3] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[3], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-                            if msg[9] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
+                            list = [3, 9, 11, 13, 15, 17, 19, 21]
+                            for i in list:
+                                if msg[i] is not None:
+                                    if msg[23] == False:
+                                        if msg[25] == False:
+                                            if msg[24] == False:
+                                                try:
+                                                    driver = await db.select_user(telegram_id=call.from_user.id)
+                                                    driver_id = driver[0]
+                                                    await bot.send_message(
+                                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
+                                                        chat_id=msg[1], reply_markup=markup_1)
+                                                    await call.message.answer(msg[i], reply_markup=markup_12)
+                                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                                except TypeError:
+                                                    await call.message.answer(
+                                                        "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
+                                            else:
+                                                await call.message.answer(
+                                                    "Afsus kech qoldingiz . Bu buyurtma qabul boshqa talabgor tomonidan qabul qilinib bo'ldi")
+                                        else:
+                                            await call.message.answer(
+                                                "Bu buyurtma buyurtmachi tomonidan bekor qilindi ")
+                                    else:
+                                        await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
 
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[9], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[11] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[11], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[13] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[13], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[15] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[15], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[17] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[17], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[19] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[19], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-
-                            if msg[21] is not None:
-                                if msg[23] == False:
-                                    try:
-                                        driver = await db.select_haydovchi(telegram_id=call.from_user.id)
-                                        driver_id = driver[0]
-                                        await bot.send_message(
-                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli haydovchi qabul qildi",
-                                            chat_id=msg[1], reply_markup=markup_1)
-                                        await call.message.answer(msg[21], reply_markup=markup_12)
-                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                    except TypeError:
-                                        await call.message.answer(
-                                            "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                else:
-                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
-                    else:
-                        await call.message.answer("Sizning kunlik ta'rif rejangiz nihoyasiga yetdi")
             if call.from_user.id not in fourth:
                 if call.from_user.id not in fifth:
                     if call.from_user.id not in third:
@@ -789,23 +255,18 @@ async def tariflar_uchun(call:CallbackQuery,state:FSMContext):
                               f"Telefon : +998 94 100 79 74\n"
                               f"Telegram : <a href='tg://user?id={343103355}'>Admin</a> ")
 
-@dp.callback_query_handler(lambda c: c.data=="kelisholmadik" or c.data=="bormidiganboldim")
+@dp.callback_query_handler(lambda c: c.data=="kelisholmadik")
 async def kelisha_olmadik(call:CallbackQuery,state:FSMContext):
     data = await state.get_data()
-    id = data.get("id")
     ord_id = data.get("ord_id")
     if ord_id is not None:
         await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
+        await db.kelishildi_orders(kelishildi=False, id=ord_id)
         markup_1 = InlineKeyboardMarkup(row_width=2)
         markup_1.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
         await call.message.answer("Afsus 😞, menda siz uchun takliflar bor. Bosh menu ga o'ting",reply_markup=markup_1)
         await call.message.delete()
-    else:
-        await db.kelishilmoqda_orders(kelishilmoqda=False, id=id)
-        markup_1 = InlineKeyboardMarkup(row_width=2)
-        markup_1.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-        await call.message.answer("Afsus 😞, menda siz uchun takliflar bor. Bosh menu ga o'ting", reply_markup=markup_1)
-        await call.message.delete()
+
 @dp.callback_query_handler(lambda c: c.data=="qaytvoramiz")
 async def qyatvoramiz(call:CallbackQuery,state:FSMContext):
     yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
@@ -838,76 +299,48 @@ async def qyatvoramiz(call:CallbackQuery,state:FSMContext):
 @dp.callback_query_handler(lambda c: c.data=="kelishaoldik")
 async def kelisha_oldik(call:CallbackQuery,state:FSMContext):
    data = await state.get_data()
-   id = data.get("id")
    ord_id = data.get("ord_id")
-   if id is not None:
-       order = await db.select_order(id=id)
+   order = await db.select_order(id=ord_id)
+   if ord_id is not None:
        if len(order)==0:
            markup = InlineKeyboardMarkup(row_width=2)
            markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-           await db.kelishildi_orders(kelishildi=True, id=id)
+           await db.kelishildi_orders(kelishildi=True, id=ord_id)
+           await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
            await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
            await call.message.delete()
        else:
            markup = InlineKeyboardMarkup(row_width=2)
            markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-           await db.kelishildi_orders(kelishildi=True,id=id)
+           await db.kelishildi_orders(kelishildi=True,id=ord_id)
+           await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
            await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
            await call.message.delete()
-   else:
-       order = await db.select_order(id=ord_id)
-       if len(order) == 0:
-           markup = InlineKeyboardMarkup(row_width=2)
-           markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-           await db.kelishildi_orders(kelishildi=True, id=ord_id)
-           await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
-           await call.message.delete()
-       else:
-           markup = InlineKeyboardMarkup(row_width=2)
-           markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-           await db.kelishildi_orders(kelishildi=True, id=ord_id)
-           await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
-           await call.message.delete()
+
 @dp.callback_query_handler(lambda c:  c.data=="Mijozbormaydiganbolibdi")
 async def bormaydigan_bolish(call:CallbackQuery,state:FSMContext):
-    list=[]
     data = await state.get_data()
-    id = data.get("id")
     ord_id = data.get("ord_id")
-    if id is not None:
-        order = await db.select_order(id=id)
-        text=f"Rostdan ham bormaydigan bo'ldingizmi ?"
-        markup = InlineKeyboardMarkup(row_width=2)
-        markup.insert(InlineKeyboardButton(text="Xa", callback_data=f"bormidiganboldim_{id}"))
-        markup.insert(InlineKeyboardButton(text="Yo'q", callback_data="yoqboraman"))
-        markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-        while len(list)<2:
-            await bot.send_message(text=text,chat_id=order[1],reply_markup=markup)
-            await asyncio.sleep(300)
-            list.append(1)
-            if len(list)==2:
-                await db.deactivate_orders(rad_etildi=True,id=id)
-                break
-    else:
+    if ord_id is not None:
         order = await db.select_order(id=ord_id)
-        text = f"Rostdan ham bormaydigan bo'ldingizmi ?"
+        text=f"Rostdan ham bormaydigan bo'ldingizmi ?"
         markup = InlineKeyboardMarkup(row_width=2)
         markup.insert(InlineKeyboardButton(text="Xa", callback_data=f"bormidiganboldim_{ord_id}"))
         markup.insert(InlineKeyboardButton(text="Yo'q", callback_data="yoqboraman"))
         markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-        while len(list) < 2:
-            await bot.send_message(text=text, chat_id=order[1], reply_markup=markup)
-            await asyncio.sleep(300)
-            list.append(1)
-            if len(list) == 2:
-                await db.deactivate_orders(rad_etildi=True, id=ord_id)
-                break
+        await bot.send_message(text=text,chat_id=order[1],reply_markup=markup)
+        if order[26]==False:
+            await db.bormaydi_update(bormaydi=True,id=ord_id)
+        else:
+            await db.delete_orders(id=ord_id)
     await call.message.delete()
 @dp.callback_query_handler(lambda c:  c.data.startswith("bormidiganboldim_"))
 async def bormaydigan_bolish_1(call:CallbackQuery,state:FSMContext):
     id = int(call.data.split("_")[1])
     if id is not None:
-        await db.deactivate_orders(rad_etildi=True, id=id)
+        await db.delete_orders(id=id)
+        # await db.kelishilmoqda_orders(kelishilmoqda=False, id=id)
+        # await db.kelishildi_orders(kelishildi=False, id=id)
         markup = InlineKeyboardMarkup(row_width=2)
         markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
         await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)

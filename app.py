@@ -1,3 +1,5 @@
+
+
 from aiogram import Bot, Dispatcher, executor, types
 from loader import dp, db, bot
 import middlewares, filters, handlers
@@ -6,11 +8,8 @@ from utils.set_bot_commands import set_default_commands
 
 
 async def on_startup(dispatcher):
-        # Birlamchi komandalar (/star va /help)
         await db.create()
-        await db.create_qoshimcha_tumanlar()
-        # await db.drop_qoshimcha_tumanlar()
-        # await db.drop_driver()
+        await db.drop_qoshimcha_tumanlar()
         await db.drop_driver()
         await db.drop_last_tarif()
         await db.drop_yoldan_odam_info()
@@ -21,6 +20,7 @@ async def on_startup(dispatcher):
         await db.drop_yolovchi()
         await db.drop_haydovchi()
         await db.drop_last_order()
+        await db.create_qoshimcha_tumanlar()
         await db.create_sayohat_info()
         await db.create_yoldan_odam()
         await db.create_table_tarif()
@@ -44,8 +44,3 @@ if __name__ == '__main__':
     executor.start_polling(dp, on_startup=on_startup,skip_updates=True)
 
 
-
-#  DB_USER=postgres
-#  DB_PASS=aqso
-#  DB_HOST=localhost
-#  DB_NAME=yolovchi_bot
