@@ -1,13 +1,18 @@
-from datetime import datetime
+import asyncio
 
-# Define two datetime objects
-start_time = datetime.now()
-end_time = datetime(2024, 4, 7, 23, 0, 0)
+from aiogram.dispatcher import FSMContext
+from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 
-# Subtracting datetime objects
-time_difference = end_time - start_time
+from handlers.statics.admin_panel import user_of_banned
+from handlers.users.tariflar import first,fifth,fourth,second,third
+from keyboards.inline.yolovchi.callback_data import menu_callback
+from keyboards.inline.yolovchi.kirish import umumiy_menu
+from loader import dp, db, bot
 
-# Convert timedelta to seconds
-time_difference_seconds = time_difference.total_seconds()
-
-print("Time difference in seconds:", time_difference_seconds)
+markup_1 = InlineKeyboardMarkup(row_width=2)
+markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
+markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
+markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                     callback_data="Mijozbormaydiganbolibdi"))
+markup_1.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
+print(markup_1["inline_keyboard"][0][0]["callback_data"])

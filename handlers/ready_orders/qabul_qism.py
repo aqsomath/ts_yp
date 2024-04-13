@@ -12,20 +12,6 @@ from loader import dp, db, bot
 
 @dp.callback_query_handler(lambda c: c.data.startswith("qabul"))
 async def first_qabul(call:CallbackQuery,state:FSMContext):
-    markup_1 = InlineKeyboardMarkup(row_width=2)
-    markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-    markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-    markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                         callback_data="Mijozbormaydiganbolibdi"))
-    markup_1.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-    markup_12 = InlineKeyboardMarkup(row_width=2)
-    markup_12.insert(
-        InlineKeyboardButton(text="Kelisha oldik 🤝 ", callback_data="kelishaoldik"))
-    markup_12.insert(
-        InlineKeyboardButton(text="Kelisha olmadik", callback_data="kelisholmadik"))
-    markup_12.insert(InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi",
-                                          callback_data="Mijozbormaydiganbolibdi"))
-    markup_12.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
     await db.add_last(telegram_id=call.from_user.id)
     last_get_orders =await db.get_order_joined_in_last_day()
     if call.from_user.id not in user_of_banned:
@@ -57,6 +43,27 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                 if msg[25] == False:
                                     if msg[24] == False:
                                         try:
+                                            markup_1 = InlineKeyboardMarkup(row_width=2)
+                                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ",
+                                                                                 callback_data=f"kelishaoldik_{ord_id}"))
+                                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik",
+                                                                                 callback_data=f"kelisholmadik_{ord_id}"))
+                                            markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                                                 callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
+                                            markup_1.insert(
+                                                InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
+
+                                            markup_12 = InlineKeyboardMarkup(row_width=2)
+                                            markup_12.insert(
+                                                InlineKeyboardButton(text="Kelisha oldik 🤝 ",
+                                                                     callback_data=f"kelishaoldik_{ord_id}"))
+                                            markup_12.insert(
+                                                InlineKeyboardButton(text="Kelisha olmadik",
+                                                                     callback_data=f"kelisholmadik_{ord_id}"))
+                                            markup_12.insert(InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi",
+                                                                                  callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
+                                            markup_12.insert(
+                                                InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
                                             driver = await db.select_user(telegram_id=call.from_user.id)
                                             driver_id = driver[0]
                                             await bot.send_message(
@@ -95,6 +102,27 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                 if msg[25]==False:
                                     if msg[24]==False:
                                         try:
+                                            markup_1 = InlineKeyboardMarkup(row_width=2)
+                                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ",
+                                                                                 callback_data=f"kelishaoldik_{ord_id}"))
+                                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik",
+                                                                                 callback_data=f"kelisholmadik_{ord_id}"))
+                                            markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                                                 callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
+                                            markup_1.insert(
+                                                InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
+
+                                            markup_12 = InlineKeyboardMarkup(row_width=2)
+                                            markup_12.insert(
+                                                InlineKeyboardButton(text="Kelisha oldik 🤝 ",
+                                                                     callback_data=f"kelishaoldik_{ord_id}"))
+                                            markup_12.insert(
+                                                InlineKeyboardButton(text="Kelisha olmadik",
+                                                                     callback_data=f"kelisholmadik_{ord_id}"))
+                                            markup_12.insert(InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi",
+                                                                                  callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
+                                            markup_12.insert(
+                                                InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
                                             driver = await db.select_user(telegram_id=call.from_user.id)
                                             driver_id = driver[0]
                                             await bot.send_message(
@@ -133,6 +161,30 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                         if msg[25] == False:
                                             if msg[24] == False:
                                                 try:
+                                                    markup_1 = InlineKeyboardMarkup(row_width=2)
+                                                    markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ",
+                                                                                         callback_data=f"kelishaoldik_{ord_id}"))
+                                                    markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik",
+                                                                                         callback_data=f"kelisholmadik_{ord_id}"))
+                                                    markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                                                         callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
+                                                    markup_1.insert(
+                                                        InlineKeyboardButton(text="Bosh menu",
+                                                                             callback_data="qaytvoramiz"))
+
+                                                    markup_12 = InlineKeyboardMarkup(row_width=2)
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Kelisha oldik 🤝 ",
+                                                                             callback_data=f"kelishaoldik_{ord_id}"))
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Kelisha olmadik",
+                                                                             callback_data=f"kelisholmadik_{ord_id}"))
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi",
+                                                                             callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Bosh menu",
+                                                                             callback_data="qaytvoramiz"))
                                                     driver = await db.select_user(telegram_id=call.from_user.id)
                                                     driver_id = driver[0]
                                                     await bot.send_message(
@@ -173,6 +225,30 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                         if msg[25] == False:
                                             if msg[24] == False:
                                                 try:
+                                                    markup_1 = InlineKeyboardMarkup(row_width=2)
+                                                    markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ",
+                                                                                         callback_data=f"kelishaoldik_{ord_id}"))
+                                                    markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik",
+                                                                                         callback_data=f"kelisholmadik_{ord_id}"))
+                                                    markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                                                         callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
+                                                    markup_1.insert(
+                                                        InlineKeyboardButton(text="Bosh menu",
+                                                                             callback_data="qaytvoramiz"))
+
+                                                    markup_12 = InlineKeyboardMarkup(row_width=2)
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Kelisha oldik 🤝 ",
+                                                                             callback_data=f"kelishaoldik_{ord_id}"))
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Kelisha olmadik",
+                                                                             callback_data=f"kelisholmadik_{ord_id}"))
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi",
+                                                                             callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Bosh menu",
+                                                                             callback_data="qaytvoramiz"))
                                                     driver = await db.select_user(telegram_id=call.from_user.id)
                                                     driver_id = driver[0]
                                                     await bot.send_message(
@@ -212,6 +288,30 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                         if msg[25] == False:
                                             if msg[24] == False:
                                                 try:
+                                                    markup_1 = InlineKeyboardMarkup(row_width=2)
+                                                    markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ",
+                                                                                         callback_data=f"kelishaoldik_{ord_id}"))
+                                                    markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik",
+                                                                                         callback_data=f"kelisholmadik_{ord_id}"))
+                                                    markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                                                         callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
+                                                    markup_1.insert(
+                                                        InlineKeyboardButton(text="Bosh menu",
+                                                                             callback_data="qaytvoramiz"))
+
+                                                    markup_12 = InlineKeyboardMarkup(row_width=2)
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Kelisha oldik 🤝 ",
+                                                                             callback_data=f"kelishaoldik_{ord_id}"))
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Kelisha olmadik",
+                                                                             callback_data=f"kelisholmadik_{ord_id}"))
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi",
+                                                                             callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Bosh menu",
+                                                                             callback_data="qaytvoramiz"))
                                                     driver = await db.select_user(telegram_id=call.from_user.id)
                                                     driver_id = driver[0]
                                                     await bot.send_message(
@@ -255,17 +355,19 @@ async def tariflar_uchun(call:CallbackQuery,state:FSMContext):
                               f"Telefon : +998 94 100 79 74\n"
                               f"Telegram : <a href='tg://user?id={343103355}'>Admin</a> ")
 
-@dp.callback_query_handler(lambda c: c.data=="kelisholmadik")
+@dp.callback_query_handler(lambda c: c.data.startswith("kelisholmadik_"))
 async def kelisha_olmadik(call:CallbackQuery,state:FSMContext):
-    data = await state.get_data()
-    ord_id = data.get("ord_id")
-    if ord_id is not None:
-        await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
-        await db.kelishildi_orders(kelishildi=False, id=ord_id)
-        markup_1 = InlineKeyboardMarkup(row_width=2)
-        markup_1.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-        await call.message.answer("Afsus 😞, menda siz uchun takliflar bor. Bosh menu ga o'ting",reply_markup=markup_1)
-        await call.message.delete()
+    ord_id = int(call.data.split("_")[1])
+    order = await db.select_order(id=ord_id)
+    await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
+    await db.kelishildi_orders(kelishildi=False, id=ord_id)
+    markup_1 = InlineKeyboardMarkup(row_width=2)
+    markup_1.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
+    await call.message.answer("Afsus 😞, menda siz uchun takliflar bor. Bosh menu ga o'ting",reply_markup=markup_1)
+    await call.message.delete()
+
+
+
 
 @dp.callback_query_handler(lambda c: c.data=="qaytvoramiz")
 async def qyatvoramiz(call:CallbackQuery,state:FSMContext):
@@ -296,10 +398,9 @@ async def qyatvoramiz(call:CallbackQuery,state:FSMContext):
         await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
         await call.message.delete()
 
-@dp.callback_query_handler(lambda c: c.data=="kelishaoldik")
+@dp.callback_query_handler(lambda c: c.data.startswith("kelishaoldik"))
 async def kelisha_oldik(call:CallbackQuery,state:FSMContext):
-   data = await state.get_data()
-   ord_id = data.get("ord_id")
+   ord_id = int(call.data.split("_")[1])
    order = await db.select_order(id=ord_id)
    if ord_id is not None:
        if len(order)==0:
@@ -317,20 +418,20 @@ async def kelisha_oldik(call:CallbackQuery,state:FSMContext):
            await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
            await call.message.delete()
 
-@dp.callback_query_handler(lambda c:  c.data=="Mijozbormaydiganbolibdi")
+@dp.callback_query_handler(lambda c:  c.data.startswith(f"Mijozbormaydiganbolibdi_"))
 async def bormaydigan_bolish(call:CallbackQuery,state:FSMContext):
-    data = await state.get_data()
-    ord_id = data.get("ord_id")
+    ord_id =int(call.data.split("_")[1])
     if ord_id is not None:
         order = await db.select_order(id=ord_id)
         text=f"Rostdan ham bormaydigan bo'ldingizmi ?"
         markup = InlineKeyboardMarkup(row_width=2)
         markup.insert(InlineKeyboardButton(text="Xa", callback_data=f"bormidiganboldim_{ord_id}"))
-        markup.insert(InlineKeyboardButton(text="Yo'q", callback_data="yoqboraman"))
+        markup.insert(InlineKeyboardButton(text="Yo'q", callback_data=f"yoqboraman_{ord_id}"))
         markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
         await bot.send_message(text=text,chat_id=order[1],reply_markup=markup)
         if order[26]==False:
             await db.bormaydi_update(bormaydi=True,id=ord_id)
+            await db.kelishilmoqda_orders(kelishilmoqda=False,id=ord_id)
         else:
             await db.delete_orders(id=ord_id)
     await call.message.delete()
@@ -339,11 +440,20 @@ async def bormaydigan_bolish_1(call:CallbackQuery,state:FSMContext):
     id = int(call.data.split("_")[1])
     if id is not None:
         await db.delete_orders(id=id)
-        # await db.kelishilmoqda_orders(kelishilmoqda=False, id=id)
-        # await db.kelishildi_orders(kelishildi=False, id=id)
         markup = InlineKeyboardMarkup(row_width=2)
         markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
         await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
         await call.message.delete()
 
 
+@dp.callback_query_handler(lambda c:  c.data.startswith("yoqboraman_"))
+async def yoqboraman(call:CallbackQuery):
+    id = int(call.data.split("_")[1])
+    if id is not None:
+        await db.kelishilmoqda_orders(kelishilmoqda=False, id=id)
+        await db.kelishildi_orders(kelishildi=False, id=id)
+        await db.bormaydi_update(bormaydi=False, id=id)
+        markup = InlineKeyboardMarkup(row_width=2)
+        markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
+        await call.message.answer("Juda yaxshi , haydovchilarimiz siz bilan bo'g'lanishini kuting ", reply_markup=markup)
+        await call.message.delete()
