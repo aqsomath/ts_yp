@@ -16,81 +16,81 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
     last_get_orders =await db.get_order_joined_in_last_day()
     if call.from_user.id not in user_of_banned:
         if call.from_user.id in fourth:
-            count = []
-            for i in last_get_orders:
-                if i[1]==call.from_user.id:
-                    count.append(i)
-            tarif = await db.select_tarif(tarif_name="fourth")
-            tarif1 = await db.select_tarif(tarif_name="first")
-            tarif2= await db.select_tarif(tarif_name="second")
-            tarif3 = await db.select_tarif(tarif_name="third")
-            limit = tarif[3]
-            if call.from_user.id in first:
-                limit+=tarif1[3]
-            if call.from_user.id in second:
-                limit+=tarif2[3]
-            if call.from_user.id in third:
-                limit+=tarif3[3]
-            if len(count)<limit+1:
-                if call.data.startswith("qabul_flkk_"):
+            if call.data.startswith("qabul_flkk_"):
                     ord_id = int(call.data.split("_")[2])
-                    await state.update_data({"ord_id":ord_id})
                     msg = await db.select_orders(id=ord_id)
-                    list = [3, 9, 11, 13, 15, 17, 19, 21]
-                    for i in list:
-                        if msg[i] is not None:
-                            if msg[23] == False:
-                                if msg[25] == False:
-                                    if msg[24] == False:
-                                        try:
-                                            markup_1 = InlineKeyboardMarkup(row_width=2)
-                                            markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ",
-                                                                                 callback_data=f"kelishaoldik_{ord_id}"))
-                                            markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik",
-                                                                                 callback_data=f"kelisholmadik_{ord_id}"))
-                                            markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                                                 callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
-                                            markup_1.insert(
-                                                InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
+                    if msg is None:
+                        await call.message.answer("Bu buyurtma o'chib ketdi")
+                    else:
+                        list = [3, 9, 11, 13, 15, 17, 19, 21]
+                        for i in list:
+                            if msg[i] is not None:
+                                if msg[23] == False:
+                                    if msg[25] == False:
+                                        if msg[24] == False:
+                                            try:
+                                                markup_1 = InlineKeyboardMarkup(row_width=2)
+                                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ",
+                                                                                     callback_data=f"kelishaoldik_{ord_id}"))
+                                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik",
+                                                                                     callback_data=f"kelisholmadik_{ord_id}"))
+                                                markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                                                     callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
+                                                markup_1.insert(
+                                                    InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
 
-                                            markup_12 = InlineKeyboardMarkup(row_width=2)
-                                            markup_12.insert(
-                                                InlineKeyboardButton(text="Kelisha oldik 🤝 ",
-                                                                     callback_data=f"kelishaoldik_{ord_id}"))
-                                            markup_12.insert(
-                                                InlineKeyboardButton(text="Kelisha olmadik",
-                                                                     callback_data=f"kelisholmadik_{ord_id}"))
-                                            markup_12.insert(InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi",
-                                                                                  callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
-                                            markup_12.insert(
-                                                InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-                                            driver = await db.select_user(telegram_id=call.from_user.id)
-                                            driver_id = driver[0]
-                                            await bot.send_message(
-                                                text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
-                                                chat_id=msg[1], reply_markup=markup_1)
-                                            await call.message.answer(msg[i], reply_markup=markup_12)
-                                            await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                        except TypeError:
+                                                markup_12 = InlineKeyboardMarkup(row_width=2)
+                                                markup_12.insert(
+                                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ",
+                                                                         callback_data=f"kelishaoldik_{ord_id}"))
+                                                markup_12.insert(
+                                                    InlineKeyboardButton(text="Kelisha olmadik",
+                                                                         callback_data=f"kelisholmadik_{ord_id}"))
+                                                markup_12.insert(InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi",
+                                                                                      callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
+                                                markup_12.insert(
+                                                    InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
+                                                count = []
+                                                for j in last_get_orders:
+                                                    if j[1] == call.from_user.id:
+                                                        count.append(j)
+                                                tarif = await db.select_tarif(tarif_name="fourth")
+                                                tarif1 = await db.select_tarif(tarif_name="first")
+                                                tarif2 = await db.select_tarif(tarif_name="second")
+                                                tarif3 = await db.select_tarif(tarif_name="third")
+                                                limit = tarif[3]
+                                                if call.from_user.id in first:
+                                                    limit += tarif1[3]
+                                                if call.from_user.id in second:
+                                                    limit += tarif2[3]
+                                                if call.from_user.id in third:
+                                                    limit += tarif3[3]
+                                                if len(count) <= limit:
+                                                    driver = await db.select_user(telegram_id=call.from_user.id)
+                                                    driver_id = driver[0]
+                                                    await bot.send_message(
+                                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
+                                                        chat_id=msg[1], reply_markup=markup_1)
+                                                    await call.message.answer(msg[i], reply_markup=markup_12)
+                                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                                else:
+                                                    await call.message.answer("Bugungi limitingiz tugadi")
+                                            except TypeError:
+                                                await call.message.answer(
+                                                    "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
+                                        else:
                                             await call.message.answer(
-                                                "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
+                                                "Afsus kech qoldingiz . Bu buyurtma qabul boshqa talabgor tomonidan qabul qilinib bo'ldi")
                                     else:
-                                        await call.message.answer(
-                                            "Afsus kech qoldingiz . Bu buyurtma qabul boshqa talabgor tomonidan qabul qilinib bo'ldi")
+
+                                        await call.message.answer("Bu buyurtma buyurtmachi tomonidan bekor qilindi ")
                                 else:
-                                    await call.message.answer("Bu buyurtma buyurtmachi tomonidan bekor qilindi ")
-                            else:
-                                await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
+                                    await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
 
         else:
 
             if call.from_user.id in fifth:
-                count = []
-                for i in last_get_orders:
-                    if i[1] == call.from_user.id:
-                        count.append(i)
-                tarif = await db.select_tarif(tarif_name="fifth")
-                if len(count) < tarif[3]+1:
+
                     if call.data.startswith("qabul_flkk_"):
                         ord_id = int(call.data.split("_")[2])
                         await state.update_data({"ord_id": ord_id})
@@ -123,33 +123,35 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                                                   callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
                                             markup_12.insert(
                                                 InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-                                            driver = await db.select_user(telegram_id=call.from_user.id)
-                                            driver_id = driver[0]
-                                            await bot.send_message(
-                                                text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
-                                                chat_id=msg[1], reply_markup=markup_1)
-                                            await call.message.answer(msg[i], reply_markup=markup_12)
-                                            await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                            count = []
+                                            for j in last_get_orders:
+                                                if j[1] == call.from_user.id:
+                                                    count.append(j)
+                                            tarif = await db.select_tarif(tarif_name="fifth")
+                                            if len(count) <= tarif[3] :
+                                                driver = await db.select_user(telegram_id=call.from_user.id)
+                                                driver_id = driver[0]
+                                                await bot.send_message(
+                                                    text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
+                                                    chat_id=msg[1], reply_markup=markup_1)
+                                                await call.message.answer(msg[i], reply_markup=markup_12)
+                                                await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                            else:
+                                                await call.message.answer("Bugungi limitingiz tugadi !")
                                         except TypeError:
                                             await call.message.answer(
                                                 "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
                                     else:
+
                                         await call.message.answer("Afsus kech qoldingiz . Bu buyurtma qabul boshqa talabgor tomonidan qabul qilinib bo'ldi")
                                 else:
+
                                     await call.message.answer("Bu buyurtma buyurtmachi tomonidan bekor qilindi ")
                             else:
+
                                 await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
 
             if call.from_user.id in first:
-                count = []
-                for i in last_get_orders:
-                    if i[1] == call.from_user.id:
-                        count.append(i)
-                tarif =await db.select_tarif(tarif_name="first")
-                if call.from_user.id in fourth:
-                    tarif_4= await db.select_tarif(tarif_name="fourth")
-                    if len(count) < tarif[3] + 1+tarif_4[3]:
-
                         if call.data.startswith("qabul_flkk_"):
                             ord_id = int(call.data.split("_")[2])
                             await state.update_data({"ord_id": ord_id})
@@ -185,34 +187,39 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                     markup_12.insert(
                                                         InlineKeyboardButton(text="Bosh menu",
                                                                              callback_data="qaytvoramiz"))
-                                                    driver = await db.select_user(telegram_id=call.from_user.id)
-                                                    driver_id = driver[0]
-                                                    await bot.send_message(
-                                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
-                                                        chat_id=msg[1], reply_markup=markup_1)
-                                                    await call.message.answer(msg[i], reply_markup=markup_12)
-                                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                                    count = []
+                                                    for j in last_get_orders:
+                                                        if j[1] == call.from_user.id:
+                                                            count.append(j)
+                                                    tarif = await db.select_tarif(tarif_name="first")
+                                                    if call.from_user.id in fourth:
+                                                        tarif_4 = await db.select_tarif(tarif_name="fourth")
+                                                        if len(count) <= tarif[3]  + tarif_4[3]:
+                                                            driver = await db.select_user(telegram_id=call.from_user.id)
+                                                            driver_id = driver[0]
+                                                            await bot.send_message(
+                                                                text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
+                                                                chat_id=msg[1], reply_markup=markup_1)
+                                                            await call.message.answer(msg[i], reply_markup=markup_12)
+                                                            await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                                        else:
+                                                            await call.message.answer("Bugungi limitingiz tugadi !")
                                                 except TypeError:
                                                     await call.message.answer(
                                                         "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
                                             else:
+
                                                 await call.message.answer(
                                                     "Afsus kech qoldingiz . Bu buyurtma qabul boshqa talabgor tomonidan qabul qilinib bo'ldi")
                                         else:
+
                                             await call.message.answer(
                                                 "Bu buyurtma buyurtmachi tomonidan bekor qilindi ")
                                     else:
+
                                         await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
 
             if call.from_user.id in second:
-                count = []
-                for i in last_get_orders:
-                    if i[1] == call.from_user.id:
-                        count.append(i)
-                tarif = await db.select_tarif(tarif_name="second")
-                if call.from_user.id in fourth:
-                    tarif_4= await db.select_tarif(tarif_name="fourth")
-                    if len(count) < tarif[3] + 1+tarif_4[3]:
 
                         if call.data.startswith("qabul_flkk_"):
                             ord_id = int(call.data.split("_")[2])
@@ -249,33 +256,39 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                     markup_12.insert(
                                                         InlineKeyboardButton(text="Bosh menu",
                                                                              callback_data="qaytvoramiz"))
-                                                    driver = await db.select_user(telegram_id=call.from_user.id)
-                                                    driver_id = driver[0]
-                                                    await bot.send_message(
-                                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
-                                                        chat_id=msg[1], reply_markup=markup_1)
-                                                    await call.message.answer(msg[i], reply_markup=markup_12)
-                                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                                    count = []
+                                                    for j in last_get_orders:
+                                                        if j[1] == call.from_user.id:
+                                                            count.append(j)
+                                                    tarif = await db.select_tarif(tarif_name="second")
+                                                    if call.from_user.id in fourth:
+                                                        tarif_4 = await db.select_tarif(tarif_name="fourth")
+                                                        if len(count) <= tarif[3] + tarif_4[3]:
+                                                            driver = await db.select_user(telegram_id=call.from_user.id)
+                                                            driver_id = driver[0]
+                                                            await bot.send_message(
+                                                                text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
+                                                                chat_id=msg[1], reply_markup=markup_1)
+                                                            await call.message.answer(msg[i], reply_markup=markup_12)
+                                                            await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                                        else:
+                                                            await call.message.answer("Bugungi limitingiz tugadi !")
                                                 except TypeError:
                                                     await call.message.answer(
                                                         "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
                                             else:
+
                                                 await call.message.answer(
                                                     "Afsus kech qoldingiz . Bu buyurtma qabul boshqa talabgor tomonidan qabul qilinib bo'ldi")
                                         else:
+
                                             await call.message.answer(
                                                 "Bu buyurtma buyurtmachi tomonidan bekor qilindi ")
                                     else:
+
                                         await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
+
             if call.from_user.id in third:
-                count = []
-                for i in last_get_orders:
-                    if i[1] == call.from_user.id:
-                        count.append(i)
-                tarif = await db.select_tarif(tarif_name="third")
-                if call.from_user.id in fourth:
-                    tarif_4 = await db.select_tarif(tarif_name="fourth")
-                    if len(count) < tarif[3] + 1 + tarif_4[3]:
 
                         if call.data.startswith("qabul_flkk_"):
                             ord_id = int(call.data.split("_")[2])
@@ -312,23 +325,36 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                     markup_12.insert(
                                                         InlineKeyboardButton(text="Bosh menu",
                                                                              callback_data="qaytvoramiz"))
-                                                    driver = await db.select_user(telegram_id=call.from_user.id)
-                                                    driver_id = driver[0]
-                                                    await bot.send_message(
-                                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
-                                                        chat_id=msg[1], reply_markup=markup_1)
-                                                    await call.message.answer(msg[i], reply_markup=markup_12)
-                                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                                    count = []
+                                                    for j in last_get_orders:
+                                                        if j[1] == call.from_user.id:
+                                                            count.append(j)
+                                                    tarif = await db.select_tarif(tarif_name="third")
+                                                    if call.from_user.id in fourth:
+                                                        tarif_4 = await db.select_tarif(tarif_name="fourth")
+                                                        if len(count) <= tarif[3] + tarif_4[3]:
+                                                            driver = await db.select_user(telegram_id=call.from_user.id)
+                                                            driver_id = driver[0]
+                                                            await bot.send_message(
+                                                                text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
+                                                                chat_id=msg[1], reply_markup=markup_1)
+                                                            await call.message.answer(msg[i], reply_markup=markup_12)
+                                                            await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                                        else:
+                                                            await call.message.answer("Bugungi limitingiz tugadi !")
                                                 except TypeError:
                                                     await call.message.answer(
                                                         "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
                                             else:
+
                                                 await call.message.answer(
                                                     "Afsus kech qoldingiz . Bu buyurtma qabul boshqa talabgor tomonidan qabul qilinib bo'ldi")
                                         else:
+
                                             await call.message.answer(
                                                 "Bu buyurtma buyurtmachi tomonidan bekor qilindi ")
                                     else:
+
                                         await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
 
             if call.from_user.id not in fourth:
@@ -356,9 +382,8 @@ async def tariflar_uchun(call:CallbackQuery,state:FSMContext):
                               f"Telegram : <a href='tg://user?id={343103355}'>Admin</a> ")
 
 @dp.callback_query_handler(lambda c: c.data.startswith("kelisholmadik_"))
-async def kelisha_olmadik(call:CallbackQuery,state:FSMContext):
+async def kelisha_olmadik(call:CallbackQuery):
     ord_id = int(call.data.split("_")[1])
-    order = await db.select_order(id=ord_id)
     await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
     await db.kelishildi_orders(kelishildi=False, id=ord_id)
     markup_1 = InlineKeyboardMarkup(row_width=2)
