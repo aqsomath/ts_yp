@@ -100,6 +100,7 @@ class Database:
         kelishildi BOOLEAN NOT NULL DEFAULT FALSE,
         rad_etildi BOOLEAN NOT NULL DEFAULT FALSE,
         bormaydi BOOLEAN NOT NULL DEFAULT FALSE,
+        aniq_bormaydi BOOLEAN NOT NULL DEFAULT FALSE,
         event_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         
         );
@@ -302,6 +303,11 @@ class Database:
            UPDATE Orders SET bormaydi=$1 WHERE id=$2
            """
         return await self.execute(sql, bormaydi, id, execute=True)
+    async def aniq_bormaydi_update(self,aniq_bormaydi,id):
+        sql = """
+           UPDATE Orders SET aniq_bormaydi=$1 WHERE id=$2
+           """
+        return await self.execute(sql, aniq_bormaydi, id, execute=True)
 
     async def update_user_tayyor_taxi(self, tayyor_taxi, telegram_id):
         sql = "UPDATE Users SET tayyor_taxi=$1 WHERE telegram_id=$2"
@@ -580,7 +586,10 @@ class Database:
           WHERE last_interaction >= NOW() - INTERVAL '1 day';
           """
         return await self.execute(sql, fetch=True)
-
+    async def delete_last_order(self,**kwargs):
+        sql = "DELETE FROM Last WHERE "
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return await self.execute(sql, *parameters, fetchrow=True)
 
 
     async def drop_last_order(self):

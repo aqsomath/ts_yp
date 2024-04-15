@@ -12,8 +12,6 @@ from loader import dp, db, bot
 
 @dp.callback_query_handler(lambda c: c.data.startswith("qabul"))
 async def first_qabul(call:CallbackQuery,state:FSMContext):
-    await db.add_last(telegram_id=call.from_user.id)
-    last_get_orders =await db.get_order_joined_in_last_day()
     if call.from_user.id not in user_of_banned:
         if call.from_user.id in fourth:
             if call.data.startswith("qabul_flkk_"):
@@ -28,63 +26,70 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                 if msg[23] == False:
                                     if msg[25] == False:
                                         if msg[24] == False:
-                                            try:
-                                                markup_1 = InlineKeyboardMarkup(row_width=2)
-                                                markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ",
-                                                                                     callback_data=f"kelishaoldik_{ord_id}"))
-                                                markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik",
-                                                                                     callback_data=f"kelisholmadik_{ord_id}"))
-                                                markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
-                                                                                     callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
-                                                markup_1.insert(
-                                                    InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
+                                            if msg[27] == False:
+                                                try:
+                                                    markup_1 = InlineKeyboardMarkup(row_width=2)
+                                                    markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ",
+                                                                                         callback_data=f"kelishaoldik_{ord_id}"))
+                                                    markup_1.insert(InlineKeyboardButton(text="Kelisha olmadik",
+                                                                                         callback_data=f"kelisholmadik_{ord_id}"))
+                                                    markup_1.insert(InlineKeyboardButton(text="Men bormaydigan bo'ldim",
+                                                                                         callback_data=f"bormidiganboldim_{ord_id}"))
+                                                    markup_1.insert(
+                                                        InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
 
-                                                markup_12 = InlineKeyboardMarkup(row_width=2)
-                                                markup_12.insert(
-                                                    InlineKeyboardButton(text="Kelisha oldik 🤝 ",
-                                                                         callback_data=f"kelishaoldik_{ord_id}"))
-                                                markup_12.insert(
-                                                    InlineKeyboardButton(text="Kelisha olmadik",
-                                                                         callback_data=f"kelisholmadik_{ord_id}"))
-                                                markup_12.insert(InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi",
-                                                                                      callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
-                                                markup_12.insert(
-                                                    InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-                                                count = []
-                                                for j in last_get_orders:
-                                                    if j[1] == call.from_user.id:
-                                                        count.append(j)
-                                                tarif = await db.select_tarif(tarif_name="fourth")
-                                                tarif1 = await db.select_tarif(tarif_name="first")
-                                                tarif2 = await db.select_tarif(tarif_name="second")
-                                                tarif3 = await db.select_tarif(tarif_name="third")
-                                                limit = tarif[3]
-                                                if call.from_user.id in first:
-                                                    limit += tarif1[3]
-                                                if call.from_user.id in second:
-                                                    limit += tarif2[3]
-                                                if call.from_user.id in third:
-                                                    limit += tarif3[3]
-                                                if len(count) <= limit:
-                                                    driver = await db.select_user(telegram_id=call.from_user.id)
-                                                    driver_id = driver[0]
-                                                    await bot.send_message(
-                                                        text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
-                                                        chat_id=msg[1], reply_markup=markup_1)
-                                                    await call.message.answer(msg[i], reply_markup=markup_12)
-                                                    await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
-                                                else:
-                                                    await call.message.answer("Bugungi limitingiz tugadi")
-                                            except TypeError:
-                                                await call.message.answer(
-                                                    "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
+                                                    markup_12 = InlineKeyboardMarkup(row_width=2)
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Kelisha oldik 🤝 ",
+                                                                             callback_data=f"kelishaoldik_{ord_id}"))
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Kelisha olmadik",
+                                                                             callback_data=f"kelisholmadik_{ord_id}"))
+                                                    markup_12.insert(InlineKeyboardButton(text="Mijoz bormaydigan bo'libdi",
+                                                                                          callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
+                                                    markup_12.insert(
+                                                        InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
+                                                    await db.add_last(telegram_id=call.from_user.id)
+                                                    last_get_orders = await db.get_order_joined_in_last_day()
+                                                    count = []
+                                                    for j in last_get_orders:
+                                                        if j[1] == call.from_user.id:
+                                                            count.append(j)
+                                                    tarif = await db.select_tarif(tarif_name="fourth")
+                                                    tarif1 = await db.select_tarif(tarif_name="first")
+                                                    tarif2 = await db.select_tarif(tarif_name="second")
+                                                    tarif3 = await db.select_tarif(tarif_name="third")
+                                                    limit = tarif[3]
+                                                    if call.from_user.id in first:
+                                                        limit += tarif1[3]
+                                                    if call.from_user.id in second:
+                                                        limit += tarif2[3]
+                                                    if call.from_user.id in third:
+                                                        limit += tarif3[3]
+                                                    if len(count) <= limit:
+                                                        driver = await db.select_user(telegram_id=call.from_user.id)
+                                                        driver_id = driver[0]
+                                                        await bot.send_message(
+                                                            text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
+                                                            chat_id=msg[1], reply_markup=markup_1)
+                                                        await call.message.answer(msg[i], reply_markup=markup_12)
+                                                        await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                                    else:
+                                                        await call.message.answer("Bugungi limitingiz tugadi")
+                                                except TypeError:
+                                                    await call.message.answer(
+                                                        "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
+                                            else:
+                                                await call.message.answer("Haydovchilar ikki bor mijoz bormasligini tasdiqlashdi, lekin , mijozning o'zi buni tasdiqlamadi .")
                                         else:
+
                                             await call.message.answer(
                                                 "Afsus kech qoldingiz . Bu buyurtma qabul boshqa talabgor tomonidan qabul qilinib bo'ldi")
                                     else:
 
                                         await call.message.answer("Bu buyurtma buyurtmachi tomonidan bekor qilindi ")
                                 else:
+
                                     await call.message.answer("Bu buyurtma ayni paytda kelishilmoqda !")
 
         else:
@@ -123,6 +128,8 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                                                   callback_data=f"Mijozbormaydiganbolibdi_{ord_id}"))
                                             markup_12.insert(
                                                 InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
+                                            await db.add_last(telegram_id=call.from_user.id)
+                                            last_get_orders = await db.get_order_joined_in_last_day()
                                             count = []
                                             for j in last_get_orders:
                                                 if j[1] == call.from_user.id:
@@ -187,6 +194,8 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                     markup_12.insert(
                                                         InlineKeyboardButton(text="Bosh menu",
                                                                              callback_data="qaytvoramiz"))
+                                                    await db.add_last(telegram_id=call.from_user.id)
+                                                    last_get_orders = await db.get_order_joined_in_last_day()
                                                     count = []
                                                     for j in last_get_orders:
                                                         if j[1] == call.from_user.id:
@@ -256,6 +265,8 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                     markup_12.insert(
                                                         InlineKeyboardButton(text="Bosh menu",
                                                                              callback_data="qaytvoramiz"))
+                                                    await db.add_last(telegram_id=call.from_user.id)
+                                                    last_get_orders = await db.get_order_joined_in_last_day()
                                                     count = []
                                                     for j in last_get_orders:
                                                         if j[1] == call.from_user.id:
@@ -325,6 +336,8 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                     markup_12.insert(
                                                         InlineKeyboardButton(text="Bosh menu",
                                                                              callback_data="qaytvoramiz"))
+                                                    await db.add_last(telegram_id=call.from_user.id)
+                                                    last_get_orders = await db.get_order_joined_in_last_day()
                                                     count = []
                                                     for j in last_get_orders:
                                                         if j[1] == call.from_user.id:
@@ -428,37 +441,43 @@ async def kelisha_oldik(call:CallbackQuery,state:FSMContext):
    ord_id = int(call.data.split("_")[1])
    order = await db.select_order(id=ord_id)
    if ord_id is not None:
-       if len(order)==0:
-           markup = InlineKeyboardMarkup(row_width=2)
-           markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-           await db.kelishildi_orders(kelishildi=True, id=ord_id)
-           await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
-           await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
-           await call.message.delete()
+       if call.from_user.id==order[1]:
+           if len(order)==0:
+               markup = InlineKeyboardMarkup(row_width=2)
+               markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
+               await db.kelishildi_orders(kelishildi=True, id=ord_id)
+               await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
+               await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
+           else:
+               markup = InlineKeyboardMarkup(row_width=2)
+               markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
+               await db.kelishildi_orders(kelishildi=True,id=ord_id)
+               await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
+               await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
        else:
-           markup = InlineKeyboardMarkup(row_width=2)
-           markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-           await db.kelishildi_orders(kelishildi=True,id=ord_id)
-           await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
-           await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
-           await call.message.delete()
+           markup=InlineKeyboardMarkup(row_width=2)
+           markup.insert(InlineKeyboardButton(text="Xa, tasdiqlayman",callback_data=f"kelishaoldik_{ord_id}"))
+           markup.insert(InlineKeyboardButton(text="Yo'q, kelishaolmadim",callback_data=f"kelisholmadik_{ord_id}"))
+           await bot.send_message(chat_id=order[1],text=f"Sizning buyurtmangiz kelishildi !\nRostdan ham kelishganingizni tasdiqlaysizmi ?",reply_markup=markup)
 
 @dp.callback_query_handler(lambda c:  c.data.startswith(f"Mijozbormaydiganbolibdi_"))
 async def bormaydigan_bolish(call:CallbackQuery,state:FSMContext):
     ord_id =int(call.data.split("_")[1])
     if ord_id is not None:
         order = await db.select_order(id=ord_id)
-        text=f"Rostdan ham bormaydigan bo'ldingizmi ?"
+        text = f"Rostdan ham bormaydigan bo'ldingizmi ?"
         markup = InlineKeyboardMarkup(row_width=2)
         markup.insert(InlineKeyboardButton(text="Xa", callback_data=f"bormidiganboldim_{ord_id}"))
         markup.insert(InlineKeyboardButton(text="Yo'q", callback_data=f"yoqboraman_{ord_id}"))
         markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-        await bot.send_message(text=text,chat_id=order[1],reply_markup=markup)
-        if order[26]==False:
-            await db.bormaydi_update(bormaydi=True,id=ord_id)
-            await db.kelishilmoqda_orders(kelishilmoqda=False,id=ord_id)
+        await bot.send_message(text=text, chat_id=order[1], reply_markup=markup)
+        if order[26] == False:
+            await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
+            await db.bormaydi_update(bormaydi=True, id=ord_id)
         else:
-            await db.delete_orders(id=ord_id)
+            await db.aniq_bormaydi_update(aniq_bormaydi=True, id=ord_id)
+            await db.bormaydi_update(bormaydi=False, id=ord_id)
+            await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
     await call.message.delete()
 @dp.callback_query_handler(lambda c:  c.data.startswith("bormidiganboldim_"))
 async def bormaydigan_bolish_1(call:CallbackQuery,state:FSMContext):
@@ -478,6 +497,7 @@ async def yoqboraman(call:CallbackQuery):
         await db.kelishilmoqda_orders(kelishilmoqda=False, id=id)
         await db.kelishildi_orders(kelishildi=False, id=id)
         await db.bormaydi_update(bormaydi=False, id=id)
+        await db.aniq_bormaydi_update(aniq_bormaydi=False, id=id)
         markup = InlineKeyboardMarkup(row_width=2)
         markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
         await call.message.answer("Juda yaxshi , haydovchilarimiz siz bilan bo'g'lanishini kuting ", reply_markup=markup)
