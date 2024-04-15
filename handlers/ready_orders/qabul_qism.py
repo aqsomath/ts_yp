@@ -26,7 +26,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                 if msg[23] == False:
                                     if msg[25] == False:
                                         if msg[24] == False:
-                                            if msg[27] == False:
+                                            # if msg[27] == False:
                                                 try:
                                                     markup_1 = InlineKeyboardMarkup(row_width=2)
                                                     markup_1.insert(InlineKeyboardButton(text="Kelisha oldik 🤝 ",
@@ -79,8 +79,8 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                 except TypeError:
                                                     await call.message.answer(
                                                         "Kechirasiz , bu buyurtmani qabul qilishigniz uchun siz haydovchi bo'lishingiz kerak !")
-                                            else:
-                                                await call.message.answer("Haydovchilar ikki bor mijoz bormasligini tasdiqlashdi, lekin , mijozning o'zi buni tasdiqlamadi .")
+                                            # else:
+                                            #     await call.message.answer("Haydovchilar ikki bor mijoz bormasligini tasdiqlashdi, lekin , mijozning o'zi buni tasdiqlamadi .")
                                         else:
 
                                             await call.message.answer(
@@ -439,26 +439,13 @@ async def qyatvoramiz(call:CallbackQuery,state:FSMContext):
 @dp.callback_query_handler(lambda c: c.data.startswith("kelishaoldik"))
 async def kelisha_oldik(call:CallbackQuery,state:FSMContext):
    ord_id = int(call.data.split("_")[1])
-   order = await db.select_order(id=ord_id)
-   if ord_id is not None:
-       if call.from_user.id==order[1]:
-           if len(order)==0:
-               markup = InlineKeyboardMarkup(row_width=2)
-               markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-               await db.kelishildi_orders(kelishildi=True, id=ord_id)
-               await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
-               await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
-           else:
-               markup = InlineKeyboardMarkup(row_width=2)
-               markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
-               await db.kelishildi_orders(kelishildi=True,id=ord_id)
-               await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
-               await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
-       else:
-           markup=InlineKeyboardMarkup(row_width=2)
-           markup.insert(InlineKeyboardButton(text="Xa, tasdiqlayman",callback_data=f"kelishaoldik_{ord_id}"))
-           markup.insert(InlineKeyboardButton(text="Yo'q, kelishaolmadim",callback_data=f"kelisholmadik_{ord_id}"))
-           await bot.send_message(chat_id=order[1],text=f"Sizning buyurtmangiz kelishildi !\nRostdan ham kelishganingizni tasdiqlaysizmi ?",reply_markup=markup)
+   markup = InlineKeyboardMarkup(row_width=2)
+   markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
+   await db.aniq_bormaydi_update(aniq_bormaydi=False,id=ord_id)
+   await db.kelishildi_orders(kelishildi=True, id=ord_id)
+   await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
+   await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
+
 
 @dp.callback_query_handler(lambda c:  c.data.startswith(f"Mijozbormaydiganbolibdi_"))
 async def bormaydigan_bolish(call:CallbackQuery,state:FSMContext):
@@ -483,7 +470,7 @@ async def bormaydigan_bolish(call:CallbackQuery,state:FSMContext):
 async def bormaydigan_bolish_1(call:CallbackQuery,state:FSMContext):
     id = int(call.data.split("_")[1])
     if id is not None:
-        await db.delete_orders(id=id)
+        await db.aniq_bormaydi_update(aniq_bormaydi=True,id=id)
         markup = InlineKeyboardMarkup(row_width=2)
         markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
         await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
