@@ -895,7 +895,7 @@ async def reys_soat(call: CallbackQuery, state: FSMContext):
         kuni = int(data.get('kuni'))
         soat = int(data.get('soat'))
         year = datetime.datetime.now().year
-        start_time = datetime.datetime(now.year, now.month, now.day, now.hour+5, now.minute+2, now.second)
+        start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)
         end_time = datetime.datetime(year, oy, kuni, soat, 0, 0)
         time_difference = end_time - start_time
         time_difference_seconds = time_difference.total_seconds()
