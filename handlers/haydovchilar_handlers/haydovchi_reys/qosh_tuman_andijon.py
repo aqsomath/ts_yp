@@ -1103,8 +1103,7 @@ async def tuman_yol(call: CallbackQuery, state: FSMContext):
                     "yo'ldagilar": yolda
                 }
             )
-            # @dp.callback_query_handler(state=Reys_andijon.odam)
-            # async def reys_odam(call:CallbackQuery,state:FSMContext):
+
 
             data = await state.get_data()
             msg = data.get("msg")
@@ -1130,10 +1129,10 @@ async def tuman_yol(call: CallbackQuery, state: FSMContext):
             if tonna is None:
                 ton = ""
             qoshimcha_tumanlar = data.get('qoshimcha_tumanlar')
-            print(qoshimcha_tumanlar)
-            tumanlarga = f"<b>Qo'shimcha qaysi tumanlarga boradi ? </b>\n " + ",".join(qoshimcha_tumanlar)
-            if qoshimcha_tumanlar is None:
+            if len(qoshimcha_tumanlar)==0:
                 tumanlarga = ""
+            else:
+                tumanlarga = f"<b>Qo'shimcha qaysi tumanlarga boradi ? </b>\n " + ",".join(qoshimcha_tumanlar)
             msg_full = msg + f"{mashina}" \
                              f"{kap}" \
                              f"{bag}" \

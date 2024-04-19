@@ -31,74 +31,71 @@ from utils.misc import show_on_gmaps
 
 @dp.callback_query_handler(state=Sayohat_andijon.asosiy,text="Ortga")
 async def qaytmoq(call:CallbackQuery,state:FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
-
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 @dp.callback_query_handler(state=Sayohat_andijon.asosiy,text="Bosh menu")
 async def qaytmoq(call:CallbackQuery,state:FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 
 viloyat = {
@@ -198,39 +195,37 @@ async def andi_jon(call: CallbackQuery, state: FSMContext):
 #     2 -  BEKOR QILISH
 @dp.callback_query_handler(text_contains='atmen', state=Sayohat_andijon.tuman)
 async def haydovchi(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
-
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 @dp.callback_query_handler(state=Sayohat_andijon.tuman)
 async def reys_tuman(call: CallbackQuery, state: FSMContext):
@@ -543,40 +538,37 @@ async def taqas(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text="atmen", state=Sayohat_andijon.kuni)
 async def taqas(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-
-        await state.finish()
-
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 @dp.callback_query_handler(text='Qoldakiritish', state=Sayohat_andijon.kuni)
 async def qolda_yozing(call: CallbackQuery, state: FSMContext):
     markup = InlineKeyboardMarkup(row_width=6)
@@ -601,38 +593,37 @@ async def qolda_yozing(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text="boshmenu", state=Sayohat_andijon.oyini_kiritsh)
 async def bosh(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 
 @dp.callback_query_handler(text="Ortga", state=Sayohat_andijon.oyini_kiritsh)
@@ -659,38 +650,37 @@ async def oyi(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text="boshmenu", state=Sayohat_andijon.kunini_kiritsh)
 async def bosh(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 
 @dp.callback_query_handler(text="Ortga", state=Sayohat_andijon.kunini_kiritsh)
@@ -758,38 +748,37 @@ async def aniq_ku(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text='bomenyu', state=Sayohat_andijon.aniq_kuni)
 async def menu_bosh(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 
 @dp.callback_query_handler(text='ortga', state=Sayohat_andijon.kuni)
@@ -802,38 +791,37 @@ async def andi_jon(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text_contains='atmen', state=Sayohat_andijon.kuni)
 async def haydovchi(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 
 @dp.callback_query_handler(state=Sayohat_andijon.aniq_kuni)
@@ -859,38 +847,37 @@ async def andi_jon(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text_contains='atmen', state=Sayohat_andijon.soat)
 async def haydovchi(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 
 @dp.callback_query_handler(state=Sayohat_andijon.soat)
@@ -908,7 +895,7 @@ async def reys_soat(call: CallbackQuery, state: FSMContext):
         kuni = int(data.get('kuni'))
         soat = int(data.get('soat'))
         year = datetime.datetime.now().year
-        start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)
+        start_time = datetime.datetime(now.year, now.month, now.day, now.hour+5, now.minute+2, now.second)
         end_time = datetime.datetime(year, oy, kuni, soat, 0, 0)
         time_difference = end_time - start_time
         time_difference_seconds = time_difference.total_seconds()
@@ -940,38 +927,37 @@ async def andi_jon(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text_contains='atmen', state=Sayohat_andijon.phone)
 async def haydovchi(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 
 @dp.message_handler(content_types=['contact', 'text'], state=Sayohat_andijon.phone)
@@ -1211,38 +1197,37 @@ async def qaytaman(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text="boshmenu", state=Sayohat_andijon.xa_yoq)
 async def qaytaman(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 
 @dp.callback_query_handler(text="qoldayozish", state=Sayohat_andijon.xa_yoq)
@@ -1281,38 +1266,37 @@ async def jeieir(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text="boshmenu", state=Sayohat_andijon.qolda_yoz)
 async def bmenu(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 
 @dp.callback_query_handler(text="ortga", state=Sayohat_andijon.qolda_yoz)
@@ -1403,38 +1387,37 @@ async def sdljf(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text="boshmenu", state=Sayohat_andijon.pochta_olasizmi)
 async def skahh(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 
 @dp.callback_query_handler(text="Keyingisi", state=Sayohat_andijon.pochta_olasizmi)
@@ -1496,39 +1479,37 @@ async def kasla(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text="boshmenu", state=Sayohat_andijon.yuk_olasizmi)
 async def jasa(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
-
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 @dp.callback_query_handler(text="Keyingisi", state=Sayohat_andijon.yuk_olasizmi)
 async def yuk_olasizmi_reys(call: CallbackQuery, state: FSMContext):
@@ -1602,38 +1583,37 @@ async def ksdhkja(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text="boshmenu", state=Sayohat_andijon.jami_odam)
 async def aljs(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 
 @dp.callback_query_handler(text="Keyingisi",state=Sayohat_andijon.jami_odam)
@@ -1686,39 +1666,37 @@ async def ton(call:CallbackQuery,state:FSMContext):
 
 @dp.callback_query_handler(text="boshmenu", state=Sayohat_andijon.locatsiya)
 async def bosh_menu(call:CallbackQuery,state:FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-
-        await state.finish()
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 @dp.callback_query_handler(text="ortga", state=Sayohat_andijon.locatsiya)
 async def ortga_qaytamian(call:CallbackQuery,state:FSMContext):
@@ -1794,40 +1772,37 @@ async def y_n(call:CallbackQuery, state:FSMContext):
 
 @dp.callback_query_handler(text="Boshmennu", state=Sayohat_andijon.odam)
 async def kasaas(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
-
-
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 @dp.callback_query_handler(text="Qaytish", state=Sayohat_andijon.odam)
 async def kasaas(call: CallbackQuery, state: FSMContext):
     
@@ -1858,9 +1833,37 @@ async def kasaas(call: CallbackQuery, state: FSMContext):
 async def asla(call: CallbackQuery, state: FSMContext):
     
         await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id - 1)
-        await call.message.answer("Salom haydovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
+        user = await db.select_user(telegram_id=call.from_user.id)
+        if user is not None:
+            if user[5] == True:
+                await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                          reply_markup=umumiy_menu)
+                await call.message.delete()
+                await state.finish()
+            elif user[6] == True:
+                driver = {
+                    "Haydovchi reys belgilash": 'yolovchikerak',
+                    "Tayyor yo'lovchi": 'tayyoryolovchi',
+                    "Yuk kerak": 'yukkerak',
+                    "Tayyor yuk": "tayyoryuk",
+                    "Pochta kerak": 'pochtakerak',
+                    "Tayyor pochta": "tayyorpochta",
+                    "Sayohatchilar kerak": 'sayohatgayolovchi',
+                    "Tayyor sayohatchi": "tayyorsayohatchi",
+                    "Mening buyurtmalarim": "meningbuyurtmalarim",
+                    "Admin bilan bog'lanish": "adminbilanboglanish",
+                    "Sozlamalar": "nastroyki",
+                    "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+                }
+                markup = InlineKeyboardMarkup(row_width=2)
+                for key, value in driver.items():
+                    markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+                await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+                await call.message.delete()
+                await state.finish()
+            else:
+                await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+                await state.finish()
 
 @dp.message_handler(state=Sayohat_andijon.pul_qol)
 async def sjhsdfhs(message:Message,state:FSMContext):
@@ -1985,39 +1988,37 @@ async def qayiys(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text='glavmenu', state=Sayohat_andijon.end)
 async def boshmenuga(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-
-        await state.finish()
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 @dp.callback_query_handler(text='Confirm', state=Sayohat_andijon.end)
 async def oxirgi(call: CallbackQuery, state: FSMContext):
@@ -2101,36 +2102,34 @@ async def oxirgi(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text='UnConfirm', state=Sayohat_andijon.end)
 async def y_n(call: CallbackQuery, state: FSMContext):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-        await state.finish()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
-        await state.finish()
-
-    else:
-        await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-        await state.finish()
-
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()

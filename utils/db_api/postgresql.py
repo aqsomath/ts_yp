@@ -55,7 +55,9 @@ class Database:
         full_name VARCHAR(255) NOT NULL,
         username varchar(255) NULL,
         telegram_id BIGINT NULL UNIQUE,
-        last_interaction TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        last_interaction TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        yolovchi BOOLEAN NOT NULL DEFAULT FALSE,
+        haydovchi BOOLEAN NOT NULL DEFAULT FALSE
        );
         """
         await self.execute(sql, execute=True)
@@ -67,7 +69,16 @@ class Database:
         """
         return await self.execute(sql,fetch=True)
 
-
+    async def yolovchi_set(self,yolovchi,telegram_id):
+        sql = """
+           UPDATE Users SET yolovchi=$1 WHERE telegram_id=$2
+           """
+        return await self.execute(sql, yolovchi, telegram_id, execute=True)
+    async def haydovchi_set(self,haydovchi,telegram_id):
+        sql = """
+           UPDATE Users SET haydovchi=$1 WHERE telegram_id=$2
+           """
+        return await self.execute(sql, haydovchi, telegram_id, execute=True)
 
 
     async def create_table_orders(self):
@@ -101,7 +112,10 @@ class Database:
         rad_etildi BOOLEAN NOT NULL DEFAULT FALSE,
         bormaydi BOOLEAN NOT NULL DEFAULT FALSE,
         aniq_bormaydi BOOLEAN NOT NULL DEFAULT FALSE,
-        event_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        event_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        bormaydi2 BOOLEAN NOT NULL DEFAULT FALSE
+        
+        
         
         );
         """
@@ -303,6 +317,11 @@ class Database:
            UPDATE Orders SET bormaydi=$1 WHERE id=$2
            """
         return await self.execute(sql, bormaydi, id, execute=True)
+    async def bormaydi2_update(self,bormaydi2,id):
+        sql = """
+           UPDATE Orders SET bormaydi2=$1 WHERE id=$2
+           """
+        return await self.execute(sql, bormaydi2, id, execute=True)
     async def aniq_bormaydi_update(self,aniq_bormaydi,id):
         sql = """
            UPDATE Orders SET aniq_bormaydi=$1 WHERE id=$2

@@ -10,12 +10,13 @@ from handlers.ready_orders.dictionary import all_district, tumanlar_all, andijon
 from handlers.users.edit_district.sozlamalar import haydovchilar_royxati
 from handlers.users.yolovchi_tuman.yolovchimisiz import yolovchilar_royxati
 from keyboards.inline.yolovchi.callback_data import menu_callback
-from keyboards.inline.yolovchi.kirish import umumiy_menu_1, umumiy_menu
+from keyboards.inline.yolovchi.kirish import umumiy_menu_1, umumiy_menu, kirish
 from loader import dp, db
 
 
 @dp.callback_query_handler(menu_callback.filter() )
 async def ready_orders(call:CallbackQuery,state:FSMContext):
+    now = datetime.datetime.now()
     await state.update_data({"First_data":call.data})
     tayyor=[]
     orders=[]
@@ -23,7 +24,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
         orders_all = await db.select_tayyor_yolovchi()
         for i in orders_all:
             end_time = i[9]
-            sec = (end_time - datetime.datetime.now()).total_seconds()
+            sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
                 await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_yolovchi()
@@ -31,7 +32,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
         orders_all = await db.select_tayyor_pochta()
         for i in orders_all:
             end_time = i[9]
-            sec = (end_time - datetime.datetime.now()).total_seconds()
+            sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
                 await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_pochta()
@@ -39,7 +40,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
         orders_all = await db.select_tayyor_pochta_mashina()
         for i in orders_all:
             end_time = i[9]
-            sec = (end_time - datetime.datetime.now()).total_seconds()
+            sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
                 await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_pochta_mashina()
@@ -47,7 +48,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
         orders_all = await db.select_tayyor_yuk()
         for i in orders_all:
             end_time = i[9]
-            sec = (end_time - datetime.datetime.now()).total_seconds()
+            sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
                 await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_yuk()
@@ -55,7 +56,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
         orders_all = await db.select_tayyor_yuk_haydovchi()
         for i in orders_all:
             end_time = i[9]
-            sec = (end_time - datetime.datetime.now()).total_seconds()
+            sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
                 await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_yuk_haydovchi()
@@ -63,7 +64,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
         orders_all = await db.select_tayyor_taxi()
         for i in orders_all:
             end_time = i[9]
-            sec = (end_time - datetime.datetime.now()).total_seconds()
+            sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
                 await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_taxi()
@@ -71,7 +72,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
         orders_all = await db.select_tayyor_sayohatchi()
         for i in orders_all:
             end_time = i[9]
-            sec = (end_time - datetime.datetime.now()).total_seconds()
+            sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
                 await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_sayohatchi()
@@ -79,7 +80,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
         orders_all = await db.select_tayyor_sayohatchi_mashina()
         for i in orders_all:
             end_time = i[9]
-            sec = (end_time - datetime.datetime.now()).total_seconds()
+            sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
                 await db.delete_orders(id=i[6])
         orders = await db.select_tayyor_sayohatchi_mashina()
@@ -107,61 +108,71 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
         await call.message.delete()
 
 @dp.callback_query_handler(text="qaytvoramiz")
-async def boshi_uchun(call:CallbackQuery):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
+async def boshi_uchun(call:CallbackQuery,state:FSMContext):
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 @dp.callback_query_handler(text="osjdndi")
-async def boshi_uchun(call:CallbackQuery):
-    yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-    haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-    if yolovchi is not None:
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
-
-    elif haydovchi is not None:
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
+async def boshi_uchun(call:CallbackQuery,state:FSMContext):
+    user = await db.select_user(telegram_id=call.from_user.id)
+    if user is not None:
+        if user[5] == True:
+            await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                      reply_markup=umumiy_menu)
+            await call.message.delete()
+            await state.finish()
+        elif user[6] == True:
+            driver = {
+                "Haydovchi reys belgilash": 'yolovchikerak',
+                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                "Yuk kerak": 'yukkerak',
+                "Tayyor yuk": "tayyoryuk",
+                "Pochta kerak": 'pochtakerak',
+                "Tayyor pochta": "tayyorpochta",
+                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                "Tayyor sayohatchi": "tayyorsayohatchi",
+                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                "Admin bilan bog'lanish": "adminbilanboglanish",
+                "Sozlamalar": "nastroyki",
+                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+            }
+            markup = InlineKeyboardMarkup(row_width=2)
+            for key, value in driver.items():
+                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+            await call.message.delete()
+            await state.finish()
+        else:
+            await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 @dp.callback_query_handler(lambda c: c.data.startswith('next_'))
 async def keyingi_list_item(call:CallbackQuery,state:FSMContext):
     current_page=int(call.data.split("_")[1])

@@ -2,6 +2,10 @@ from aiogram.dispatcher.filters.state import State,StatesGroup
 
 class Yolovchi_andijon(StatesGroup):
     asosiy = State()
+    mashina = State()
+    kira_haqqi = State()
+    kira_haqqi_2 = State()
+    mashina_qolda_turi = State()
     qolda_odam_soni = State()
     qolda_yozish = State()
     oyini_kiritsh = State()

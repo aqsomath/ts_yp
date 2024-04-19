@@ -6,6 +6,51 @@ from loader import dp, db, bot
 from states.haydovchi_reys_states import Reys_andijon
 
 
+@dp.callback_query_handler(state=Reys_andijon.qoshimcha_tumanlarga,text="keyingisi")
+async def qosh(call:CallbackQuery,state:FSMContext):
+        markup = aiogram.types.InlineKeyboardMarkup(row_width=3)
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Nexia', callback_data='Nexia'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Kobalt', callback_data='Kobalt'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Damas', callback_data='Damas'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Gentra', callback_data='Gentra'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Tracker', callback_data='Tracker'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Onix', callback_data='Onix'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Monza', callback_data='Monza'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Elektro car', callback_data='Elektro car'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Keyingisi', callback_data='Keyingisi'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Turini kiritish', callback_data='qoldayozish'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Ortga', callback_data='ortga'))
+        markup.insert(aiogram.types.InlineKeyboardButton(text='Bosh menu', callback_data='boshmenu'))
+        await call.message.answer("Mahsinangiz qanday ? :   ", reply_markup=markup)
+        await call.message.delete()
+        await Reys_andijon.xa_yoq.set()
+@dp.callback_query_handler(state=Reys_andijon.qoshimcha_tumanlarga,text="tanladim")
+async def qosh(call:CallbackQuery,state:FSMContext):
+    jamii = await db.select_all_qoshimcha_tumanlar()
+    list = []
+    for i in jamii:
+        if i[2] == call.from_user.id:
+            list.append(i[1])
+    for a in list:
+        await db.delete_qoshimcha_tumanlar(telegram_id=call.from_user.id, tuman=a)
+    markup = aiogram.types.InlineKeyboardMarkup(row_width=3)
+    markup.insert(aiogram.types.InlineKeyboardButton(text='Nexia', callback_data='Nexia'))
+    markup.insert(aiogram.types.InlineKeyboardButton(text='Kobalt', callback_data='Kobalt'))
+    markup.insert(aiogram.types.InlineKeyboardButton(text='Damas', callback_data='Damas'))
+    markup.insert(aiogram.types.InlineKeyboardButton(text='Gentra', callback_data='Gentra'))
+    markup.insert(aiogram.types.InlineKeyboardButton(text='Tracker', callback_data='Tracker'))
+    markup.insert(aiogram.types.InlineKeyboardButton(text='Onix', callback_data='Onix'))
+    markup.insert(aiogram.types.InlineKeyboardButton(text='Monza', callback_data='Monza'))
+    markup.insert(aiogram.types.InlineKeyboardButton(text='Elektro car', callback_data='Elektro car'))
+    markup.insert(aiogram.types.InlineKeyboardButton(text='Keyingisi', callback_data='Keyingisi'))
+    markup.insert(aiogram.types.InlineKeyboardButton(text='Turini kiritish', callback_data='qoldayozish'))
+    markup.insert(aiogram.types.InlineKeyboardButton(text='Ortga', callback_data='ortga'))
+    markup.insert(aiogram.types.InlineKeyboardButton(text='Bosh menu', callback_data='boshmenu'))
+    await call.message.answer("Mashinangiz qanday ? :   ", reply_markup=markup)
+    await call.message.delete()
+    await Reys_andijon.xa_yoq.set()
+
+
 @dp.callback_query_handler(state=Reys_andijon.qoshimcha_tuman)
 async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
 
@@ -19,7 +64,7 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
             "Namangan": "namangan",
             "Farg'ona": "farg'ona",
             "Buxoro": "buxoro",
-            "Toshkent": "toshkent",
+            "Toshkent viloyati": "toshkent",
             "Sirdaryo": "sirdaryo",
             "Surxondaryo": "surxondaryo",
             "Qashqadaryo": "qashqadaryo",
@@ -28,18 +73,16 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
             "Jizzax": "jizzax",
             "Samarqand": "samarqand",
             "Qoraqalpog'iston": "qoraqalpoq",
-            "Keyingisi": "Olinmaydi",
-            "Tanlab bo'ldim": "tanladim",
+            "Keyingisi": "keyingisi",
             "Ortga": "ortga",
             "Bosh menu": "boshmenu",
         }
-
         viloyatlar_yol = InlineKeyboardMarkup(row_width=3)
         for key, value in viloyat.items():
             viloyatlar_yol.insert(InlineKeyboardButton(text=key, callback_data=value))
-        await call.message.answer("Qo'shimcha qaysi viloyatlarning qaysi tumaniga borasiz ? ",
+        await call.message.answer("Qo'shimcha qaysi viloyatlarning qaysi tumaniga borasiz ?",
                                   reply_markup=viloyatlar_yol)
-        await Reys_andijon.odam_vil.set()
+        await Reys_andijon.qoshimcha_tumanlarga.set()
         await call.message.delete()
     list_1 = []
     jami = await db.select_all_qoshimcha_tumanlar()
@@ -57,8 +100,8 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
             list.append(i[1])
             if "qaytish" in list:
                 list.remove("qaytish")
-            if "tanladim" in list:
-                list.remove("tanladim")
+            if "tugatdim" in list:
+                list.remove("tugatdim")
     await state.update_data({"qoshimcha_tumanlar": list})
     buxoro = {}
     if "buxoro shaxar" in list:
@@ -116,7 +159,7 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
     shaxsiy_buxoro = InlineKeyboardMarkup(row_width=3)
     for key, value in buxoro.items():
         shaxsiy_buxoro.insert(InlineKeyboardButton(text=key, callback_data=value))
-    shaxsiy_buxoro.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tanladim"))
+    shaxsiy_buxoro.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tugatdim"))
     shaxsiy_buxoro.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
     shaxsiy_buxoro.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
 
@@ -201,7 +244,7 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
     shaxsiy_fargona = InlineKeyboardMarkup(row_width=3)
     for key, value in fargona.items():
         shaxsiy_fargona.insert(InlineKeyboardButton(text=key, callback_data=value))
-    shaxsiy_fargona.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tanladim"))
+    shaxsiy_fargona.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tugatdim"))
     shaxsiy_fargona.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
     shaxsiy_fargona.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
 
@@ -289,7 +332,7 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
     shaxsiy_tugma = InlineKeyboardMarkup(row_width=3)
     for key, value in andijon.items():
         shaxsiy_tugma.insert(InlineKeyboardButton(text=key, callback_data=value))
-    shaxsiy_tugma.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tanladim"))
+    shaxsiy_tugma.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tugatdim"))
     shaxsiy_tugma.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
     shaxsiy_tugma.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
 
@@ -349,7 +392,7 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
     shaxsiy_namangan = InlineKeyboardMarkup(row_width=3)
     for key, value in namangan.items():
         shaxsiy_namangan.insert(InlineKeyboardButton(text=key, callback_data=value))
-    shaxsiy_namangan.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tanladim"))
+    shaxsiy_namangan.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tugatdim"))
     shaxsiy_namangan.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
     shaxsiy_namangan.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
 
@@ -497,7 +540,7 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
     shaxsiy_toshkent = InlineKeyboardMarkup(row_width=3)
     for key, value in toshkent.items():
         shaxsiy_toshkent.insert(InlineKeyboardButton(text=key, callback_data=value))
-    shaxsiy_toshkent.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tanladim"))
+    shaxsiy_toshkent.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tugatdim"))
     shaxsiy_toshkent.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
     shaxsiy_toshkent.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
 
@@ -558,7 +601,7 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
     shaxsiy_sirdaryo = InlineKeyboardMarkup(row_width=3)
     for key, value in sirdaryo.items():
         shaxsiy_sirdaryo.insert(InlineKeyboardButton(text=key, callback_data=value))
-    shaxsiy_sirdaryo.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tanladim"))
+    shaxsiy_sirdaryo.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tugatdim"))
     shaxsiy_sirdaryo.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
     shaxsiy_sirdaryo.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
 
@@ -626,7 +669,7 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
     shaxsiy_surxondaryo = InlineKeyboardMarkup(row_width=3)
     for key, value in surxondaryo.items():
         shaxsiy_surxondaryo.insert(InlineKeyboardButton(text=key, callback_data=value))
-    shaxsiy_surxondaryo.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tanladim"))
+    shaxsiy_surxondaryo.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tugatdim"))
     shaxsiy_surxondaryo.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
     shaxsiy_surxondaryo.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
 
@@ -699,7 +742,7 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
     shaxsiy_qashqadaryo = InlineKeyboardMarkup(row_width=3)
     for key, value in qashqadaryo.items():
         shaxsiy_qashqadaryo.insert(InlineKeyboardButton(text=key, callback_data=value))
-    shaxsiy_qashqadaryo.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tanladim"))
+    shaxsiy_qashqadaryo.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tugatdim"))
     shaxsiy_qashqadaryo.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
     shaxsiy_qashqadaryo.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
 
@@ -748,7 +791,7 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
     shaxsiy_navoiy = InlineKeyboardMarkup(row_width=3)
     for key, value in navoiy.items():
         shaxsiy_navoiy.insert(InlineKeyboardButton(text=key, callback_data=value))
-    shaxsiy_navoiy.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tanladim"))
+    shaxsiy_navoiy.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tugatdim"))
     shaxsiy_navoiy.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
     shaxsiy_navoiy.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
 
@@ -809,7 +852,7 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
     shaxsiy_xorazm = InlineKeyboardMarkup(row_width=3)
     for key, value in xorazm.items():
         shaxsiy_xorazm.insert(InlineKeyboardButton(text=key, callback_data=value))
-    shaxsiy_xorazm.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tanladim"))
+    shaxsiy_xorazm.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tugatdim"))
     shaxsiy_xorazm.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
     shaxsiy_xorazm.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
 
@@ -869,7 +912,7 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
     shaxsiy_jizzax = InlineKeyboardMarkup(row_width=3)
     for key, value in jizzax.items():
         shaxsiy_jizzax.insert(InlineKeyboardButton(text=key, callback_data=value))
-    shaxsiy_jizzax.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tanladim"))
+    shaxsiy_jizzax.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tugatdim"))
     shaxsiy_jizzax.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
     shaxsiy_jizzax.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
 
@@ -937,7 +980,7 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
     shaxsiy_samarqand = InlineKeyboardMarkup(row_width=3)
     for key, value in samarqand.items():
         shaxsiy_samarqand.insert(InlineKeyboardButton(text=key, callback_data=value))
-    shaxsiy_samarqand.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tanladim"))
+    shaxsiy_samarqand.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tugatdim"))
     shaxsiy_samarqand.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
     shaxsiy_samarqand.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
 
@@ -1010,10 +1053,10 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
     shaxsiy_qoraqalpoq = InlineKeyboardMarkup(row_width=3)
     for key, value in qoraqalpoq.items():
         shaxsiy_qoraqalpoq.insert(InlineKeyboardButton(text=key, callback_data=value))
-    shaxsiy_qoraqalpoq.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tanladim"))
+    shaxsiy_qoraqalpoq.insert(InlineKeyboardButton(text="Tanlab bo'ldim", callback_data="tugatdim"))
     shaxsiy_qoraqalpoq.insert(InlineKeyboardButton(text="Ortga", callback_data="qaytish"))
     shaxsiy_qoraqalpoq.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
-    if call.data == 'tanladim':
+    if call.data == 'tugatdim':
 
         jamii = await db.select_all_qoshimcha_tumanlar()
         list = []
@@ -1035,10 +1078,10 @@ async def qoshimcha_tuman(call: CallbackQuery, state: FSMContext):
         markup.insert(aiogram.types.InlineKeyboardButton(text='Turini kiritish', callback_data='qoldayozish'))
         markup.insert(aiogram.types.InlineKeyboardButton(text='Ortga', callback_data='ortga'))
         markup.insert(aiogram.types.InlineKeyboardButton(text='Bosh menu', callback_data='boshmenu'))
-        await call.message.answer("Mahsinangiz qanday ? :   ", reply_markup=markup)
+        await call.message.answer("Mashinangiz qanday ? :   ", reply_markup=markup)
         await call.message.delete()
         await Reys_andijon.xa_yoq.set()
-    if call.data == 'Olinmaydi':
+    if call.data == 'keyingisi':
         markup = aiogram.types.InlineKeyboardMarkup(row_width=3)
         markup.insert(aiogram.types.InlineKeyboardButton(text='Nexia', callback_data='Nexia'))
         markup.insert(aiogram.types.InlineKeyboardButton(text='Kobalt', callback_data='Kobalt'))

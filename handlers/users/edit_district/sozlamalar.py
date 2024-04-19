@@ -18,7 +18,8 @@ haydovchilar_royxati = []
 @dp.callback_query_handler(kirish_callback.filter(item_name='haydovchi6656'))
 async def haydovchif(call:CallbackQuery):
         haydovchilar_royxati.append(call.from_user.id)
-
+        await db.haydovchi_set(haydovchi=True, telegram_id=call.from_user.id)
+        await db.yolovchi_set(yolovchi=False, telegram_id=call.from_user.id)
         await db.add_haydovchi(username=call.from_user.username, telegram_id=call.from_user.id, balans=0)
 
         await db.add_driver(tashiman_odam="odam", tashiman_pochta='pochta', tashiman_yuk='yuk',

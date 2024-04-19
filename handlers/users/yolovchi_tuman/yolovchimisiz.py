@@ -13,7 +13,8 @@ yolovchilar_royxati = []
 async def haydovchi(call:CallbackQuery):
         yolovchilar_royxati.append(call.from_user.id)
         await db.add_yolovchi(username=call.from_user.username,telegram_id=call.from_user.id)
-
+        await db.haydovchi_set(haydovchi=False, telegram_id=call.from_user.id)
+        await db.yolovchi_set(yolovchi=True, telegram_id=call.from_user.id)
         await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
         await call.message.delete()
 
@@ -39,28 +40,30 @@ async def haydovchi(call:CallbackQuery,state: FSMContext):
 
 @dp.callback_query_handler(menu_callback.filter(item_name='haydovchibolibdavometish'))
 async def haydovchi_bolib(call:CallbackQuery):
-    
-        driver = {
-            "Haydovchi reys belgilash": 'yolovchikerak',
-            "Tayyor yo'lovchi": 'tayyoryolovchi',
-            "Yuk kerak": 'yukkerak',
-            "Tayyor yuk": "tayyoryuk",
-            "Pochta kerak": 'pochtakerak',
-            "Tayyor pochta": "tayyorpochta",
-            "Sayohatchilar kerak": 'sayohatgayolovchi',
-            "Tayyor sayohatchi": "tayyorsayohatchi",
-            "Mening buyurtmalarim": "meningbuyurtmalarim",
-            "Admin bilan bog'lanish": "adminbilanboglanish",
-            "Sozlamalar": "nastroyki",
-            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key, value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-        await call.message.delete()
+    await db.haydovchi_set(haydovchi=True, telegram_id=call.from_user.id)
+    await db.yolovchi_set(yolovchi=False, telegram_id=call.from_user.id)
+    driver = {
+        "Haydovchi reys belgilash": 'yolovchikerak',
+        "Tayyor yo'lovchi": 'tayyoryolovchi',
+        "Yuk kerak": 'yukkerak',
+        "Tayyor yuk": "tayyoryuk",
+        "Pochta kerak": 'pochtakerak',
+        "Tayyor pochta": "tayyorpochta",
+        "Sayohatchilar kerak": 'sayohatgayolovchi',
+        "Tayyor sayohatchi": "tayyorsayohatchi",
+        "Mening buyurtmalarim": "meningbuyurtmalarim",
+        "Admin bilan bog'lanish": "adminbilanboglanish",
+        "Sozlamalar": "nastroyki",
+        "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+    }
+    markup = InlineKeyboardMarkup(row_width=2)
+    for key, value in driver.items():
+        markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+    await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+    await call.message.delete()
 @dp.callback_query_handler(menu_callback.filter(item_name='yolovchibolibdavometish'))
 async def haydovchi_bolib(call:CallbackQuery):
-    
-        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
-        await call.message.delete()
+    await db.haydovchi_set(haydovchi=False, telegram_id=call.from_user.id)
+    await db.yolovchi_set(yolovchi=True, telegram_id=call.from_user.id)
+    await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
+    await call.message.delete()

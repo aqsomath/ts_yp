@@ -1,2 +1,2 @@
-x=00
-print(x+5)
+import datetime
+print(datetime.datetime.now())

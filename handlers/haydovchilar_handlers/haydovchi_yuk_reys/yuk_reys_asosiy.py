@@ -16,36 +16,36 @@ async def yuk_reys_asosiy(call:CallbackQuery):
         await call.message.delete()
 @dp.callback_query_handler(text='ortga',state=Yuk_reys_andijon.asosiy)
 async def orga(call:CallbackQuery,state:FSMContext):
-        yolovchi = await db.select_yolovchi(telegram_id=call.from_user.id)
-        haydovchi = await db.select_haydovchi(telegram_id=call.from_user.id)
-        if yolovchi is not None:
-                await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
-                                          reply_markup=umumiy_menu)
-                await call.message.delete()
-                await state.finish()
-
-        elif haydovchi is not None:
-                driver = {
-                        "Haydovchi reys belgilash": 'yolovchikerak',
-                        "Tayyor yo'lovchi": 'tayyoryolovchi',
-                        "Yuk kerak": 'yukkerak',
-                        "Tayyor yuk": "tayyoryuk",
-                        "Pochta kerak": 'pochtakerak',
-                        "Tayyor pochta": "tayyorpochta",
-                        "Sayohatchilar kerak": 'sayohatgayolovchi',
-                        "Tayyor sayohatchi": "tayyorsayohatchi",
-                        "Mening buyurtmalarim": "meningbuyurtmalarim",
-                        "Admin bilan bog'lanish": "adminbilanboglanish",
-                        "Sozlamalar": "nastroyki",
-                        "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-                }
-                markup = InlineKeyboardMarkup(row_width=2)
-                for key, value in driver.items():
-                        markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-                await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-                await call.message.delete()
-                await state.finish()
-
-        else:
-                await call.message.answer(f"Salom, {call.message.from_user.full_name}!", reply_markup=kirish)
-                await state.finish()
+        user = await db.select_user(telegram_id=call.from_user.id)
+        if user is not None:
+                if user[5] == True:
+                        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?",
+                                                  reply_markup=umumiy_menu)
+                        await call.message.delete()
+                        await state.finish()
+                elif user[6] == True:
+                        driver = {
+                                "Haydovchi reys belgilash": 'yolovchikerak',
+                                "Tayyor yo'lovchi": 'tayyoryolovchi',
+                                "Yuk kerak": 'yukkerak',
+                                "Tayyor yuk": "tayyoryuk",
+                                "Pochta kerak": 'pochtakerak',
+                                "Tayyor pochta": "tayyorpochta",
+                                "Sayohatchilar kerak": 'sayohatgayolovchi',
+                                "Tayyor sayohatchi": "tayyorsayohatchi",
+                                "Mening buyurtmalarim": "meningbuyurtmalarim",
+                                "Admin bilan bog'lanish": "adminbilanboglanish",
+                                "Sozlamalar": "nastroyki",
+                                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+                        }
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        for key, value in driver.items():
+                                markup.insert(InlineKeyboardButton(text=key,
+                                                                   callback_data=menu_callback.new(item_name=value)))
+                        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !",
+                                                  reply_markup=markup)
+                        await call.message.delete()
+                        await state.finish()
+                else:
+                        await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+                        await state.finish()
