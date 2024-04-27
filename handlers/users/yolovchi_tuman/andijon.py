@@ -529,14 +529,34 @@ async def qayyt(call: CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(state=Yolovchi_andijon.oyini_kiritsh)
 async def oyi(call: CallbackQuery, state: FSMContext):
     await state.update_data({"oyi": call.data})
-    markup = InlineKeyboardMarkup(row_width=6)
-    for i in range(1, 32):
-        markup.insert(InlineKeyboardButton(text=f"{i}", callback_data=f"{i}"))
-    markup.insert(InlineKeyboardButton(text="Ortga", callback_data="Ortga"))
-    markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
-    await call.message.answer(f"Tanlagan oyingizni nechinchi kunida ketasiz ? ", reply_markup=markup)
-    await call.message.delete()
-    await Yolovchi_andijon.kunini_kiritsh.set()
+    if int(call.data) < datetime.datetime.now().month:
+        markup = InlineKeyboardMarkup(row_width=6)
+        markup.insert(InlineKeyboardButton(text="Yanvar", callback_data="1"))
+        markup.insert(InlineKeyboardButton(text="Fevral", callback_data="2"))
+        markup.insert(InlineKeyboardButton(text="Mart", callback_data="3"))
+        markup.insert(InlineKeyboardButton(text="Aprel", callback_data="4"))
+        markup.insert(InlineKeyboardButton(text="May", callback_data="5"))
+        markup.insert(InlineKeyboardButton(text="Iyun", callback_data="6"))
+        markup.insert(InlineKeyboardButton(text="Iyul", callback_data="7"))
+        markup.insert(InlineKeyboardButton(text="Avgust", callback_data="8"))
+        markup.insert(InlineKeyboardButton(text="Sentabr", callback_data="9"))
+        markup.insert(InlineKeyboardButton(text="Oktabr", callback_data="10"))
+        markup.insert(InlineKeyboardButton(text="Noyabr", callback_data="11"))
+        markup.insert(InlineKeyboardButton(text="Dekabr", callback_data="12"))
+        markup.insert(InlineKeyboardButton(text="Ortga", callback_data="Ortga"))
+        markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
+        await call.message.answer("Kechirasiz siz o'tib ketgan oyni kiritingiz!\nQaytadan oyni kiriting.", reply_markup=markup)
+        await call.message.delete()
+        await Yolovchi_andijon.oyini_kiritsh.set()
+    else:
+        markup = InlineKeyboardMarkup(row_width=6)
+        for i in range(1, 32):
+            markup.insert(InlineKeyboardButton(text=f"{i}", callback_data=f"{i}"))
+        markup.insert(InlineKeyboardButton(text="Ortga", callback_data="Ortga"))
+        markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
+        await call.message.answer(f"Tanlagan oyingizni nechinchi kunida ketasiz ? ", reply_markup=markup)
+        await call.message.delete()
+        await Yolovchi_andijon.kunini_kiritsh.set()
 
 
 @dp.callback_query_handler(text="boshmenu", state=Yolovchi_andijon.kunini_kiritsh)
@@ -598,11 +618,29 @@ async def qayyt(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(state=Yolovchi_andijon.kunini_kiritsh)
 async def kunini(call: CallbackQuery, state: FSMContext):
-    await state.update_data({"kuni": call.data})
-    await call.message.answer("Soat nechchida yo'lga chiqasiz ? ", reply_markup=time)
-    await call.message.delete()
-    await Yolovchi_andijon.soat.set()
-
+    data = await state.get_data()
+    oy = data.get("oyi")
+    oy = int(oy)
+    if oy > datetime.datetime.now().month:
+        await state.update_data({"kuni": call.data})
+        await call.message.answer("Soat nechchida yo'lga chiqasiz ? ", reply_markup=time)
+        await call.message.delete()
+        await Yolovchi_andijon.soat.set()
+    if oy == datetime.datetime.now().month:
+        if int(call.data)>=datetime.datetime.now().day:
+            await state.update_data({"kuni": call.data})
+            await call.message.answer("Soat nechchida yo'lga chiqasiz ? ", reply_markup=time)
+            await call.message.delete()
+            await Yolovchi_andijon.soat.set()
+        else:
+            markup = InlineKeyboardMarkup(row_width=6)
+            for i in range(1, 32):
+                markup.insert(InlineKeyboardButton(text=f"{i}", callback_data=f"{i}"))
+            markup.insert(InlineKeyboardButton(text="Ortga", callback_data="Ortga"))
+            markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
+            await call.message.answer(f"Kechirasiz siz o'tib ketgan kunni belgilandingiz!\nQaytadan kiriting.\nTanlagan oyingizni nechinchi kunida ketasiz ? ", reply_markup=markup)
+            await call.message.delete()
+            await Yolovchi_andijon.kunini_kiritsh.set()
 
 @dp.callback_query_handler(text='Bugun', state=Yolovchi_andijon.kuni)
 @dp.callback_query_handler(text='Ertaga', state=Yolovchi_andijon.kuni)
@@ -790,10 +828,9 @@ async def reys_soat(call: CallbackQuery, state: FSMContext):
         await call.message.delete()
         await Yolovchi_andijon.phone.set()
     else:
-        await call.message.answer("Kechirasiz siz vaqtni noto'g'ri kiritdingiz?")
-        await call.message.answer("Qachon yo'lga chiqasiz ?", reply_markup=reys_ortgaa)
+        await call.message.answer("Kechirasiz siz vaqtni noto'g'ri kiritdingiz!\nSoat nechchida yo'lga chiqasiz ? ", reply_markup=time)
         await call.message.delete()
-        await Yolovchi_andijon.kuni.set()
+        await Yolovchi_andijon.soat.set()
 
 
 @dp.callback_query_handler(text='tortga', state=Yolovchi_andijon.phone)

@@ -455,7 +455,7 @@ async def kelisha_oldik(call:CallbackQuery,state:FSMContext):
    markup = InlineKeyboardMarkup(row_width=2)
    markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
    await db.aniq_bormaydi_update(aniq_bormaydi=True,id=ord_id)
-   await db.kelishildi_orders(kelishildi=False, id=ord_id)
+   await db.kelishildi_orders(kelishildi=True, id=ord_id)
    await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
    await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)
 
