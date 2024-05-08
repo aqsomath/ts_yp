@@ -1155,7 +1155,11 @@ async def bazaas(call: CallbackQuery, state: FSMContext):
                 tayyor_sayohatchi_full=None,
                 tayyor_sayohatchi_mashina=m,
                 tayyor_sayohatchi_full_mashina=msg,
-                event_time=end_time
+                event_time=end_time,
+                kim_tomonidan_qabul_qilindi=None,
+                 sana=f"{datetime.date.today()}"
+
+
 
             )
 
@@ -4258,7 +4262,11 @@ async def oxirgi(call: CallbackQuery, state: FSMContext):
             tayyor_sayohatchi_full=None,
             tayyor_sayohatchi_mashina=m,
             tayyor_sayohatchi_full_mashina=msg,
-            event_time=end_time
+            event_time=end_time,
+            kim_tomonidan_qabul_qilindi=None,
+             sana=f"{datetime.date.today()}"
+
+
 
         )
 

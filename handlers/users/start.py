@@ -21,7 +21,7 @@ async def bot_start(message: types.Message):
         pass
     else:
         await db.add_user(full_name=message.from_user.full_name, username=message.from_user.username,
-                          telegram_id=message.from_user.id)
+                          telegram_id=message.from_user.id,balans=0)
     user = await db.select_user(telegram_id=message.from_user.id)
     if user is not None:
         if user[5]==True:

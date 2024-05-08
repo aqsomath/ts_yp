@@ -26,7 +26,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
             end_time = i[9]
             sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
-                await db.delete_orders(id=i[6])
+                await db.aniq_bormaydi_update(aniq_bormaydi=True,id=i[6])
         orders = await db.select_tayyor_yolovchi()
     if call.data == "course:tayyorpochta":
         orders_all = await db.select_tayyor_pochta()
@@ -34,7 +34,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
             end_time = i[9]
             sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
-                await db.delete_orders(id=i[6])
+                await db.aniq_bormaydi_update(aniq_bormaydi=True,id=i[6])
         orders = await db.select_tayyor_pochta()
     if call.data == "course:tayyorpochtamashinasi":
         orders_all = await db.select_tayyor_pochta_mashina()
@@ -42,7 +42,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
             end_time = i[9]
             sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
-                await db.delete_orders(id=i[6])
+                await db.aniq_bormaydi_update(aniq_bormaydi=True,id=i[6])
         orders = await db.select_tayyor_pochta_mashina()
     if call.data == "course:tayyoryuk":
         orders_all = await db.select_tayyor_yuk()
@@ -50,7 +50,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
             end_time = i[9]
             sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
-                await db.delete_orders(id=i[6])
+                await db.aniq_bormaydi_update(aniq_bormaydi=True,id=i[6])
         orders = await db.select_tayyor_yuk()
     if call.data == "course:tayyoryukmashinasi":
         orders_all = await db.select_tayyor_yuk_haydovchi()
@@ -58,7 +58,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
             end_time = i[9]
             sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
-                await db.delete_orders(id=i[6])
+                await db.aniq_bormaydi_update(aniq_bormaydi=True,id=i[6])
         orders = await db.select_tayyor_yuk_haydovchi()
     if call.data == "course:tayyortaksi":
         orders_all = await db.select_tayyor_taxi()
@@ -66,7 +66,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
             end_time = i[9]
             sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
-                await db.delete_orders(id=i[6])
+                await db.aniq_bormaydi_update(aniq_bormaydi=True,id=i[6])
         orders = await db.select_tayyor_taxi()
     if call.data == "course:tayyorsayohatchi":
         orders_all = await db.select_tayyor_sayohatchi()
@@ -74,7 +74,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
             end_time = i[9]
             sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
-                await db.delete_orders(id=i[6])
+                await db.aniq_bormaydi_update(aniq_bormaydi=True,id=i[6])
         orders = await db.select_tayyor_sayohatchi()
     if call.data == "course:tayyorsayohatgamashina":
         orders_all = await db.select_tayyor_sayohatchi_mashina()
@@ -82,7 +82,7 @@ async def ready_orders(call:CallbackQuery,state:FSMContext):
             end_time = i[9]
             sec = (end_time - datetime.datetime(year=now.year,month=now.month,day=now.day,hour=now.hour,minute=now.minute,second=now.second)).total_seconds()
             if sec <= 0:
-                await db.delete_orders(id=i[6])
+                await db.aniq_bormaydi_update(aniq_bormaydi=True,id=i[6])
         orders = await db.select_tayyor_sayohatchi_mashina()
     for order in orders:
         if order[1] is not None:

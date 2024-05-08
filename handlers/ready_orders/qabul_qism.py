@@ -74,6 +74,8 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                             chat_id=msg[1], reply_markup=markup_1)
                                                         await call.message.answer(msg[i], reply_markup=markup_12)
                                                         await db.kelishilmoqda_orders(kelishilmoqda=True, id=ord_id)
+                                                        qabul_qildi = await db.select_user(telegram_id = call.from_user.id)
+                                                        await db.update_orders_qabul_qilish(f"<a href='tg://user?id={call.from_user.id}'>{qabul_qildi[2]}</a>\nQabul qiluvchinind ID si :\n<code>{call.from_user.id}</code>",id=ord_id)
                                                     else:
                                                         await call.message.answer("Bugungi limitingiz tugadi")
                                                 except TypeError:
@@ -402,6 +404,7 @@ async def kelisha_olmadik(call:CallbackQuery):
         await db.aniq_bormaydi_update(aniq_bormaydi=False, id=ord_id)
         await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
         await db.kelishildi_orders(kelishildi=False, id=ord_id)
+        await db.update_orders_qabul_qilish(kim_tomonidan_qabul_qilindi=None,id=ord_id)
         markup_1 = InlineKeyboardMarkup(row_width=2)
         markup_1.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
         await call.message.answer("Afsus 😞, menda siz uchun takliflar bor. Bosh menu ga o'ting",reply_markup=markup_1)
@@ -482,12 +485,21 @@ async def bormaydigan_bolish(call:CallbackQuery,state:FSMContext):
                 await bot.send_message(text=text, chat_id=order[1], reply_markup=markup)
             else:
                 await db.aniq_bormaydi_update(aniq_bormaydi=True,id=ord_id)
+                await db.update_orders_qabul_qilish(kim_tomonidan_qabul_qilindi=None,id=ord_id)
+                await db.kelishilmoqda_orders(kelishilmoqda=False, id=ord_id)
+                await db.kelishildi_orders(kelishildi=False, id=ord_id)
+                await db.bormaydi_update(bormaydi=False, id=ord_id)
+                await db.bormaydi2_update(bormaydi2=False, id=ord_id)
     await call.message.delete()
 @dp.callback_query_handler(lambda c:  c.data.startswith("bormidiganboldim_"))
 async def bormaydigan_bolish_1(call:CallbackQuery,state:FSMContext):
     id = int(call.data.split("_")[1])
     if id is not None:
         await db.aniq_bormaydi_update(aniq_bormaydi=True,id=id)
+        await db.kelishilmoqda_orders(kelishilmoqda=False, id=id)
+        await db.kelishildi_orders(kelishildi=False, id=id)
+        await db.bormaydi_update(bormaydi=False, id=id)
+        await db.bormaydi2_update(bormaydi2=False, id=id)
         markup = InlineKeyboardMarkup(row_width=2)
         markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="qaytvoramiz"))
         await call.message.answer("Sizga hizmat etganimizdan xursandmiz. ", reply_markup=markup)

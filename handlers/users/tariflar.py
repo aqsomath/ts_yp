@@ -16,8 +16,8 @@ fourth = []
 fifth = []
 
 
-@dp.message_handler(commands=['tarif_sozlamalari'])
-async def tarif_conf(message:Message):
+@dp.callback_query_handler(text='barchatariflar')
+async def tarif_conf(call:CallbackQuery):
     markup = InlineKeyboardMarkup(row_width=2)
     markup.insert(InlineKeyboardButton(text="1 - tarif",callback_data="confonesetting"))
     markup.insert(InlineKeyboardButton(text="2 - tarif",callback_data="confsecondsetting"))
@@ -25,8 +25,8 @@ async def tarif_conf(message:Message):
     markup.insert(InlineKeyboardButton(text="4 - tarif",callback_data="conffourthsetting"))
     markup.insert(InlineKeyboardButton(text="5 - tarif",callback_data="conffifthsetting"))
     markup.insert(InlineKeyboardButton(text="Bosh menu",callback_data="skldjuiuiuiuiererere"))
-    await message.answer("Qaysi tarifni o'zgartirmoqchisiz ?",reply_markup=markup)
-    await message.delete()
+    await call.message.answer("Ta'riflar bo'limi",reply_markup=markup)
+    await call.message.delete()
 
 @dp.callback_query_handler(text="skldjuiuiuiuiererere")
 async def menuu(call:CallbackQuery):
@@ -61,6 +61,14 @@ class ConfFirstGroup(StatesGroup):
     day = State()
 @dp.callback_query_handler(text="confonesetting")
 async def conf_one(call:CallbackQuery,state:FSMContext):
+    one = await db.select_tarif(tarif_name='first')
+    msg_1 = f"1-ta'rif\nA'zolar {len(first)}\nKuniga {one[3]} ta qabul qilish, oyiga - > {one[2]}"
+    markup=InlineKeyboardMarkup(row_width=2)
+    markup.insert(InlineKeyboardButton(text="Tarifga odam qo'shish",callback_data="birinchitarigaodamqoshish"))
+    markup.insert(InlineKeyboardButton(text="Tarif sozlamalarini o'zgartirish",callback_data="birinchitarifsozlamalari"))
+    await call.message.answer(msg_1,reply_markup=markup)
+@dp.callback_query_handler(text="birinchitarifsozlamalari")
+async def conf_one_setting(call:CallbackQuery,state:FSMContext):
     await call.message.answer("Yangi oylik to'lov miqdorini kiriting :")
     await ConfFirstGroup.pay.set()
 @dp.message_handler(state=ConfFirstGroup.pay)
@@ -86,6 +94,14 @@ class ConfSecondGroup(StatesGroup):
     pay = State()
     day = State()
 @dp.callback_query_handler(text="confsecondsetting")
+async def conf_one(call:CallbackQuery):
+    two = await db.select_tarif(tarif_name='second')
+    msg_2 = f"Kuniga {two[3]} ta qabul qilish, oyiga - > {two[2]}"
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.insert(InlineKeyboardButton(text="Tarifga odam qo'shish", callback_data="ikkinchitarigaodamqoshish"))
+    markup.insert(InlineKeyboardButton(text="Tarif sozlamalarini o'zgartirish", callback_data="ikkinchitarifsozlamalari"))
+    await call.message.answer(msg_2, reply_markup=markup)
+@dp.callback_query_handler(text="ikkinchitarigaodamqoshish")
 async def conf_one(call:CallbackQuery):
     await call.message.answer("Yangi oylik to'lov miqdorini kiriting :")
     await ConfSecondGroup.pay.set()
@@ -113,6 +129,14 @@ class ConfThirdGroup(StatesGroup):
     day = State()
 
 @dp.callback_query_handler(text="confthirdsetting")
+async def conf_one(call:CallbackQuery):
+    three = await db.select_tarif(tarif_name='third')
+    msg_3 = f"Kuniga {three[3]} ta qabul qilish, oyiga - > {three[2]}"
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.insert(InlineKeyboardButton(text="Tarifga odam qo'shish", callback_data="uchinchitarigaodamqoshish"))
+    markup.insert(InlineKeyboardButton(text="Tarif sozlamalarini o'zgartirish", callback_data="uchinchitarifsozlamalari"))
+    await call.message.answer(msg_3, reply_markup=markup)
+@dp.callback_query_handler(text="uchinchitarifsozlamalari")
 async def conf_one(call:CallbackQuery):
     await call.message.answer("Yangi oylik to'lov miqdorini kiriting :")
     await ConfThirdGroup.pay.set()
@@ -145,9 +169,15 @@ class ConfFourthGroup(StatesGroup):
 
 @dp.callback_query_handler(text="conffourthsetting")
 async def conf_one(call:CallbackQuery):
-    await call.message.answer("Yangi oylik to'lov miqdorini kiriting :")
-    await ConfFourthGroup.pay.set()
-
+    if len(fourth)==0:
+        markup = InlineKeyboardMarkup(row_width=2)
+        markup.insert(InlineKeyboardButton(text="Yoqish",callback_data="Hammagauchunbepulqilish"))
+        await call.message.answer("Hamma uchun bepul tarif.Bu tarif hozirda o'chiq.\nYoqishni istaysizmi ?",reply_markup=markup)
+    else:
+        markup = InlineKeyboardMarkup(row_width=2)
+        markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="xa"))
+        await call.message.answer(f"Barcha uchun bepul tarif \nA'zolar soni -{len(fourth)} ",
+                                  reply_markup=markup)
 
 @dp.message_handler(state=ConfFourthGroup.pay)
 async def first_conf_pay(message: Message, state: FSMContext):
@@ -176,9 +206,19 @@ class ConfFifthGroup(StatesGroup):
 
 @dp.callback_query_handler(text="conffifthsetting")
 async def conf_one(call:CallbackQuery):
-    await call.message.answer("Yangi oylik to'lov miqdorini kiriting :")
-    await ConfFifthGroup.pay.set()
-
+    if len(fifth)==0:
+        five = await db.select_tarif(tarif_name='fifth')
+        msg_5 = f"/start bosilishiga {five[3]} kun bepul"
+        markup = InlineKeyboardMarkup(row_width=2)
+        markup.insert(InlineKeyboardButton(text="Yoqish", callback_data="Beshinchitarifniyoqish"))
+        await call.message.answer(f"Beshinchi ta'rif .\n{msg_5}\n Bu tarif hozircha o'chiq. Yoqishni istaysizmi ? ",reply_markup=markup)
+    else:
+        five = await db.select_tarif(tarif_name='fifth')
+        msg_5 = f"/start bosilishiga {five[3]} kun bepul"
+        markup = InlineKeyboardMarkup(row_width=2)
+        markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="xa"))
+        await call.message.answer(f"{msg_5} tarif \nA'zolar soni -{len(fifth)} ",
+                                  reply_markup=markup)
 
 @dp.message_handler(state=ConfFifthGroup.pay)
 async def first_conf_pay(message: Message, state: FSMContext):
@@ -203,13 +243,13 @@ async def first_conf_day(message: Message, state: FSMContext):
 
 class FirstStatesGroup(StatesGroup):
     id = State()
-@dp.message_handler(commands=['first_type'])
-async def tarif_1_ga_otkazish(message: Message, state: FSMContext):
+@dp.callback_query_handler(text="birinchitarigaodamqoshish")
+async def tarif_1_ga_otkazish(call: CallbackQuery, state: FSMContext):
     markup = InlineKeyboardMarkup(row_width=2)
     markup.insert(InlineKeyboardButton(text="Bosh menu",callback_data="xa"))
-    await message.answer("1 - ta'rif. Kimnidur bu tarifga o'tkazmoqchi bo'lsangiz Foydalanuvchi ID raqamini kiriting , aks holda Bosh menu ni  bosing",reply_markup=markup)
+    await call.message.answer("Foydalanuvchi ID sini kiriting",reply_markup=markup)
     await FirstStatesGroup.id.set()
-    await message.delete()
+    await call.message.delete()
 @dp.callback_query_handler(text="xa",state=FirstStatesGroup.id)
 async def yakun(call:CallbackQuery,state:FSMContext):
     if call.from_user.id in yolovchilar_royxati:
@@ -271,15 +311,12 @@ async def tarif_1_id(message:Message,state:FSMContext):
 
 class SecondStatesGroup(StatesGroup):
     id = State()
-@dp.message_handler(commands=['second_type'])
-async def tarif_2_ga_otkazish(message: Message, state: FSMContext):
-    await message.answer("2 - ta'rifga o'tkaziladigan haydovchi ID sini kiriting")
+@dp.callback_query_handler(text="ikkinchitarigaodamqoshish")
+async def tarif_1_ga_otkazish(call: CallbackQuery, state: FSMContext):
     markup = InlineKeyboardMarkup(row_width=2)
-    markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="xa"))
-    await message.answer(
-        "2 - ta'rif yoqildi . Kimnidur bu tarifga o'tkazmoqchi bo'lsangiz Foydalanuvchi ID raqamini kiriting , aks holda Bosh menu ni bosing",
-        reply_markup=markup)
-    await message.delete()
+    markup.insert(InlineKeyboardButton(text="Bosh menu",callback_data="xa"))
+    await call.message.answer("Foydalanuvchi ID sini kiriting",reply_markup=markup)
+    await call.message.delete()
     await SecondStatesGroup.id.set()
 @dp.callback_query_handler(text="xa",state=SecondStatesGroup.id)
 async def yakun(call:CallbackQuery,state:FSMContext):
@@ -337,16 +374,42 @@ async def tarif_1_id(message:Message,state:FSMContext):
 
 class ThirdStatesGroup(StatesGroup):
     id = State()
-@dp.message_handler(commands=['third_type'])
-async def tarif_3_ga_otkazish(message: Message, state: FSMContext):
+@dp.callback_query_handler(text="uchinchitarigaodamqoshish")
+async def tarif_1_ga_otkazish(call: CallbackQuery, state: FSMContext):
     markup = InlineKeyboardMarkup(row_width=2)
-    markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="xa"))
-    await message.answer(
-        "3 - ta'rif yoqildi . Kimnidur bu tarifga o'tkazmoqchi bo'lsangiz Foydalanuvchi ID raqamini kiriting , aks holda Bosh menu bosing",
-        reply_markup=markup)
-    await message.delete()
+    markup.insert(InlineKeyboardButton(text="Bosh menu",callback_data="xa"))
+    await call.message.answer("Foydalanuvchi ID sini kiriting",reply_markup=markup)
+    await call.message.delete()
     await ThirdStatesGroup.id.set()
 @dp.callback_query_handler(text="xa",state=ThirdStatesGroup.id)
+async def yakun(call:CallbackQuery,state:FSMContext):
+    if call.from_user.id in yolovchilar_royxati:
+        await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
+        await call.message.delete()
+
+
+    elif call.from_user.id in haydovchilar_royxati:
+        driver = {
+            "Haydovchi reys belgilash": 'yolovchikerak',
+            "Tayyor yo'lovchi": 'tayyoryolovchi',
+            "Yuk kerak": 'yukkerak',
+            "Tayyor yuk": "tayyoryuk",
+            "Pochta kerak": 'pochtakerak',
+            "Tayyor pochta": "tayyorpochta",
+            "Sayohatchilar kerak": 'sayohatgayolovchi',
+            "Tayyor sayohatchi": "tayyorsayohatchi",
+            "Mening buyurtmalarim": "meningbuyurtmalarim",
+            "Admin bilan bog'lanish": "adminbilanboglanish",
+            "Sozlamalar": "nastroyki",
+            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+        }
+        markup = InlineKeyboardMarkup(row_width=2)
+        for key, value in driver.items():
+            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+        await call.message.delete()
+    await state.finish()
+@dp.callback_query_handler(text="xa")
 async def yakun(call:CallbackQuery,state:FSMContext):
     if call.from_user.id in yolovchilar_royxati:
         await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
@@ -402,8 +465,8 @@ async def tarif_1_id(message:Message,state:FSMContext):
 
 class FouthStatesGroup(StatesGroup):
     id = State()
-@dp.message_handler(commands=['hammaga_bepul_qilish'])
-async def tarif_4_ga_otkazish(message: Message, state: FSMContext):
+@dp.callback_query_handler(text="Hammagauchunbepulqilish")
+async def tarif_4_ga_otkazish(call: CallbackQuery, state: FSMContext):
     users = await db.select_all_users()
     for user in users:
         print(user[3])
@@ -418,10 +481,10 @@ async def tarif_4_ga_otkazish(message: Message, state: FSMContext):
         fifth.remove(l)
     markup = InlineKeyboardMarkup(row_width=2)
     markup.insert(InlineKeyboardButton(text="Bosh menu ", callback_data="xa"))
-    await message.answer(
+    await call.message.answer(
         "4 - ta'rif - > Barcha uchun bepul bo'ldi",
         reply_markup=markup)
-    await message.delete()
+    await call.message.delete()
     await FouthStatesGroup.id.set()
 @dp.callback_query_handler(text="xa",state=FouthStatesGroup.id)
 async def yakun(call:CallbackQuery,state:FSMContext):
@@ -455,8 +518,8 @@ async def yakun(call:CallbackQuery,state:FSMContext):
 
 class FifthStatesGroup(StatesGroup):
     id = State()
-@dp.message_handler(commands=['fifth_type'])
-async def tarif_5_ga_otkazish(message: Message, state: FSMContext):
+@dp.callback_query_handler(text="Beshinchitarifniyoqish")
+async def tarif_5_ga_otkazish(call: CallbackQuery, state: FSMContext):
     for i in fourth:
         fourth.remove(i)
     users = await db.select_all_users()
@@ -467,13 +530,12 @@ async def tarif_5_ga_otkazish(message: Message, state: FSMContext):
     markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="xa"))
     five = await db.select_tarif(tarif_name='fifth')
     msg_5 = f"/start bosilishiga {five[3]} kun bepul holatida ishlaydi "
-    await message.answer(
+    await call.message.answer(
         f"5 - ta'rif yoqildi .{msg_5}",
         reply_markup=markup)
-    await message.delete()
-    await FifthStatesGroup.id.set()
+    await call.message.delete()
 
-@dp.callback_query_handler(text="xa",state=FifthStatesGroup.id)
+@dp.callback_query_handler(text="xa")
 async def yakun(call:CallbackQuery,state:FSMContext):
     if call.from_user.id in yolovchilar_royxati:
         await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)

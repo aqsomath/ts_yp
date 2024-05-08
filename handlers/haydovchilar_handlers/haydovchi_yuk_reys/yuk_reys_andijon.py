@@ -970,7 +970,11 @@ async def y_n(call: CallbackQuery, state: FSMContext):
                 tayyor_sayohatchi_full=None,
                 tayyor_sayohatchi_mashina=None,
                 tayyor_sayohatchi_full_mashina=None,
-                event_time=end_time
+                event_time=end_time,
+                kim_tomonidan_qabul_qilindi=None,
+                 sana=f"{datetime.date.today()}"
+
+
 
             )
 
@@ -4051,7 +4055,12 @@ async def oxirgi(call: CallbackQuery, state: FSMContext):
                                    tayyor_sayohatchi_full=None,
                                    tayyor_sayohatchi_mashina=None,
                                    tayyor_sayohatchi_full_mashina=None,
-                                   event_time=end_time
+                                   event_time=end_time,
+                                   kim_tomonidan_qabul_qilindi=None,
+                                    sana=f"{datetime.date.today()}"
+
+
+
                                    )
     print("Qo'shildi")
     await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"

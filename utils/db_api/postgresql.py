@@ -57,7 +57,9 @@ class Database:
         telegram_id BIGINT NULL UNIQUE,
         last_interaction TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         yolovchi BOOLEAN NOT NULL DEFAULT FALSE,
-        haydovchi BOOLEAN NOT NULL DEFAULT FALSE
+        haydovchi BOOLEAN NOT NULL DEFAULT FALSE,
+        balans BIGINT NULL
+        
        );
         """
         await self.execute(sql, execute=True)
@@ -79,6 +81,10 @@ class Database:
            UPDATE Users SET haydovchi=$1 WHERE telegram_id=$2
            """
         return await self.execute(sql, haydovchi, telegram_id, execute=True)
+
+    async def update_balans(self, balans, telegram_id):
+        sql = "UPDATE Users SET balans=$1 WHERE telegram_id=$2"
+        return await self.execute(sql, balans, telegram_id, execute=True)
 
 
     async def create_table_orders(self):
@@ -113,8 +119,10 @@ class Database:
         bormaydi BOOLEAN NOT NULL DEFAULT FALSE,
         aniq_bormaydi BOOLEAN NOT NULL DEFAULT FALSE,
         event_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        bormaydi2 BOOLEAN NOT NULL DEFAULT FALSE
-        
+        bormaydi2 BOOLEAN NOT NULL DEFAULT FALSE,
+        kim_tomonidan_qabul_qilindi TEXT NULL,
+        sana TEXT NULL
+
         
         
         );
@@ -143,7 +151,9 @@ class Database:
                                     tayyor_sayohatchi_full,
                                     tayyor_sayohatchi_mashina,
                                     tayyor_sayohatchi_full_mashina,
-                                    event_time):
+                                    event_time,
+                                    kim_tomonidan_qabul_qilindi,
+                                    sana):
         sql = "INSERT INTO orders (" \
               "tayyor_taxi," \
               "tayyor_taxi_full, " \
@@ -166,9 +176,11 @@ class Database:
               "tayyor_sayohatchi_full," \
               "tayyor_sayohatchi_mashina,"\
               "tayyor_sayohatchi_full_mashina," \
-              "event_time" \
+              "event_time," \
+              "kim_tomonidan_qabul_qilindi,"\
+              "sana"\
               ") VALUES(" \
-              "$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12 , $13, $14, $15, $16, $17, $18, $19, $20, $21,$22" \
+              "$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12 , $13, $14, $15, $16, $17, $18, $19, $20, $21,$22,$23,$24" \
               ") " \
               "returning *"
         return await self.execute(
@@ -194,6 +206,8 @@ class Database:
             tayyor_sayohatchi_mashina,
             tayyor_sayohatchi_full_mashina,
             event_time,
+            kim_tomonidan_qabul_qilindi,
+            sana,
             fetchrow=True
         )
 
@@ -211,9 +225,9 @@ class Database:
          WHERE last_interaction >= NOW() - INTERVAL '1 day';
          """
         return await self.execute(sql, fetch=True)
-    async def add_user(self, full_name, username, telegram_id):
-        sql = "INSERT INTO users (full_name, username, telegram_id) VALUES($1, $2, $3) returning *"
-        return await self.execute(sql, full_name, username, telegram_id, fetchrow=True)
+    async def add_user(self, full_name, username, telegram_id,balans):
+        sql = "INSERT INTO users (full_name, username, telegram_id,balans) VALUES($1, $2, $3,$4) returning *"
+        return await self.execute(sql, full_name, username, telegram_id,balans, fetchrow=True)
     async def select_user(self, **kwargs):
         sql = "SELECT * FROM Users WHERE "
         sql, parameters = self.format_args(sql, parameters=kwargs)
@@ -232,6 +246,9 @@ class Database:
     async def select_all_orders(self):
         sql = "SELECT * FROM Orders"
         return await self.execute(sql, fetch=True)
+    async def update_orders_qabul_qilish(self, kim_tomonidan_qabul_qilindi, id):
+        sql = "UPDATE Orders SET kim_tomonidan_qabul_qilindi=$1 WHERE id=$2"
+        return await self.execute(sql, kim_tomonidan_qabul_qilindi, id, execute=True)
 
     async def update_user_username(self, username, telegram_id):
         sql = "UPDATE Users SET username=$1 WHERE telegram_id=$2"
@@ -564,9 +581,7 @@ class Database:
         sql = "INSERT INTO Haydovchi (username,telegram_id,balans) VALUES($1, $2,$3) returning *"
         return await self.execute(sql, username, telegram_id,balans, fetchrow=True)
 
-    async def update_balans(self, balans, telegram_id):
-        sql = "UPDATE Haydovchi SET balans=$1 WHERE telegram_id=$2"
-        return await self.execute(sql, balans, telegram_id, execute=True)
+
     async def select_haydovchi(self, **kwargs):
         sql = "SELECT * FROM Haydovchi WHERE "
         sql, parameters = self.format_args(sql, parameters=kwargs)
