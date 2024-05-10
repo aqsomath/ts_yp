@@ -1,16 +1,21 @@
 import asyncio
-import datetime
-from datetime import timedelta
-
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.types import CallbackQuery, Message, ChatMemberUpdated, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.dispatcher.filters.state import StatesGroup, State
+from loader import dp,db
 
-from loader import dp,db,bot
-
+asosiy = [6132434228,343103355]
 admin_ids = [6132434228,343103355]
-
+admin_qoshish = []
+admin_chiqarish = []
+balans_toldirish = []
+balans_ayrish = []
+ban_qilish = []
+bandan_chiqarish = []
+send_message = []
+ruxsatlar = []
+delete_admin = []
 user_of_banned = []
 class BanStatesGroup(StatesGroup):
     id = State()
@@ -26,7 +31,7 @@ class BalansAyirish(StatesGroup):
     money = State()
 
 
-@dp.message_handler(commands=['admin'])
+@dp.message_handler(commands=["admin"])
 async def admin_panel_commands(message:Message,state:FSMContext):
     one = await db.select_tarif(tarif_name='first')
     msg_1 = f"Kuniga {one[3]} ta qabul qilish, oyiga - > {one[2]}"
@@ -68,9 +73,30 @@ async def admin_panel_commands(message:Message,state:FSMContext):
 
 @dp.callback_query_handler(text="Balanstoldirish")
 async def pay_balans(call:CallbackQuery,state:FSMContext):
-    await call.message.answer("Foydalanuvchining ID sini kiriting :")
-    await BalansToldirish.id.set()
-
+    if call.from_user.id in balans_toldirish:
+        await call.message.answer("Foydalanuvchining ID sini kiriting :")
+        await BalansToldirish.id.set()
+    else:
+        await call.message.answer("Kechirasiz sizga balans to'ldirish uchun ruxsat yo'q")
+        await state.finish()
+@dp.message_handler(state=BalansToldirish , commands=['cancel'])
+@dp.message_handler(state=BalansAyirish , commands=['cancel'])
+@dp.message_handler(state=BanStatesGroup , commands=['cancel'])
+@dp.message_handler(state=UnBanStatesGroup , commands=['cancel'])
+async def cancel_com(message:Message,state:FSMContext):
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.insert(InlineKeyboardButton(text="Statistika", callback_data="umumiystatistika"))
+    markup.insert(InlineKeyboardButton(text="Foydalanuvchilar", callback_data="foydalanuvchilarniqidirish"))
+    markup.insert(InlineKeyboardButton(text="Adminlar", callback_data="adminlarroyxati"))
+    markup.insert(InlineKeyboardButton(text="Buyurtmalar", callback_data="baribuyurtmalar"))
+    markup.insert(InlineKeyboardButton(text="Ban qilish", callback_data="banqilish"))
+    markup.insert(InlineKeyboardButton(text="Bandan chiqarish", callback_data="bandanchiqarish"))
+    markup.insert(InlineKeyboardButton(text="Tariflar", callback_data='barchatariflar'))
+    markup.insert(InlineKeyboardButton(text="Balans to'ldirish", callback_data="Balanstoldirish"))
+    markup.insert(InlineKeyboardButton(text="Balans ayirish", callback_data="Balansayrish"))
+    await message.answer(reply_markup=markup, text="Admin bo'lim")
+    await message.delete()
+    await state.finish()
 @dp.message_handler(state=BalansToldirish.id)
 async def balans_id(message:Message,state:FSMContext):
     if message.text.isdigit():
@@ -94,8 +120,11 @@ async def balans_id(message:Message,state:FSMContext):
 
 @dp.callback_query_handler(text="Balansayrish")
 async def pay_balans(call:CallbackQuery,state:FSMContext):
-    await call.message.answer("Foydalanuvchining ID sini kiriting :")
-    await BalansAyirish.id.set()
+    if call.from_user.id in balans_ayrish:
+        await call.message.answer("Foydalanuvchining ID sini kiriting :")
+        await BalansAyirish.id.set()
+    else:
+        await call.message.answer("Kechirasiz sizga balans kamaytirish uchun ruxsat yo'q")
 
 @dp.message_handler(state=BalansAyirish.id)
 async def balans_id(message:Message,state:FSMContext):

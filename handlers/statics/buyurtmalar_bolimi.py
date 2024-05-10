@@ -1,7 +1,9 @@
 from aiogram import types
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.dispatcher import FSMContext
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 from loader import dp, bot, db
+from aiogram.dispatcher.filters.state import StatesGroup, State
 
 
 def get_paginated_keyboard(items, current_page, items_per_page):
@@ -10,6 +12,7 @@ def get_paginated_keyboard(items, current_page, items_per_page):
 
     # Create inline keyboard
     keyboard = InlineKeyboardMarkup()
+    qidirish = InlineKeyboardButton(text="Qidirish 🔍", callback_data="searchorderbyid")
     ortga = InlineKeyboardButton(text="Ortga", callback_data="back")
 
 
@@ -37,8 +40,257 @@ def get_paginated_keyboard(items, current_page, items_per_page):
 
     if navigation_buttons:
         keyboard.row(*navigation_buttons)
-    keyboard.add(ortga)
+    keyboard.add(ortga,qidirish)
     return keyboard
+
+
+class SearchOrderState(StatesGroup):
+    id = State()
+@dp.callback_query_handler(text="searchorderbyid")
+async def qidirish_order(call:types.CallbackQuery,state:FSMContext):
+    await call.message.answer("Buyurtma ID sini kiriting : ")
+    await SearchOrderState.id.set()
+    await call.message.delete()
+@dp.message_handler(state=SearchOrderState.id,commands=['cancel'])
+async def come_back(message:Message,state:FSMContext):
+    items = []
+    orders = await db.select_all_orders()
+    for order in orders:
+        if order[2] != None:
+            items.append([f"Taxi reys: ID - {order[0]}", f"id_of_order_{order[0]}"])
+        if order[8] != None:
+            items.append([f"Tayyor pochta : ID - {order[0]}", f"id_of_order_{order[0]}"])
+        if order[10] != None:
+            items.append([f"Tayyor yuk: ID - {order[0]}", f"id_of_order_{order[0]}"])
+        if order[12] != None:
+            items.append([f"Tayyor yuk mashinasi : ID - {order[0]}", f"id_of_order_{order[0]}"])
+        if order[14] != None:
+            items.append([f"Tayyor yo'lovchi : ID - {order[0]}", f"id_of_order_{order[0]}"])
+        if order[16] != None:
+            items.append([f"Tayyor pochta mashinasi : ID - {order[0]}", f"id_of_order_{order[0]}"])
+        if order[18] != None:
+            items.append([f"Tayyor sayohatchi : ID - {order[0]}", f"id_of_order_{order[0]}"])
+        if order[20] != None:
+            items.append([f"Tayyor sayohat mashinasi : ID - {order[0]}", f"id_of_order_{order[0]}"])
+    current_page = 0
+    items_per_page = 3
+
+    keyboard = get_paginated_keyboard(items, current_page, items_per_page)
+
+    await message.answer("Buyurtmalar ro'yxati :", reply_markup=keyboard)
+    await message.delete()
+    await state.finish()
+@dp.message_handler(state=SearchOrderState.id)
+async def idiruv_id(message:types.Message,state:FSMContext):
+    if message.text.isdigit():
+        order = await db.select_orders(id=int(message.text))
+        if order is not None:
+            if order[2] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              3] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              3] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                      3] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+                else:
+                    await message.answer(
+                        order[3] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                    await state.finish()
+
+            if order[8] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              9] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              9] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                      9] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+                else:
+                    await message.answer(
+                        order[9] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                    await state.finish()
+
+            if order[10] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              11] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              11] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                      11] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+
+                else:
+                    await message.answer(
+                        order[11] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                    await state.finish()
+
+            if order[12] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              13] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              13] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                      13] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+
+                else:
+                    await message.answer(
+                        order[13] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                    await state.finish()
+
+            if order[14] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              15] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              15] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                      15] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+
+                else:
+                    await message.answer(
+                        order[15] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                    await state.finish()
+
+            if order[16] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              17] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              17] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                      17] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+
+                else:
+                    await message.answer(
+                        order[17] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                    await state.finish()
+
+            if order[18] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              19] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              19] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                      19] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+
+                else:
+                    await message.answer(
+                        order[19] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                    await state.finish()
+
+            if order[20] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              21] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                              21] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                      21] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+
+                else:
+                    await message.answer(
+                        order[21] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                    await state.finish()
+    await message.delete()
+
 
 @dp.callback_query_handler(text="back")
 async def admin_bolimga_qaytish(call:types.CallbackQuery):
@@ -81,6 +333,7 @@ async def start_handler(call: types.CallbackQuery):
     keyboard = get_paginated_keyboard(items, current_page, items_per_page)
 
     await call.message.answer("Buyurtmalar ro'yxati :", reply_markup=keyboard)
+    await call.message.delete()
 
 
 @dp.callback_query_handler(lambda c: c.data.startswith("page_"))

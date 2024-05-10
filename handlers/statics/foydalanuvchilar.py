@@ -2,6 +2,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, Message
 
+from handlers.statics.admin_qoshish import balans_toldirish, balans_ayrish
 from handlers.statics.buyurtmalar_bolimi import get_paginated_keyboard
 from loader import dp, db, bot
 from aiogram.dispatcher.filters.state import StatesGroup, State
@@ -31,7 +32,6 @@ async def admin_qisimga_qaytish(call:CallbackQuery):
     await call.message.delete()
 
 
-
 class SelectUserState(StatesGroup):
     id = State()
     keyingi = State()
@@ -39,12 +39,27 @@ class SelectUserState(StatesGroup):
     hisob_ayirish = State()
     send_message = State()
     pagination = State()
+
 @dp.callback_query_handler(lambda c:c.data=="idorqalitopish")
 async def id_orqali_foydalanuvchi(call:CallbackQuery,state:FSMContext):
     await call.message.answer("Foydalanuvchi ID sini kiriting : ")
     await SelectUserState.id.set()
     await call.message.delete()
-
+@dp.message_handler(state=SelectUserState , commands=['cancel'])
+async def cancel_com(message:Message,state:FSMContext):
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.insert(InlineKeyboardButton(text="Statistika", callback_data="/"))
+    markup.insert(InlineKeyboardButton(text="Foydalanuvchilar", callback_data="foydalanuvchilarniqidirish"))
+    markup.insert(InlineKeyboardButton(text="Adminlar", callback_data="adminlarroyxati"))
+    markup.insert(InlineKeyboardButton(text="Buyurtmalar", callback_data="baribuyurtmalar"))
+    markup.insert(InlineKeyboardButton(text="Ban qilish", callback_data="banqilish"))
+    markup.insert(InlineKeyboardButton(text="Bandan chiqarish", callback_data="bandanchiqarish"))
+    markup.insert(InlineKeyboardButton(text="Tariflar", callback_data='barchatariflar'))
+    markup.insert(InlineKeyboardButton(text="Balans to'ldirish", callback_data="Balanstoldirish"))
+    markup.insert(InlineKeyboardButton(text="Balans ayirish", callback_data="Balansayrish"))
+    await message.answer(text="Admin bo'lim", reply_markup=markup)
+    await message.delete()
+    await state.finish()
 @dp.message_handler(state=SelectUserState.id)
 async def id_kiritish(message:Message,state:FSMContext):
     if message.text.isdigit():
@@ -89,8 +104,13 @@ async def id_kiritish(message:Message,state:FSMContext):
 
 @dp.callback_query_handler(lambda c:c.data=="hisobnitoldirish",state=SelectUserState.keyingi)
 async def hisobni_toldirish(call:CallbackQuery,state:FSMContext):
-    await call.message.answer("Qanchaga to'ldirasiz ? ( Son bilan kiriting ) :")
-    await SelectUserState.hisob_toldirish.set()
+    if call.from_user.id in balans_toldirish:
+        await call.message.answer("Qanchaga to'ldirasiz ? ( Son bilan kiriting ) :")
+        await SelectUserState.hisob_toldirish.set()
+    else:
+        await call.message.answer("Kechirasiz sizga hisobni to'ldirish uchun ruxsat yo'q")
+        await state.finish()
+
 
 @dp.message_handler(state=SelectUserState.hisob_toldirish)
 async def hisobga_qosh(message:Message,state:FSMContext):
@@ -132,8 +152,12 @@ async def hisobga_qosh(message:Message,state:FSMContext):
 
 @dp.callback_query_handler(lambda c:c.data=="hisobnikamaytirish",state=SelectUserState.keyingi)
 async def hisobni_toldirish(call:CallbackQuery,state:FSMContext):
-    await call.message.answer("Qanchaga kamaytirmoqchisiz ? ( Son bilan kiriting ) :")
-    await SelectUserState.hisob_ayirish.set()
+    if call.from_user.id in balans_ayrish:
+        await call.message.answer("Qanchaga kamaytirmoqchisiz ? ( Son bilan kiriting ) :")
+        await SelectUserState.hisob_ayirish.set()
+    else:
+        await call.message.answer("Kechirasiz sizga hisobni kamaytirish uchun ruxsat yo'q")
+        await state.finish()
 
 @dp.message_handler(state=SelectUserState.hisob_ayirish)
 async def hisobga_qosh(message:Message,state:FSMContext):

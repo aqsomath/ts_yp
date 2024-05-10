@@ -279,28 +279,28 @@ class Database:
         sql = "SELECT region,tayyor_sayohatchi_mashina, tayyor_sayohatchi_full_mashina, viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi,event_time FROM Orders "
         return await self.execute(sql, fetch=True)
     async def select_tayyor_taxi(self):
-        sql = "SELECT region,tayyor_taxi,tayyor_taxi_full,viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi,event_time FROM Orders"
+        sql = "SELECT region,tayyor_taxi,tayyor_taxi_full,viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi,event_time FROM Orders WHERE aniq_bormaydi=False"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_sayohatchi(self):
-        sql = "SELECT region,tayyor_sayohatchi,tayyor_sayohatchi_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders"
+        sql = "SELECT region,tayyor_sayohatchi,tayyor_sayohatchi_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders WHERE aniq_bormaydi=False"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_sayohatchi_mashina(self):
-        sql = "SELECT region,tayyor_sayohatchi_mashina,tayyor_sayohatchi_full_mashina,viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi,event_time  FROM Orders"
+        sql = "SELECT region,tayyor_sayohatchi_mashina,tayyor_sayohatchi_full_mashina,viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi,event_time  FROM Orders WHERE aniq_bormaydi=False"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_pochta_mashina(self):
-        sql = "SELECT region,tayyor_pochta_mashina,tayyor_pochta_mashina_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders"
+        sql = "SELECT region,tayyor_pochta_mashina,tayyor_pochta_mashina_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders WHERE aniq_bormaydi=False"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_pochta(self):
-            sql = "SELECT region,tayyor_pochta,tayyor_pochta_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders"
+            sql = "SELECT region,tayyor_pochta,tayyor_pochta_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders WHERE aniq_bormaydi=False"
             return await self.execute(sql, fetch=True)
     async def select_tayyor_yuk(self):
-        sql = "SELECT region,tayyor_yuk,tayyor_yuk_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders"
+        sql = "SELECT region,tayyor_yuk,tayyor_yuk_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders WHERE aniq_bormaydi=False"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_yolovchi(self):
         sql = "SELECT region,tayyor_yolovchi,tayyor_yolovchi_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders WHERE aniq_bormaydi=False"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_yuk_haydovchi(self):
-        sql = "SELECT region,tayyor_yuk_haydovchisi,tayyor_yuk_haydovchisi_full,viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi,event_time  FROM Orders"
+        sql = "SELECT region,tayyor_yuk_haydovchisi,tayyor_yuk_haydovchisi_full,viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi,event_time  FROM Orders WHERE aniq_bormaydi=False"
         return await self.execute(sql, fetch=True)
     async def select_order(self, **kwargs):
         sql = "SELECT * FROM Orders WHERE "
