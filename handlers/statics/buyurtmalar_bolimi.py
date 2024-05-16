@@ -1,6 +1,6 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, CallbackQuery
 
 from loader import dp, bot, db
 from aiogram.dispatcher.filters.state import StatesGroup, State
@@ -105,8 +105,10 @@ async def idiruv_id(message:types.Message,state:FSMContext):
                         await state.finish()
 
                 else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(InlineKeyboardButton(text="Buyurtmani o'chirish",callback_data=f"buyurtmani_ochir_{order[0]}"))
                     await message.answer(
-                        order[3] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                        order[3] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",reply_markup=markup)
                     await state.finish()
 
             if order[8] != None:
@@ -130,6 +132,9 @@ async def idiruv_id(message:types.Message,state:FSMContext):
                         await state.finish()
 
                 else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
                     await message.answer(
                         order[9] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
                     await state.finish()
@@ -156,8 +161,11 @@ async def idiruv_id(message:types.Message,state:FSMContext):
 
 
                 else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
                     await message.answer(
-                        order[11] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                        order[11] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",reply_markup=markup)
                     await state.finish()
 
             if order[12] != None:
@@ -182,8 +190,11 @@ async def idiruv_id(message:types.Message,state:FSMContext):
 
 
                 else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
                     await message.answer(
-                        order[13] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                        order[13] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",reply_markup=markup)
                     await state.finish()
 
             if order[14] != None:
@@ -208,8 +219,11 @@ async def idiruv_id(message:types.Message,state:FSMContext):
 
 
                 else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
                     await message.answer(
-                        order[15] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                        order[15] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",reply_markup=markup)
                     await state.finish()
 
             if order[16] != None:
@@ -234,8 +248,11 @@ async def idiruv_id(message:types.Message,state:FSMContext):
 
 
                 else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
                     await message.answer(
-                        order[17] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                        order[17] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",reply_markup=markup)
                     await state.finish()
 
             if order[18] != None:
@@ -260,8 +277,11 @@ async def idiruv_id(message:types.Message,state:FSMContext):
 
 
                 else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
                     await message.answer(
-                        order[19] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                        order[19] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",reply_markup=markup)
                     await state.finish()
 
             if order[20] != None:
@@ -283,13 +303,23 @@ async def idiruv_id(message:types.Message,state:FSMContext):
                         await message.answer(order[
                                                       21] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
                         await state.finish()
-
-
                 else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
                     await message.answer(
-                        order[21] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                        order[21] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",reply_markup=markup)
                     await state.finish()
     await message.delete()
+
+
+@dp.callback_query_handler(lambda c: c.data.startswith("buyurtmani_ochir_"))
+async def buyurtmalarni_ochirish(call:CallbackQuery):
+    id  = int(call.data.split("_")[2])
+    await db.aniq_bormaydi_update(aniq_bormaydi=True,id=id)
+    await db.update_orders_qabul_qilish(kim_tomonidan_qabul_qilindi=f"<a href='tg://user?id={call.from_user.id}'>Admin</a> tomonidan o'chirilgan",id=id)
+    await call.message.answer("Buyurtma o'chirildi")
+    await call.message.delete()
 
 
 @dp.callback_query_handler(text="back")
@@ -385,7 +415,6 @@ async def get_order_statics(call:types.CallbackQuery):
 
         else:
             await call.message.answer(order[3]+f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
-
     if order[8] != None:
         if order[30] != None:
             if order[23] == False:

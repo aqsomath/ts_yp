@@ -1027,7 +1027,6 @@ async def y_n(call: CallbackQuery, state: FSMContext):
                             markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data=f'qabul_flkk_{order[0]}'))
                             await bot.send_message(chat_id=driver[4], text=m, reply_markup=markup,parse_mode="HTML")
             await state.update_data({"msg":msg})
-            await call.message.delete()
             await state.finish()
     else:
         await call.message.answer("Kechirasiz siz o'tib ketgan vaqtni belgiladingiz, vaqt belgilashda xatolikka yo'l qo'yilgan. Tekshirib qaytadan kiriting")
@@ -1814,7 +1813,6 @@ async def oxirgi(call: CallbackQuery, state: FSMContext):
     viloyat = data.get('viloyat')
     tumaniga = data.get('tumaniga')
     baza = data.get('viloyat')
-    print(tuman)
     msg = data.get("msg_full")
     m_full = data.get("m_full")
     telegram_id = call.from_user.id

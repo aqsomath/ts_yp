@@ -137,6 +137,7 @@ async def hisobga_qosh(message:Message,state:FSMContext):
                     f"Username : {username}\n"
                     f"Balans : {balans}"
                     )
+            await bot.send_message(chat_id=user[3], text=f"Balansingiz {message.text} ga to'ldirildi")
             markup = InlineKeyboardMarkup()
             button1 = InlineKeyboardButton(text="Balans to'ldirish", callback_data="hisobnitoldirish")
             button2 = InlineKeyboardButton(text="Balans ayirish", callback_data="hisobnikamaytirish")
@@ -184,6 +185,7 @@ async def hisobga_qosh(message:Message,state:FSMContext):
                     f"Username : {username}\n"
                     f"Balans : {balans}"
                     )
+            await bot.send_message(chat_id=user[3], text=f"Balansingiz {message.text} ga kamaytirildi")
             markup = InlineKeyboardMarkup()
             button1 = InlineKeyboardButton(text="Balans to'ldirish", callback_data="hisobnitoldirish")
             button2 = InlineKeyboardButton(text="Balans ayirish", callback_data="hisobnikamaytirish")

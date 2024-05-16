@@ -3,18 +3,18 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.dispatcher.filters.state import StatesGroup, State
-from loader import dp,db
+from loader import dp, db, bot
 
 asosiy = [6132434228,343103355]
 admin_ids = [6132434228,343103355]
-admin_qoshish = []
-admin_chiqarish = []
-balans_toldirish = []
-balans_ayrish = []
+admin_qoshish = [6132434228]
+admin_chiqarish = [6132434228]
+balans_toldirish = [6132434228]
+balans_ayrish = [6132434228]
 ban_qilish = []
 bandan_chiqarish = []
 send_message = []
-ruxsatlar = []
+ruxsatlar = [6132434228]
 delete_admin = []
 user_of_banned = []
 class BanStatesGroup(StatesGroup):
@@ -110,10 +110,11 @@ async def balans_id(message:Message,state:FSMContext):
     if message.text.isdigit():
         data = await state.get_data()
         id=data.get("id")
-        d=await db.select_user(id=id)
+        d = await db.select_user(telegram_id=id)
         await db.update_balans(telegram_id=d[3],balans=d[7]+int(message.text))
-        d=await db.select_user(id=id)
+        d = await db.select_user(telegram_id=id)
         await message.answer(f"Balans to'ldirildi\nHaydovchi\nusername:{d[1]}\nID:{id}\nBalans:{d[7]} ")
+        await bot.send_message(chat_id=d[3], text=f"Balansingiz {message.text} ga to'ldirildi")
         await message.delete()
         await state.finish()
 
@@ -139,10 +140,11 @@ async def balans_id(message:Message,state:FSMContext):
     if message.text.isdigit():
         data = await state.get_data()
         id=data.get("id")
-        d=await db.select_haydovchi(id=id)
-        await db.update_balans(telegram_id=d[2],balans=d[3]-int(message.text))
-        d=await db.select_haydovchi(id=id)
-        await message.answer(f"Balans ayrildi\nHaydovchi\nusername: {d[1]}\nID:{id}\nBalans:{d[3]} ")
+        d = await db.select_user(telegram_id=id)
+        await db.update_balans(telegram_id=d[3],balans=d[7]+int(message.text))
+        d = await db.select_user(telegram_id=id)
+        await message.answer(f"Balans ayrildi\nHaydovchi\nusername: {d[1]}\nID:{id}\nBalans:{d[7]} ")
+        await bot.send_message(chat_id=d[3], text=f"Balansingiz {message.text} ga kamaytirildi")
         await message.delete()
         await state.finish()
 @dp.callback_query_handler(text="banqilish")
