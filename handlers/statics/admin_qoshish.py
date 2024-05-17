@@ -1,9 +1,8 @@
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, Message
 
-from handlers.statics.admin_panel import admin_qoshish, admin_chiqarish, balans_toldirish, balans_ayrish, ban_qilish, \
+from handlers.statics.royxatlar import admin_qoshish, admin_chiqarish, balans_toldirish, balans_ayrish, ban_qilish, \
     bandan_chiqarish, send_message, ruxsatlar, user_of_banned, delete_admin
-from handlers.users.start import admin_ids
 from loader import dp,db
 from aiogram.dispatcher.filters.state import StatesGroup, State
 
@@ -11,13 +10,17 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 
 @dp.callback_query_handler(text="adminlarroyxati")
 async def adminlar_qatori(call:CallbackQuery):
+    adminlarimiz= await db.select_all_admins()
+    x= []
+    for i in adminlarimiz:
+        x.append(i[1])
     users = await db.select_all_users()
     markup = InlineKeyboardMarkup(row_width=2)
     admins ={}
-    for i in admin_ids:
-        for user in users:
-            if user[3]==i:
-                admins[user[1]]=i
+    for user in users:
+        for k in x:
+            if user[3]==k:
+                admins[user[1]]=user[3]
     for key,value in admins.items():
         markup.insert(InlineKeyboardButton(text=key,callback_data=f"adminlar_{value}"))
     markup.insert(InlineKeyboardButton(text="Admin qo'shish",callback_data="asosiyqoshish"))
@@ -39,13 +42,11 @@ async def admin_qosh(call:CallbackQuery,state:FSMContext):
 
 @dp.message_handler(state=AdminkopaytirishState.admin_id,commands=["cancel"])
 async def head_menu(message:Message,state:FSMContext):
-    users = await db.select_all_users()
+    users = await db.select_all_admins()
     markup = InlineKeyboardMarkup(row_width=2)
     admins = {}
-    for i in admin_ids:
-        for user in users:
-            if user[3] == i:
-                admins[user[1]] = i
+    for user in users:
+        admins[user[1]] = user[3]
     for key, value in admins.items():
         markup.insert(InlineKeyboardButton(text=key, callback_data=f"adminlar_{value}"))
     markup.insert(InlineKeyboardButton(text="Admin qo'shish", callback_data="asosiyqoshish"))
@@ -59,16 +60,18 @@ async def head_menu(message:Message,state:FSMContext):
 async def admin_add(message:Message,state:FSMContext):
     if message.text.isdigit():
         id = int(message.text)
+
         user = await db.select_user(telegram_id=id)
         if user is not None:
-            admin_ids.append(id)
+            await db.add_admin(telegram_id=id)
             users = await db.select_all_users()
+            adminlar = await db.select_all_admins()
             markup = InlineKeyboardMarkup(row_width=2)
             admins = {}
-            for i in admin_ids:
+            for i in adminlar:
                 for user in users:
-                    if user[3] == i:
-                        admins[user[1]] = i
+                    if user[3] == i[1]:
+                        admins[user[1]] = i[1]
             for key, value in admins.items():
                 markup.insert(InlineKeyboardButton(text=key, callback_data=f"adminlar_{value}"))
             markup.insert(InlineKeyboardButton(text="Admin qo'shish", callback_data="asosiyqoshish"))
@@ -113,21 +116,23 @@ async def admin_haqida(call:CallbackQuery):
 
 @dp.callback_query_handler(lambda c: c.data.startswith("ochirish_"))
 async def adminni_chiqarish(call:CallbackQuery):
+    telegram_id = int(call.data.split("_")[1])
+    user1 = await db.select_user(telegram_id=telegram_id)
     if call.from_user.id in delete_admin:
-        telegram_id = int(call.data.split("_")[1])
-        admin_ids.remove(telegram_id)
+        await db.delete_admin(telegram_id=telegram_id)
         users = await db.select_all_users()
+        adminlar = await db.select_all_admins()
         markup = InlineKeyboardMarkup(row_width=2)
         admins = {}
-        for i in admin_ids:
+        for i in adminlar:
             for user in users:
-                if user[3] == i:
-                    admins[user[1]] = i
+                if user[3] == i[1]:
+                    admins[user[1]] = i[1]
         for key, value in admins.items():
             markup.insert(InlineKeyboardButton(text=key, callback_data=f"adminlar_{value}"))
         markup.insert(InlineKeyboardButton(text="Admin qo'shish", callback_data="asosiyqoshish"))
-        markup.insert(InlineKeyboardButton(text="Ortga",callback_data="adminpanel"))
-        await call.message.answer("Adminlar", reply_markup=markup)
+        markup.insert(InlineKeyboardButton(text="Ortga", callback_data="adminpanel"))
+        await call.message.answer(f"Adminlar ro'yxatiga {user1[1]} qo'shildi", reply_markup=markup)
         await call.message.delete()
     else:
         await call.message.answer("Kechirasiz sizga adminlarni o'chirish uchun ruxsat yo'q")
@@ -141,10 +146,10 @@ async def adminni_chiqarish(call:CallbackQuery):
             admin_qosh = InlineKeyboardButton(text="Admin qo'shish✅ ", callback_data=f"add_admin_{telegram_id}")
         else:
             admin_qosh = InlineKeyboardButton(text="Admin qo'shish ", callback_data=f"add_admin_{telegram_id}")
-        if telegram_id in admin_chiqarish:
-            admin_ochir = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"remove_admin_{telegram_id}")
+        if telegram_id in delete_admin:
+            delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
         else:
-            admin_ochir = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"remove_admin_{telegram_id}")
+            delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
         if telegram_id in balans_toldirish:
             balans_toldir = InlineKeyboardButton(text="Balans to'ldirish✅", callback_data=f"add_balans_{telegram_id}")
         else:
@@ -169,16 +174,12 @@ async def adminni_chiqarish(call:CallbackQuery):
             permission = InlineKeyboardButton(text="Admin ruxsatlari✅", callback_data=f"permission_admin_{telegram_id}")
         else:
             permission = InlineKeyboardButton(text="Admin ruxsatlari", callback_data=f"permission_admin_{telegram_id}")
-        if telegram_id in delete_admin:
-            delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
-        else:
-            delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
+
         ortga = InlineKeyboardButton(text="Ortga", callback_data=f"adminlar_{telegram_id}")
-        markup.add(admin_qosh, admin_ochir)
+        markup.add(admin_qosh, delete)
         markup.add(balans_toldir, balans_ayr)
         markup.add(ban, unban)
         markup.add(send, permission)
-        markup.add(delete)
         markup.add(ortga)
         await call.message.edit_reply_markup(markup)
     else:
@@ -193,10 +194,10 @@ async def adminni_chiqarish(call:CallbackQuery):
     else:
         admin_qoshish.append(telegram_id)
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish✅ ", callback_data=f"add_admin_{telegram_id}")
-    if telegram_id in admin_chiqarish:
-        admin_ochir = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"remove_admin_{telegram_id}")
+    if telegram_id in delete_admin:
+        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
     else:
-        admin_ochir = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"remove_admin_{telegram_id}")
+        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
     if telegram_id in balans_toldirish:
         balans_toldir = InlineKeyboardButton(text="Balans to'ldirish✅", callback_data=f"add_balans_{telegram_id}")
     else:
@@ -221,69 +222,15 @@ async def adminni_chiqarish(call:CallbackQuery):
         permission = InlineKeyboardButton(text="Admin ruxsatlari✅", callback_data=f"permission_admin_{telegram_id}")
     else:
         permission = InlineKeyboardButton(text="Admin ruxsatlari", callback_data=f"permission_admin_{telegram_id}")
-    if telegram_id in delete_admin:
-        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
-    else:
-        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
+
     ortga = InlineKeyboardButton(text="Ortga", callback_data=f"adminlar_{telegram_id}")
-    markup.add(admin_qosh, admin_ochir)
+    markup.add(admin_qosh, delete)
     markup.add(balans_toldir, balans_ayr)
     markup.add(ban, unban)
     markup.add(send, permission)
-    markup.add(delete)
     markup.add(ortga)
     await call.message.edit_reply_markup(markup)
 
-@dp.callback_query_handler(lambda c: c.data.startswith("remove_admin_"))
-async def adminni_chiqarish(call:CallbackQuery):
-    telegram_id = int(call.data.split("_")[2])
-    markup = InlineKeyboardMarkup()
-    if telegram_id in admin_qoshish:
-        admin_qosh = InlineKeyboardButton(text="Admin qo'shish ✅",callback_data=f"add_admin_{telegram_id}")
-    else:
-        admin_qosh = InlineKeyboardButton(text="Admin qo'shish", callback_data=f"add_admin_{telegram_id}")
-    if telegram_id in admin_chiqarish:
-        admin_chiqarish.remove(telegram_id)
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish",callback_data=f"remove_admin_{telegram_id}")
-    else:
-        admin_chiqarish.append(telegram_id)
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish✅",callback_data=f"remove_admin_{telegram_id}")
-    if telegram_id in balans_toldirish:
-        balans_toldir= InlineKeyboardButton(text="Balans to'ldirish✅",callback_data=f"add_balans_{telegram_id}")
-    else:
-        balans_toldir= InlineKeyboardButton(text="Balans to'ldirish",callback_data=f"add_balans_{telegram_id}")
-    if telegram_id in balans_ayrish:
-        balans_ayr= InlineKeyboardButton(text="Balans ayirish✅",callback_data=f"frac_balans_{telegram_id}")
-    else:
-        balans_ayr= InlineKeyboardButton(text="Balans ayirish",callback_data=f"frac_balans_{telegram_id}")
-    if telegram_id in ban_qilish:
-        ban = InlineKeyboardButton(text="Ban qilish✅", callback_data=f"ban_user_{telegram_id}")
-    else:
-        ban = InlineKeyboardButton(text="Ban qilish", callback_data=f"ban_user_{telegram_id}")
-    if telegram_id in bandan_chiqarish:
-        unban = InlineKeyboardButton(text="Bandan chiqarish✅", callback_data=f"unban_user_{telegram_id}")
-    else:
-        unban = InlineKeyboardButton(text="Bandan chiqarish", callback_data=f"unban_user_{telegram_id}")
-    if telegram_id in send_message:
-        send = InlineKeyboardButton(text="Xabar yuborish✅", callback_data=f"send_message_{telegram_id}")
-    else:
-        send = InlineKeyboardButton(text="Xabar yuborish", callback_data=f"send_message_{telegram_id}")
-    if telegram_id in ruxsatlar:
-        permission = InlineKeyboardButton(text="Admin ruxsatlari✅", callback_data=f"permission_admin_{telegram_id}")
-    else:
-        permission = InlineKeyboardButton(text="Admin ruxsatlari", callback_data=f"permission_admin_{telegram_id}")
-    if telegram_id in delete_admin:
-        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
-    else:
-        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
-    ortga = InlineKeyboardButton(text="Ortga", callback_data=f"adminlar_{telegram_id}")
-    markup.add(admin_qosh, admin_ochir)
-    markup.add(balans_toldir, balans_ayr)
-    markup.add(ban, unban)
-    markup.add(send, permission)
-    markup.add(delete)
-    markup.add(ortga)
-    await call.message.edit_reply_markup(markup)
 
 @dp.callback_query_handler(lambda c: c.data.startswith("add_balans_"))
 async def adminni_chiqarish(call:CallbackQuery):
@@ -293,10 +240,10 @@ async def adminni_chiqarish(call:CallbackQuery):
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish ✅",callback_data=f"add_admin_{telegram_id}")
     else:
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish", callback_data=f"add_admin_{telegram_id}")
-    if telegram_id in admin_chiqarish:
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish✅",callback_data=f"remove_admin_{telegram_id}")
+    if telegram_id in delete_admin:
+        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
     else:
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish",callback_data=f"remove_admin_{telegram_id}")
+        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
     if telegram_id in balans_toldirish:
         balans_toldirish.remove(telegram_id)
         balans_toldir= InlineKeyboardButton(text="Balans to'ldirish",callback_data=f"add_balans_{telegram_id}")
@@ -323,16 +270,12 @@ async def adminni_chiqarish(call:CallbackQuery):
         permission = InlineKeyboardButton(text="Admin ruxsatlari✅", callback_data=f"permission_admin_{telegram_id}")
     else:
         permission = InlineKeyboardButton(text="Admin ruxsatlari", callback_data=f"permission_admin_{telegram_id}")
-    if telegram_id in delete_admin:
-        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
-    else:
-        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
+
     ortga = InlineKeyboardButton(text="Ortga", callback_data=f"adminlar_{telegram_id}")
-    markup.add(admin_qosh, admin_ochir)
+    markup.add(admin_qosh, delete)
     markup.add(balans_toldir, balans_ayr)
     markup.add(ban, unban)
     markup.add(send, permission)
-    markup.add(delete)
     markup.add(ortga)
     await call.message.edit_reply_markup(markup)
 
@@ -344,10 +287,10 @@ async def adminni_chiqarish(call:CallbackQuery):
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish ✅",callback_data=f"add_admin_{telegram_id}")
     else:
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish", callback_data=f"add_admin_{telegram_id}")
-    if telegram_id in admin_chiqarish:
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish✅",callback_data=f"remove_admin_{telegram_id}")
+    if telegram_id in delete_admin:
+        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
     else:
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish",callback_data=f"remove_admin_{telegram_id}")
+        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
     if telegram_id in balans_toldirish:
         balans_toldir= InlineKeyboardButton(text="Balans to'ldirish✅",callback_data=f"add_balans_{telegram_id}")
     else:
@@ -374,16 +317,12 @@ async def adminni_chiqarish(call:CallbackQuery):
         permission = InlineKeyboardButton(text="Admin ruxsatlari✅", callback_data=f"permission_admin_{telegram_id}")
     else:
         permission = InlineKeyboardButton(text="Admin ruxsatlari", callback_data=f"permission_admin_{telegram_id}")
-    if telegram_id in delete_admin:
-        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
-    else:
-        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
+
     ortga = InlineKeyboardButton(text="Ortga", callback_data=f"adminlar_{telegram_id}")
-    markup.add(admin_qosh, admin_ochir)
+    markup.add(admin_qosh, delete)
     markup.add(balans_toldir, balans_ayr)
     markup.add(ban, unban)
     markup.add(send, permission)
-    markup.add(delete)
     markup.add(ortga)
     await call.message.edit_reply_markup(markup)
 
@@ -395,10 +334,10 @@ async def adminni_chiqarish(call:CallbackQuery):
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish ✅",callback_data=f"add_admin_{telegram_id}")
     else:
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish", callback_data=f"add_admin_{telegram_id}")
-    if telegram_id in admin_chiqarish:
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish✅",callback_data=f"remove_admin_{telegram_id}")
+    if telegram_id in delete_admin:
+        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
     else:
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish",callback_data=f"remove_admin_{telegram_id}")
+        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
     if telegram_id in balans_toldirish:
         balans_toldir= InlineKeyboardButton(text="Balans to'ldirish✅",callback_data=f"add_balans_{telegram_id}")
     else:
@@ -425,16 +364,12 @@ async def adminni_chiqarish(call:CallbackQuery):
         permission = InlineKeyboardButton(text="Admin ruxsatlari✅", callback_data=f"permission_admin_{telegram_id}")
     else:
         permission = InlineKeyboardButton(text="Admin ruxsatlari", callback_data=f"permission_admin_{telegram_id}")
-    if telegram_id in delete_admin:
-        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
-    else:
-        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
+
     ortga = InlineKeyboardButton(text="Ortga", callback_data=f"adminlar_{telegram_id}")
-    markup.add(admin_qosh, admin_ochir)
+    markup.add(admin_qosh, delete)
     markup.add(balans_toldir, balans_ayr)
     markup.add(ban, unban)
     markup.add(send, permission)
-    markup.add(delete)
     markup.add(ortga)
     await call.message.edit_reply_markup(markup)
 
@@ -447,10 +382,10 @@ async def adminni_chiqarish(call:CallbackQuery):
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish ✅",callback_data=f"add_admin_{telegram_id}")
     else:
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish", callback_data=f"add_admin_{telegram_id}")
-    if telegram_id in admin_chiqarish:
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish✅",callback_data=f"remove_admin_{telegram_id}")
+    if telegram_id in delete_admin:
+        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
     else:
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish",callback_data=f"remove_admin_{telegram_id}")
+        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
     if telegram_id in balans_toldirish:
         balans_toldir= InlineKeyboardButton(text="Balans to'ldirish✅",callback_data=f"add_balans_{telegram_id}")
     else:
@@ -477,16 +412,12 @@ async def adminni_chiqarish(call:CallbackQuery):
         permission = InlineKeyboardButton(text="Admin ruxsatlari✅", callback_data=f"permission_admin_{telegram_id}")
     else:
         permission = InlineKeyboardButton(text="Admin ruxsatlari", callback_data=f"permission_admin_{telegram_id}")
-    if telegram_id in delete_admin:
-        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
-    else:
-        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
+
     ortga = InlineKeyboardButton(text="Ortga", callback_data=f"adminlar_{telegram_id}")
-    markup.add(admin_qosh, admin_ochir)
+    markup.add(admin_qosh, delete)
     markup.add(balans_toldir, balans_ayr)
     markup.add(ban, unban)
     markup.add(send, permission)
-    markup.add(delete)
     markup.add(ortga)
     await call.message.edit_reply_markup(markup)
 
@@ -498,10 +429,10 @@ async def adminni_chiqarish(call:CallbackQuery):
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish ✅",callback_data=f"add_admin_{telegram_id}")
     else:
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish", callback_data=f"add_admin_{telegram_id}")
-    if telegram_id in admin_chiqarish:
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish✅",callback_data=f"remove_admin_{telegram_id}")
+    if telegram_id in delete_admin:
+        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
     else:
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish",callback_data=f"remove_admin_{telegram_id}")
+        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
     if telegram_id in balans_toldirish:
         balans_toldir= InlineKeyboardButton(text="Balans to'ldirish✅",callback_data=f"add_balans_{telegram_id}")
     else:
@@ -528,16 +459,12 @@ async def adminni_chiqarish(call:CallbackQuery):
         permission = InlineKeyboardButton(text="Admin ruxsatlari✅", callback_data=f"permission_admin_{telegram_id}")
     else:
         permission = InlineKeyboardButton(text="Admin ruxsatlari", callback_data=f"permission_admin_{telegram_id}")
-    if telegram_id in delete_admin:
-        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
-    else:
-        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
+
     ortga = InlineKeyboardButton(text="Ortga", callback_data=f"adminlar_{telegram_id}")
-    markup.add(admin_qosh, admin_ochir)
+    markup.add(admin_qosh, delete)
     markup.add(balans_toldir, balans_ayr)
     markup.add(ban, unban)
     markup.add(send, permission)
-    markup.add(delete)
     markup.add(ortga)
     await call.message.edit_reply_markup(markup)
 
@@ -550,10 +477,12 @@ async def adminni_chiqarish(call:CallbackQuery):
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish ✅",callback_data=f"add_admin_{telegram_id}")
     else:
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish", callback_data=f"add_admin_{telegram_id}")
-    if telegram_id in admin_chiqarish:
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish✅",callback_data=f"remove_admin_{telegram_id}")
+    if telegram_id in delete_admin:
+        delete_admin.remove(telegram_id)
+        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
     else:
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish",callback_data=f"remove_admin_{telegram_id}")
+        delete_admin.append(telegram_id)
+        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
     if telegram_id in balans_toldirish:
         balans_toldir= InlineKeyboardButton(text="Balans to'ldirish✅",callback_data=f"add_balans_{telegram_id}")
     else:
@@ -578,18 +507,12 @@ async def adminni_chiqarish(call:CallbackQuery):
         permission = InlineKeyboardButton(text="Admin ruxsatlari✅", callback_data=f"permission_admin_{telegram_id}")
     else:
         permission = InlineKeyboardButton(text="Admin ruxsatlari", callback_data=f"permission_admin_{telegram_id}")
-    if telegram_id in delete_admin:
-        delete_admin.remove(telegram_id)
-        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
-    else:
-        delete_admin.append(telegram_id)
-        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
+
     ortga = InlineKeyboardButton(text="Ortga", callback_data=f"adminlar_{telegram_id}")
-    markup.add(admin_qosh, admin_ochir)
+    markup.add(admin_qosh, delete)
     markup.add(balans_toldir, balans_ayr)
     markup.add(ban, unban)
     markup.add(send, permission)
-    markup.add(delete)
     markup.add(ortga)
     await call.message.edit_reply_markup(markup)
 
@@ -602,10 +525,10 @@ async def adminni_chiqarish(call:CallbackQuery):
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish ✅",callback_data=f"add_admin_{telegram_id}")
     else:
         admin_qosh = InlineKeyboardButton(text="Admin qo'shish", callback_data=f"add_admin_{telegram_id}")
-    if telegram_id in admin_chiqarish:
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish✅",callback_data=f"remove_admin_{telegram_id}")
+    if telegram_id in delete_admin:
+        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
     else:
-        admin_ochir= InlineKeyboardButton(text="Admin o'chirish",callback_data=f"remove_admin_{telegram_id}")
+        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
     if telegram_id in balans_toldirish:
         balans_toldir= InlineKeyboardButton(text="Balans to'ldirish✅",callback_data=f"add_balans_{telegram_id}")
     else:
@@ -632,15 +555,11 @@ async def adminni_chiqarish(call:CallbackQuery):
     else:
         ruxsatlar.append(telegram_id)
         permission = InlineKeyboardButton(text="Admin ruxsatlari✅", callback_data=f"permission_admin_{telegram_id}")
-    if telegram_id in delete_admin:
-        delete = InlineKeyboardButton(text="Admin o'chirish✅", callback_data=f"delete_admin_{telegram_id}")
-    else:
-        delete = InlineKeyboardButton(text="Admin o'chirish", callback_data=f"delete_admin_{telegram_id}")
+
     ortga = InlineKeyboardButton(text="Ortga", callback_data=f"adminlar_{telegram_id}")
-    markup.add(admin_qosh, admin_ochir)
+    markup.add(admin_qosh, delete)
     markup.add(balans_toldir, balans_ayr)
     markup.add(ban, unban)
     markup.add(send, permission)
-    markup.add(delete)
     markup.add(ortga)
     await call.message.edit_reply_markup(markup)

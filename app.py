@@ -11,6 +11,7 @@ async def on_startup(dispatcher):
         await db.create()
         # await db.drop_qoshimcha_tumanlar()
         # await db.drop_driver()
+        await db.drop_admins()
         # await db.drop_last_tarif()
         # await db.drop_yoldan_odam_info()
         # await db.drop_sayohat_info()
@@ -36,7 +37,10 @@ async def on_startup(dispatcher):
         # await db.create_table_haydovchi()
         # await db.create_table_yolovchi()
         # await db.create_table_count_last_get_orders()
-        await on_startup_notify(dispatcher)
+        await db.create_table_admins()
+        await db.add_admin(telegram_id=6132434228)
+        await db.add_admin(telegram_id=343103355)
+        # await on_startup_notify(dispatcher)
         await set_default_commands(dispatcher)
 
 

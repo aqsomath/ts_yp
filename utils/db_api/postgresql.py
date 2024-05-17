@@ -64,6 +64,31 @@ class Database:
         """
         await self.execute(sql, execute=True)
 
+    async def create_table_admins(self):
+        sql = """
+        CREATE TABLE IF NOT EXISTS Admins (
+        id SERIAL PRIMARY KEY,
+        telegram_id BIGINT NULL UNIQUE
+       );
+        """
+        await self.execute(sql, execute=True)
+    async def add_admin(self,telegram_id):
+        sql = "INSERT INTO admins (telegram_id) VALUES($1) returning *"
+        return await self.execute(sql,  telegram_id, fetchrow=True)
+    async def delete_admin(self, **kwargs):
+        sql = "DELETE FROM Admins WHERE "
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return await self.execute(sql, *parameters, fetchrow=True)
+    async def select_admin(self, **kwargs):
+        sql = "SELECT * FROM Admins WHERE "
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return await self.execute(sql, *parameters, fetchrow=True)
+    async def select_all_admins(self):
+        sql = "SELECT * FROM Admins"
+        return await self.execute(sql, fetch=True)
+    async def drop_admins(self):
+        await self.execute("DROP TABLE Admins", execute=True)
+
     async def get_users_joined_in_last_day(self):
         sql = """
         SELECT * FROM Users

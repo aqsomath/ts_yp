@@ -1,4 +1,4 @@
-
+from . import royxatlar
 from . import statistika
 from . import admin_panel
 

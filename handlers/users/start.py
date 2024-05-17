@@ -1,14 +1,11 @@
 from aiogram import types,filters
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from handlers.users.edit_district.sozlamalar import haydovchilar_royxati
 from handlers.users.tariflar import fourth, fifth
-from handlers.users.yolovchi_tuman.yolovchimisiz import yolovchilar_royxati
 from keyboards.inline.yolovchi.callback_data import menu_callback
 from keyboards.inline.yolovchi.kirish import kirish, umumiy_menu
 from loader import dp, db, bot
 
-admin_ids = [6132434228,343103355]
 
 @dp.message_handler(commands=["start"])
 async def bot_start(message: types.Message):
