@@ -1,7 +1,9 @@
+import asyncio
+
 from aiogram import types,filters
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from handlers.users.tariflar import fourth, fifth
+from handlers.users.tariflar.asosiy import fourth, fifth
 from keyboards.inline.yolovchi.callback_data import menu_callback
 from keyboards.inline.yolovchi.kirish import kirish, umumiy_menu
 from loader import dp, db, bot
@@ -13,6 +15,9 @@ async def bot_start(message: types.Message):
         fourth.append(message.from_user.id)
     if len(fifth)>0:
         fifth.append(message.from_user.id)
+        five = await db.select_tarif(tarif_name='fifth')
+        await asyncio.sleep(five[3]*24*60*60)
+        fifth.remove(message.from_user.id)
     existing_user = await db.select_user(telegram_id=message.from_user.id)
     if existing_user:
         pass

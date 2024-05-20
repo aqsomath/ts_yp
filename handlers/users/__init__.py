@@ -1,3 +1,4 @@
+from . import tariflar
 from .edit_district import buxoro_edit, fargona_edit, jizzax_edit, navoiy_edit, xorazm_edit, haydovchimisiz,sozlamalar
 from . import tariflar
 from . import chat_member

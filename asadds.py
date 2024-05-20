@@ -1,2 +1,4 @@
-import datetime
-print(datetime.date.today())
+list  = []
+
+list.clear()
+print(list)
