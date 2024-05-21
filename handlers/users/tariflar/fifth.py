@@ -4,7 +4,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, Message
 
-from handlers.users.tariflar.asosiy import second, third, first, fifth, fourth
+from handlers.users.tariflar.asosiy import second, third, first, fifth, fourth,hammaga_bepul
 from keyboards.inline.yolovchi.callback_data import menu_callback
 from keyboards.inline.yolovchi.kirish import umumiy_menu, kirish
 from loader import db, dp
@@ -45,7 +45,7 @@ async def conf_one(call:CallbackQuery):
 
     else:
         five = await db.select_tarif(tarif_name='fifth')
-        msg_5 = f"5-tarif\nA'zolar soni - {len(fifth)}\n/start bosilishiga\nKuniga - {five[3]}\n3 -  kun bepul"
+        msg_5 = f"5-tarif\nA'zolar soni - {len(fifth)}\n/start bosilishiga :\nKuniga - {five[3]}\n3 -  kun bepul"
         markup = InlineKeyboardMarkup(row_width=2)
         markup.insert(InlineKeyboardButton(text="Tarifni o'chirish", callback_data="beshiinchitarifniochirish"))
         markup.insert(
@@ -99,8 +99,15 @@ async def back_tarifs(message:Message,state:FSMContext):
     await message.delete()
     await state.finish()
 @dp.callback_query_handler(text="beshinchitarifgaodamqoshish")
-async def tarif_5_ga_otkazish(call: CallbackQuery, state: FSMContext):
+async def tarif_5_ga_otkazish(call: CallbackQuery):
     fourth.clear()
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.insert(InlineKeyboardButton(text="Ortga", callback_data="quququortga"))
+    markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="xa"))
+    five = await db.select_tarif(tarif_name='fifth')
+    msg_5 = f"/start bosilishiga {five[3]} kun bepul holatida ishlaydi "
+    await call.message.answer(f"5 - ta'rif yoqildi .{msg_5}", reply_markup=markup)
+    await call.message.delete()
     users = await db.select_all_users()
     for user in users:
         fifth.append(user[3])
@@ -109,13 +116,7 @@ async def tarif_5_ga_otkazish(call: CallbackQuery, state: FSMContext):
         for user in users:
             if user[3] in fifth:
                 fifth.remove(user[3])
-    markup = InlineKeyboardMarkup(row_width=2)
-    markup.insert(InlineKeyboardButton(text="Ortga", callback_data="quququortga"))
-    markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="xa"))
-    five = await db.select_tarif(tarif_name='fifth')
-    msg_5 = f"/start bosilishiga {five[3]} kun bepul holatida ishlaydi "
-    await call.message.answer(f"5 - ta'rif yoqildi .{msg_5}",reply_markup=markup)
-    await call.message.delete()
+
 
 @dp.callback_query_handler(text="beshiinchitarifniochirish")
 async def tarif_5_ga_otkazish(call: CallbackQuery, state: FSMContext):

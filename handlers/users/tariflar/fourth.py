@@ -4,7 +4,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, Message
 
-from handlers.users.tariflar.asosiy import second, third, first, fourth, fifth
+from handlers.users.tariflar.asosiy import second, third, first, fourth, fifth,hammaga_bepul
 from keyboards.inline.yolovchi.callback_data import menu_callback
 from keyboards.inline.yolovchi.kirish import umumiy_menu, kirish
 from loader import db, dp
@@ -36,11 +36,27 @@ async def conf_one(call:CallbackQuery):
     markup = InlineKeyboardMarkup(row_width=2)
     markup.insert(InlineKeyboardButton(text="Tarifga odam qo'shish", callback_data="tortinchitarifgaodamqoshish"))
     markup.insert(InlineKeyboardButton(text="Tarif sozlamalarini o'zgartirish", callback_data="tortingchitarifsozlamalari"))
+    if len(fourth)==0:
+        markup.insert(InlineKeyboardButton(text="Tarifni yoqish", callback_data="tortinchitarifniyoqish"))
+    else:
+        markup.insert(InlineKeyboardButton(text="Tarifni o'chirish", callback_data="tortinchitarifniochirish"))
     markup.insert(InlineKeyboardButton(text="Ortga", callback_data="qayt"))
     markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="menuga"))
     await call.message.answer(f"{msg_4}",reply_markup=markup)
     await call.message.delete()
 
+@dp.callback_query_handler(text="tortinchitarifniyoqish")
+async def turn_on_fourth(call:CallbackQuery):
+    hammaga_bepul.clear()
+    fifth.clear()
+    users = await db.select_all_users()
+    for user in users:
+        fourth.append(user[3])
+    await call.message.answer("To'rtinchi tarif yoqildi")
+@dp.callback_query_handler(text="tortinchitarifniochirish")
+async def turn_on_fourth(call:CallbackQuery):
+    fourth.clear()
+    await call.message.answer("To'rtinchi tarif o'chirildi")
 
 @dp.callback_query_handler(text="tortingchitarifsozlamalari")
 async def conf_one_setting(call:CallbackQuery,state:FSMContext):
@@ -100,8 +116,11 @@ async def birinchi_tarifg_odam(call:CallbackQuery,state:FSMContext):
     msg_4 = f"4 - ta'rif\nA'zolar soni - {len(fourth)}\nKuniga {four[3]} ta qabul qilish\nOyiga - > {four[2]} "
     markup = InlineKeyboardMarkup(row_width=2)
     markup.insert(InlineKeyboardButton(text="Tarifga odam qo'shish", callback_data="tortinchitarifgaodamqoshish"))
-    markup.insert(
-        InlineKeyboardButton(text="Tarif sozlamalarini o'zgartirish", callback_data="tortingchitarifsozlamalari"))
+    markup.insert(InlineKeyboardButton(text="Tarif sozlamalarini o'zgartirish", callback_data="tortingchitarifsozlamalari"))
+    if len(fourth)==0:
+        markup.insert(InlineKeyboardButton(text="Tarifni yoqish", callback_data="tortinchitarifniyoqish"))
+    else:
+        markup.insert(InlineKeyboardButton(text="Tarifni o'chirish", callback_data="tortinchitarifniochirish"))
     markup.insert(InlineKeyboardButton(text="Ortga", callback_data="qayt"))
     markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="menuga"))
     await call.message.answer(f"{msg_4}", reply_markup=markup)
@@ -184,8 +203,11 @@ async def ortga_qaytish(call:CallbackQuery):
     if len(fourth)==0:
         markup = InlineKeyboardMarkup(row_width=2)
         markup.insert(InlineKeyboardButton(text="Tarifga odam qo'shish", callback_data="birinchitarigaodamqoshish"))
-        markup.insert(
-            InlineKeyboardButton(text="Tarif sozlamalarini o'zgartirish", callback_data="birinchitarifsozlamalari"))
+        markup.insert(InlineKeyboardButton(text="Tarif sozlamalarini o'zgartirish", callback_data="birinchitarifsozlamalari"))
+        if len(fourth) == 0:
+            markup.insert(InlineKeyboardButton(text="Tarifni yoqish", callback_data="tortinchitarifniyoqish"))
+        else:
+            markup.insert(InlineKeyboardButton(text="Tarifni o'chirish", callback_data="tortinchitarifniochirish"))
         markup.insert(InlineKeyboardButton(text="Ortga", callback_data="qayt"))
         markup.insert(InlineKeyboardButton(text="Bosh menu", callback_data="menuga"))
         await call.message.answer("Hamma uchun bepul tarif.Bu tarif hozirda o'chiq.\nYoqishni istaysizmi ?",reply_markup=markup)
