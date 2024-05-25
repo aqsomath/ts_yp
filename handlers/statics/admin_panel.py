@@ -4,7 +4,8 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.dispatcher.filters.state import StatesGroup, State
 
-from handlers.statics.royxatlar import admin_ids, balans_toldirish, balans_ayrish, user_of_banned
+from handlers.statics.royxatlar import admin_ids, balans_toldirish, balans_ayrish, user_of_banned, ban_qilish, \
+    bandan_chiqarish
 from loader import dp, db, bot
 
 
@@ -138,7 +139,7 @@ async def balans_id(message:Message,state:FSMContext):
         id=data.get("id")
         d = await db.select_user(telegram_id=id)
         if d is not None:
-            await db.update_balans(telegram_id=d[3],balans=d[7]+int(message.text))
+            await db.update_balans(telegram_id=d[3],balans=d[7]-int(message.text))
             d = await db.select_user(telegram_id=id)
             await message.answer(f"Balans ayrildi\nHaydovchi\nusername: {d[1]}\nID:{id}\nBalans:{d[7]} ")
             await bot.send_message(chat_id=d[3], text=f"Balansingiz {message.text} ga kamaytirildi")
@@ -150,9 +151,13 @@ async def balans_id(message:Message,state:FSMContext):
 
 @dp.callback_query_handler(text="banqilish")
 async def ban_user(call: types.CallbackQuery,state:FSMContext):
-    await call.message.answer("Foydalanuvchi ID sini kiriting :")
-    await call.message.delete()
-    await BanStatesGroup.id.set()
+    if call.from_user.id in ban_qilish:
+        await call.message.answer("Foydalanuvchi ID sini kiriting :")
+        await call.message.delete()
+        await BanStatesGroup.id.set()
+    else:
+        await call.message.answer("Kechirasiz sizga ban qilish uchun ruxsat yo'q")
+        await state.finish()
 @dp.message_handler(state=BanStatesGroup.id)
 async def id_get(message:Message,state:FSMContext):
     if message.text.isalpha():
@@ -188,10 +193,14 @@ async def how_many_day(message:Message,state:FSMContext):
 
 
 @dp.callback_query_handler(text='bandanchiqarish')
-async def unban_user(call: types.CallbackQuery):
-    await call.message.answer("Foydalanuvchi ID sini kiriting :")
-    await call.message.delete()
-    await UnBanStatesGroup.id.set()
+async def unban_user(call: types.CallbackQuery,state:FSMContext):
+    if call.from_user.id in bandan_chiqarish:
+        await call.message.answer("Foydalanuvchi ID sini kiriting :")
+        await call.message.delete()
+        await UnBanStatesGroup.id.set()
+    else:
+        await call.message.answer("Kechirasiz sizga foydalanuvchilarni bandan chiqarish uchun ruxsat yo'q")
+        await state.finish()
 @dp.message_handler(state=UnBanStatesGroup.id)
 async def id_get_ban_user(message:Message,state:FSMContext):
     if message.text.isalpha():

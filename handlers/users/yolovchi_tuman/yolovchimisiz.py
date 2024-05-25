@@ -20,7 +20,14 @@ async def haydovchi(call:CallbackQuery):
 
 @dp.callback_query_handler(menu_callback.filter(item_name='texikerak'),state=None)
 async def yolovchi(call:CallbackQuery):
-    
+    last_get_orders = await db.get_order_joined_in_last_day_2()
+    count = []
+    for order in last_get_orders:
+        if order[1]==call.from_user.id:
+            count.append(call.from_user.id)
+    if len(count)>3:
+        await call.message.answer("Kechirasiz bugungi limitingiz tugadi !")
+    else:
         await call.message.answer("Qayerdan yurmoqchisiz ? \n",reply_markup=viloyatlar_yol)
         await call.message.delete()
         await Yolovchi_andijon.asosiy.set()

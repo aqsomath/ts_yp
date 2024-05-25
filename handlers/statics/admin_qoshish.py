@@ -42,11 +42,17 @@ async def admin_qosh(call:CallbackQuery,state:FSMContext):
 
 @dp.message_handler(state=AdminkopaytirishState.admin_id,commands=["cancel"])
 async def head_menu(message:Message,state:FSMContext):
-    users = await db.select_all_admins()
+    adminlarimiz = await db.select_all_admins()
+    x = []
+    for i in adminlarimiz:
+        x.append(i[1])
+    users = await db.select_all_users()
     markup = InlineKeyboardMarkup(row_width=2)
     admins = {}
     for user in users:
-        admins[user[1]] = user[3]
+        for k in x:
+            if user[3] == k:
+                admins[user[1]] = user[3]
     for key, value in admins.items():
         markup.insert(InlineKeyboardButton(text=key, callback_data=f"adminlar_{value}"))
     markup.insert(InlineKeyboardButton(text="Admin qo'shish", callback_data="asosiyqoshish"))
@@ -62,23 +68,28 @@ async def admin_add(message:Message,state:FSMContext):
         id = int(message.text)
 
         user = await db.select_user(telegram_id=id)
+        admin = await db.select_admin(telegram_id=id)
         if user is not None:
-            await db.add_admin(telegram_id=id)
-            users = await db.select_all_users()
-            adminlar = await db.select_all_admins()
-            markup = InlineKeyboardMarkup(row_width=2)
-            admins = {}
-            for i in adminlar:
-                for user in users:
-                    if user[3] == i[1]:
-                        admins[user[1]] = i[1]
-            for key, value in admins.items():
-                markup.insert(InlineKeyboardButton(text=key, callback_data=f"adminlar_{value}"))
-            markup.insert(InlineKeyboardButton(text="Admin qo'shish", callback_data="asosiyqoshish"))
-            markup.insert(InlineKeyboardButton(text="Ortga", callback_data="adminpanel"))
-            await message.answer(f"Adminlar ro'yxatiga {user[1]} qo'shildi", reply_markup=markup)
-            await message.delete()
-            await state.finish()
+            if admin is None:
+                await db.add_admin(telegram_id=id)
+                users = await db.select_all_users()
+                adminlar = await db.select_all_admins()
+                markup = InlineKeyboardMarkup(row_width=2)
+                admins = {}
+                for i in adminlar:
+                    for user in users:
+                        if user[3] == i[1]:
+                            admins[user[1]] = i[1]
+                for key, value in admins.items():
+                    markup.insert(InlineKeyboardButton(text=key, callback_data=f"adminlar_{value}"))
+                markup.insert(InlineKeyboardButton(text="Admin qo'shish", callback_data="asosiyqoshish"))
+                markup.insert(InlineKeyboardButton(text="Ortga", callback_data="adminpanel"))
+                await message.answer(f"Adminlar ro'yxatiga {user[1]} qo'shildi", reply_markup=markup)
+                await message.delete()
+                await state.finish()
+            else:
+                await message.answer("Bu foydalanuvchi shundoq ham admin !")
+                await state.finish()
         else:
             await message.answer("Bunday ID bot foydalanuvchilari orasidan topilmadi !")
             await state.finish()

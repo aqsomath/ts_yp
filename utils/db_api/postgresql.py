@@ -645,6 +645,12 @@ class Database:
           WHERE last_interaction >= NOW() - INTERVAL '1 day';
           """
         return await self.execute(sql, fetch=True)
+    async def get_order_joined_in_last_day_2(self):
+        sql = """
+          SELECT * FROM Orders
+          WHERE last_interaction >= NOW() - INTERVAL '1 day';
+          """
+        return await self.execute(sql, fetch=True)
     async def delete_last_order(self,**kwargs):
         sql = "DELETE FROM Last WHERE "
         sql, parameters = self.format_args(sql, parameters=kwargs)

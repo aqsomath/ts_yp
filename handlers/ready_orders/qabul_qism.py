@@ -53,7 +53,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                             last_get_orders = await db.get_order_joined_in_last_day()
 
                                             driver = await db.select_user(telegram_id=call.from_user.id)
-                                            driver_id = driver[0]
+                                            driver_id = driver[3]
                                             await bot.send_message(
                                                 text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
                                                 chat_id=msg[1], reply_markup=markup_1)
@@ -135,7 +135,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                             limit += tarif3[3]
                                                         if len(count) <= limit:
                                                             driver = await db.select_user(telegram_id=call.from_user.id)
-                                                            driver_id = driver[0]
+                                                            driver_id = driver[3]
                                                             await bot.send_message(
                                                                 text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
                                                                 chat_id=msg[1], reply_markup=markup_1)
@@ -205,7 +205,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                 tarif = await db.select_tarif(tarif_name="fifth")
                                                 if len(count) <= tarif[3] :
                                                     driver = await db.select_user(telegram_id=call.from_user.id)
-                                                    driver_id = driver[0]
+                                                    driver_id = driver[3]
                                                     await bot.send_message(
                                                         text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
                                                         chat_id=msg[1], reply_markup=markup_1)
@@ -273,7 +273,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                             tarif_4 = await db.select_tarif(tarif_name="fourth")
                                                             if len(count) <= tarif[3]  + tarif_4[3]:
                                                                 driver = await db.select_user(telegram_id=call.from_user.id)
-                                                                driver_id = driver[0]
+                                                                driver_id = driver[3]
                                                                 await bot.send_message(
                                                                     text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
                                                                     chat_id=msg[1], reply_markup=markup_1)
@@ -344,7 +344,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                             tarif_4 = await db.select_tarif(tarif_name="fourth")
                                                             if len(count) <= tarif[3] + tarif_4[3]:
                                                                 driver = await db.select_user(telegram_id=call.from_user.id)
-                                                                driver_id = driver[0]
+                                                                driver_id = driver[3]
                                                                 await bot.send_message(
                                                                     text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
                                                                     chat_id=msg[1], reply_markup=markup_1)
@@ -415,7 +415,7 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                                             tarif_4 = await db.select_tarif(tarif_name="fourth")
                                                             if len(count) <= tarif[3] + tarif_4[3]:
                                                                 driver = await db.select_user(telegram_id=call.from_user.id)
-                                                                driver_id = driver[0]
+                                                                driver_id = driver[3]
                                                                 await bot.send_message(
                                                                     text=f"Sizning buyurtmangizni {driver_id} - raqamli foydalanuvchi qabul qildi",
                                                                     chat_id=msg[1], reply_markup=markup_1)
@@ -447,12 +447,17 @@ async def first_qabul(call:CallbackQuery,state:FSMContext):
                                     markup.insert(InlineKeyboardButton(text="1 - tarif",callback_data="birinchitarif"))
                                     markup.insert(InlineKeyboardButton(text="2 - tarif ",callback_data="ikkinchitarif"))
                                     markup.insert(InlineKeyboardButton(text="3 - tarif",callback_data="uchinchitarif"))
+
                                     await call.message.answer("Siz hech qaysi ta'rifda emassiz !\nQuyidagi tariflardan biriga ulaning:\n"
                                                               "<b>1 - tarif </b>\nKunlik 3 ta mijozni qabul qilish, oyiga 30000 so'm\n"
                                                               "<b>2 - tarif </b>\nKunlik 6 ta mijozni qabul qilish, oyiga 50000 so'm\n"
                                                               "<b>3 - tarif </b>\nKunlik 12 ta mijozni qabul qilish, oyiga 100000 so'm\n",reply_markup=markup)
     else:
-        await call.message.answer("Kechirasiz !!!\nSiz vaqtinchalik qora ro'yxatdasiz")
+        await call.message.answer(f"Kechirasiz !!!\n"
+                                  f"Siz vaqtinchalik qora ro'yxatdasiz\n"
+                                  f"Admin bilan bog'lanib bandan chiqarishini so'rang :\n"
+                                  f"Telefon : +998 94 100 79 74\n"
+                                  f"Telegram : <a href='tg://user?id={343103355}'>Admin</a> ")
 
 @dp.callback_query_handler(text="birinchitarif")
 async def birinchiga(call:CallbackQuery):

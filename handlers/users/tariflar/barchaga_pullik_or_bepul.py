@@ -22,4 +22,4 @@ async def hammaga_pullik(call:CallbackQuery):
     users = await db.select_all_users()
     for user in users:
         hammaga_bepul.append(user[3])
-    await call.message.answer("Hamma uchun pullik bo'ldi !!!")
+    await call.message.answer("Hamma uchun bepul bo'ldi !!!")
