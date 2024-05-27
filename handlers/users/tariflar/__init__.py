@@ -1,3 +1,4 @@
+from . import qabul_qism
 from . import asosiy
 from . import first
 from . import second

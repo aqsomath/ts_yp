@@ -907,7 +907,6 @@ async def taxireys_loc(message: Message, state: FSMContext):
         await bot.delete_message(chat_id=message.from_user.id,message_id=message.message_id)
         await message.answer(f"Ma'lumotlar to'g'rimi\n{msg}?", reply_markup=yes_not)
         await Reys_andijon.tasdiqlash.set()
-        await message.delete()
 @dp.callback_query_handler(text='ortga', state=Reys_andijon.tasdiqlash)
 async def taxi_reys_ortga(call: CallbackQuery, state: FSMContext):
     

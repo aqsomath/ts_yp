@@ -15,33 +15,6 @@ third = []
 fourth = []
 fifth = []
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @dp.callback_query_handler(state=SozlamalarStates.tarifni_almashtirish)
 async def change_tarif(call: CallbackQuery, state: FSMContext):
     if call.data == 'changebirinchitarif':
