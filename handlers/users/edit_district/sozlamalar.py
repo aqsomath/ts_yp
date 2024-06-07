@@ -1,6 +1,8 @@
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, Message
 from aiogram.dispatcher.filters.state import StatesGroup, State
+
+from handlers.users.tariflar.asosiy import first, second, third
 from keyboards.inline.yolovchi.callback_data import kirish_callback, viloyatlar_callback,menu_callback
 from keyboards.inline.yolovchi.viloyatlar import viloyatlar
 from loader import dp,db
@@ -785,15 +787,69 @@ async def balans_toldirish(call:CallbackQuery,state:FSMContext):
     three = await db.select_tarif(tarif_name='third')
     msg_3 = f"Kuniga {three[3]}ta qabul qilish, oyiga - > {three[2]}"
     markup = InlineKeyboardMarkup(row_width=2)
-    markup.insert(InlineKeyboardButton(text="1 - tarif", callback_data="changebirinchitarif"))
-    markup.insert(InlineKeyboardButton(text="2 - tarif ", callback_data="changeikkinchitarif"))
-    markup.insert(InlineKeyboardButton(text="3 - tarif", callback_data="changeuchinchitarif"))
+    markup.insert(InlineKeyboardButton(text="1 - tarif",
+                                       callback_data="birinchitarif"))
+    markup.insert(InlineKeyboardButton(text="2 - tarif ",
+                                       callback_data="ikkinchitarif"))
+    markup.insert(InlineKeyboardButton(text="3 - tarif",
+                                       callback_data="uchinchitarif"))
     await call.message.answer("Qaysi tarifga ulanmoqchisiz\n"
                               f"<b>1 - tarif </b>\n{msg_1}\n"
                               f"<b>2 - tarif </b>\n{msg_2}\n"
                               f"<b>3 - tarif </b>\n{msg_3}\n",
                               reply_markup=markup)
     await call.message.delete()
-    await SozlamalarStates.tarifni_almashtirish.set()
+    await state.finish()
+
+
+@dp.callback_query_handler(text="birinchitarif",state=SozlamalarStates.tarifni_almashtirish)
+async def birinchiga(call:CallbackQuery,state:FSMContext):
+    haydovchi = await db.select_user(telegram_id=call.from_user.id)
+    haydovchi_balansi = haydovchi[7]
+    tarif = await db.select_tarif(tarif_name='first')
+    if haydovchi_balansi >= tarif[3]:
+        await db.update_balans(balans=haydovchi_balansi - tarif[3], telegram_id=call.from_user.id)
+        first.append(call.from_user.id)
+        await call.message.answer("Siz birinchi tarifga muvaffaqiyatli qo'shildingiz !")
+        await state.finish()
+    else:
+        await call.message.answer(f"Admin bilan bog'lanib balansingizni to'ldiring :\n"
+                                  f"Telefon : +998 94 100 79 74\n"
+                                  f"Telegram : <a href='tg://user?id={343103355}'>Admin</a> ")
+        await state.finish()
+
+@dp.callback_query_handler(text="ikkinchitarif",state=SozlamalarStates.tarifni_almashtirish)
+async def ikkinchiga(call:CallbackQuery,state:FSMContext):
+    haydovchi = await db.select_user(telegram_id=call.from_user.id)
+    haydovchi_balansi = haydovchi[7]
+    tarif = await db.select_tarif(tarif_name='second')
+    if haydovchi_balansi >= tarif[3]:
+        await db.update_balans(balans=haydovchi_balansi - tarif[3], telegram_id=call.from_user.id)
+        second.append(call.from_user.id)
+        await call.message.answer("Siz ikkinchi tarifga muvaffaqiyatli qo'shildingiz !")
+        await state.finish()
+
+    else:
+        await call.message.answer(f"Admin bilan bog'lanib balansingizni to'ldiring :\n"
+                                  f"Telefon : +998 94 100 79 74\n"
+                                  f"Telegram : <a href='tg://user?id={343103355}'>Admin</a> ")
+        await state.finish()
+
+@dp.callback_query_handler(text="uchinchitarif",state=SozlamalarStates.tarifni_almashtirish)
+async def tariflar_uchun(call:CallbackQuery,state:FSMContext):
+    haydovchi = await db.select_user(telegram_id=call.from_user.id)
+    haydovchi_balansi = haydovchi[7]
+    tarif = await db.select_tarif(tarif_name='third')
+    if haydovchi_balansi >= tarif[3]:
+        await db.update_balans(balans=haydovchi_balansi - tarif[3], telegram_id=call.from_user.id)
+        third.append(call.from_user.id)
+        await call.message.answer("Siz uchinchi tarifga muvaffaqiyatli qo'shildingiz !")
+        await state.finish()
+
+    else:
+        await call.message.answer(f"Admin bilan bog'lanib balansingizni to'ldiring :\n"
+                                  f"Telefon : +998 94 100 79 74\n"
+                                  f"Telegram : <a href='tg://user?id={343103355}'>Admin</a> ")
+        await state.finish()
 
 
