@@ -1,3 +1,4 @@
+from . import namangan_edit
 from . import qoraqalpoq_edit
 from . import toshkent_shahar_edit
 from . import qashqadaryo_edit

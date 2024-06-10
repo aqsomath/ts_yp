@@ -325,7 +325,7 @@ class Database:
         sql = "SELECT region,tayyor_yolovchi,tayyor_yolovchi_full,viloyatga,tumanga,viloyat ,id,kelishildi,rad_etildi,event_time FROM Orders WHERE aniq_bormaydi=False"
         return await self.execute(sql, fetch=True)
     async def select_tayyor_yuk_haydovchi(self):
-        sql = "SELECT region,tayyor_yuk_haydovchisi,tayyor_yuk_haydovchisi_full,viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi,event_time  FROM Orders WHERE aniq_bormaydi=False"
+        sql = "SELECT region,tayyor_yuk_haydovchisi,tayyor_yuk_haydovchisi_full,viloyatga,tumanga,viloyat,id,kelishildi,rad_etildi,event_time,telegram_id  FROM Orders WHERE aniq_bormaydi=False"
         return await self.execute(sql, fetch=True)
     async def select_order(self, **kwargs):
         sql = "SELECT * FROM Orders WHERE "

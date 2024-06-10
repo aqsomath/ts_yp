@@ -248,26 +248,14 @@ async def haydovchif(call:CallbackQuery):
         await db.add_driver_info(viloyat="Buxoro", tuman="romitan tuman", telegram_id=call.from_user.id)
         await db.add_driver_info(viloyat="Buxoro", tuman="shofirkon tuman", telegram_id=call.from_user.id)
         await db.add_driver_info(viloyat="Buxoro", tuman="vobkent tuman", telegram_id=call.from_user.id)
-        driver={
-        "Haydovchi reys belgilash":'yolovchikerak',
-        "Tayyor yo'lovchi": 'tayyoryolovchi',
-        "Yuk kerak":'yukkerak',
-        "Tayyor yuk": "tayyoryuk",
-        "Pochta kerak":'pochtakerak',
-        "Tayyor pochta": "tayyorpochta",
-        "Sayohatchilar kerak":'sayohatgayolovchi',
-        "Tayyor sayohatchi":"tayyorsayohatchi",
-        "Mening buyurtmalarim": "meningbuyurtmalarim",
-        "Admin bilan bog'lanish": "adminbilanboglanish",
-        "Sozlamalar":"nastroyki",
-        "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-
-        }
-        markup = InlineKeyboardMarkup(row_width=2)
-        for key,value in driver.items():
-            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+        marrk = InlineKeyboardMarkup(row_width=2)
+        marrk.insert(InlineKeyboardButton(text='Filtrlash', callback_data='filtrlash'))
+        marrk.insert(InlineKeyboardButton(text="Mening ma'lumotlarim", callback_data='meningmalumotlarim'))
+        marrk.insert(InlineKeyboardButton(text='Ortga ', callback_data='headmenu'))
+        marrk.insert(InlineKeyboardButton(text='Bosh menu ', callback_data='headmenu'))
+        await call.message.answer("Filtrlash tusgmasini bosing va o'zingizga moslab sozlang", reply_markup=marrk)
         await call.message.delete()
+
 
 @dp.callback_query_handler(menu_callback.filter(item_name='nastroyki'))
 async def sozlamalar(call:CallbackQuery):
@@ -277,22 +265,10 @@ async def sozlamalar(call:CallbackQuery):
     marrk.insert(InlineKeyboardButton(text='Ortga ', callback_data='headmenu'))
     marrk.insert(InlineKeyboardButton(text='Bosh menu ', callback_data='headmenu'))
     await call.message.answer("Sozlamalar bo'limi ",reply_markup=marrk)
-    await SozlamalarStates.kirish.set()
     await call.message.delete()
 
-@dp.message_handler(commands='filter')
-async def sozlamalar(message:Message):
-    marrk = InlineKeyboardMarkup(row_width=2)
-    marrk.insert(InlineKeyboardButton(text='Filtrlash', callback_data='filtrlash'))
-    marrk.insert(InlineKeyboardButton(text="Mening ma'lumotlarim", callback_data='meningmalumotlarim'))
-    marrk.insert(InlineKeyboardButton(text='Ortga ', callback_data='headmenu'))
-    marrk.insert(InlineKeyboardButton(text='Bosh menu ', callback_data='headmenu'))
-    await message.answer("Sozlamalar bo'limi ", reply_markup=marrk)
-    await SozlamalarStates.kirish.set()
-    await message.delete()
 
-
-@dp.callback_query_handler(text=["headmenu"],state=SozlamalarStates.kirish)
+@dp.callback_query_handler(text="headmenu")
 async def ortga_qarab_qoch(call:CallbackQuery,state:FSMContext):
     
         driver = {
@@ -316,15 +292,16 @@ async def ortga_qarab_qoch(call:CallbackQuery,state:FSMContext):
         await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
         await call.message.delete()
         await state.finish()
-@dp.callback_query_handler(text="filtrlash",state=SozlamalarStates.kirish)
+@dp.callback_query_handler(text="filtrlash")
 async def katta_filtr(call:CallbackQuery,state:FSMContext):
     
         mark=InlineKeyboardMarkup(row_width=2)
         mark.insert(InlineKeyboardButton(text="Haydovchi filter",callback_data="haydovchifilter"))
         mark.insert(InlineKeyboardButton(text="Viloyat filter",callback_data="viloyatfilter"))
         mark.insert(InlineKeyboardButton(text=" Ortga",callback_data="ortga"))
-        mark.insert(InlineKeyboardButton(text="Bosh menu",callback_data="boshmenu"))
+        mark.insert(InlineKeyboardButton(text="Bosh menu",callback_data="headmenu"))
         await call.message.answer("O'zingizga mos qilib sozlang.", reply_markup=mark)
+        await SozlamalarStates.kirish.set()
         await call.message.delete()
 
 @dp.callback_query_handler(text="ortga",state=SozlamalarStates.kirish)
@@ -336,8 +313,34 @@ async def ortga(call:CallbackQuery,state:FSMContext):
         marrk.insert(InlineKeyboardButton(text='Ortga ', callback_data='headmenu'))
         marrk.insert(InlineKeyboardButton(text='Bosh menu ', callback_data='headmenu'))
         await call.message.answer("Sozlamalar bo'limi ", reply_markup=marrk)
-        await SozlamalarStates.kirish.set()
+        await state.finish()
         await call.message.delete()
+
+
+@dp.callback_query_handler(text="headmenu", state=SozlamalarStates.kirish)
+async def ortga(call: CallbackQuery, state: FSMContext):
+    driver = {
+        "Haydovchi reys belgilash": 'yolovchikerak',
+        "Tayyor yo'lovchi": 'tayyoryolovchi',
+        "Yuk kerak": 'yukkerak',
+        "Tayyor yuk": "tayyoryuk",
+        "Pochta kerak": 'pochtakerak',
+        "Tayyor pochta": "tayyorpochta",
+        "Sayohatchilar kerak": 'sayohatgayolovchi',
+        "Tayyor sayohatchi": "tayyorsayohatchi",
+        "Mening buyurtmalarim": "meningbuyurtmalarim",
+        "Admin bilan bog'lanish": "adminbilanboglanish",
+        "Sozlamalar": "nastroyki",
+        "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+
+    }
+    markup = InlineKeyboardMarkup(row_width=2)
+    for key, value in driver.items():
+        markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+    await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+    await call.message.delete()
+    await state.finish()
+
 @dp.callback_query_handler(text="haydovchifilter",state=SozlamalarStates.kirish)
 async def haydovchi_filter(call:CallbackQuery,state:FSMContext):
     
@@ -376,7 +379,7 @@ async def haydovchi_filter(call:CallbackQuery,state:FSMContext):
         for key,value in tur.items():
             haydovchi_tur.insert(InlineKeyboardButton(text=key,callback_data=value))
         print(drivers)
-        await call.message.answer("Siz aynan nima tashisiz ?",reply_markup=haydovchi_tur)
+        await call.message.answer("Siz aynan nima tashisiz ?\n✅ - tanlangan\n❌- tanlanmagan",reply_markup=haydovchi_tur)
         await SozlamalarStates.haydovchi_tur.set()
         await call.message.delete()
 
@@ -747,7 +750,7 @@ async def katta_filtr(call:CallbackQuery,state:FSMContext):
         await call.message.answer("O'zingizga mos qilib sozlang.", reply_markup=mark)
         await call.message.delete()
         await SozlamalarStates.kirish.set()
-@dp.callback_query_handler(text="meningmalumotlarim",state=SozlamalarStates.kirish)
+@dp.callback_query_handler(text="meningmalumotlarim")
 async def my_report(call:CallbackQuery,state:FSMContext):
     try:
         driver = await db.select_user(telegram_id=call.from_user.id)
@@ -793,6 +796,7 @@ async def balans_toldirish(call:CallbackQuery,state:FSMContext):
                                        callback_data="ikkinchitarif"))
     markup.insert(InlineKeyboardButton(text="3 - tarif",
                                        callback_data="uchinchitarif"))
+    markup.insert(InlineKeyboardButton(text="Ortga", callback_data="backk"))
     await call.message.answer("Qaysi tarifga ulanmoqchisiz\n"
                               f"<b>1 - tarif </b>\n{msg_1}\n"
                               f"<b>2 - tarif </b>\n{msg_2}\n"
@@ -800,6 +804,31 @@ async def balans_toldirish(call:CallbackQuery,state:FSMContext):
                               reply_markup=markup)
     await call.message.delete()
     await state.finish()
+
+
+@dp.callback_query_handler(text="backk")
+async def birinchiga(call:CallbackQuery,state:FSMContext):
+    try:
+        driver = await db.select_user(telegram_id=call.from_user.id)
+        balans = driver[7]
+        msg=(f"<b>Sizning ma'lumotlaringiz </b>\n\n"
+             f"Haydovchi nomi :\n{call.from_user.full_name}\n\n"
+             f"Haydovchi ID :\n{driver[0]}\n"
+             f"Haydovchi telegram ID :\n{driver[3]} \n"
+             f"Balans :{balans} \n"
+            )
+        markup=InlineKeyboardMarkup(row_width=2)
+        markup.insert(InlineKeyboardButton(text="Balansni to'ldirish", callback_data="balansnitoldirish"))
+        markup.insert(InlineKeyboardButton(text="Tarifni almashtirish", callback_data="tarifnialmashtirish"))
+        markup.insert(InlineKeyboardButton(text="Ortga",callback_data="ortga"))
+        markup.insert(InlineKeyboardButton(text="Bosh menu",callback_data="boshmenu"))
+        await call.message.answer(msg,reply_markup=markup)
+        await SozlamalarStates.my_info.set()
+        await call.message.delete()
+    except TypeError:
+        await call.message.answer("Uzr bu bo'lim faqat haydovchilar uchun. Siz haydovchilar ro'yxatida yo'qsiz.")
+        await call.message.delete()
+        await state.finish()
 
 
 @dp.callback_query_handler(text="birinchitarif",state=SozlamalarStates.tarifni_almashtirish)
