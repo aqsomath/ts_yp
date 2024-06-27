@@ -1,7 +1,8 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, CallbackQuery
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, CallbackQuery, ReplyKeyboardMarkup,KeyboardButton
 
+from keyboards.default.location import phone_number
 from loader import dp, bot, db
 from aiogram.dispatcher.filters.state import StatesGroup, State
 
@@ -45,11 +46,18 @@ def get_paginated_keyboard(items, current_page, items_per_page):
 
 
 class SearchOrderState(StatesGroup):
+    how = State()
+    phone = State()
     id = State()
+
 @dp.callback_query_handler(text="searchorderbyid")
 async def qidirish_order(call:types.CallbackQuery,state:FSMContext):
-    await call.message.answer("Buyurtma ID sini kiriting : ")
-    await SearchOrderState.id.set()
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.insert(InlineKeyboardButton(text="ID orqali",callback_data="byidsearch"))
+    markup.insert(InlineKeyboardButton(text="Telefon raqam orqali",callback_data="byphonesearch"))
+    markup.insert(InlineKeyboardButton(text="Ortga",callback_data="previous"))
+    await call.message.answer("Qanday qidirmoqchisiz ?",reply_markup=markup)
+    await SearchOrderState.how.set()
     await call.message.delete()
 @dp.message_handler(state=SearchOrderState.id,commands=['cancel'])
 async def come_back(message:Message,state:FSMContext):
@@ -80,6 +88,279 @@ async def come_back(message:Message,state:FSMContext):
     await message.answer("Buyurtmalar ro'yxati :", reply_markup=keyboard)
     await message.delete()
     await state.finish()
+
+@dp.callback_query_handler(text="previous",state=SearchOrderState.how)
+async def admin_previous(call:CallbackQuery,state:FSMContext):
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.insert(InlineKeyboardButton(text="Statistika", callback_data="umumiystatistika"))
+    markup.insert(InlineKeyboardButton(text="Foydalanuvchilar", callback_data="foydalanuvchilarniqidirish"))
+    markup.insert(InlineKeyboardButton(text="Adminlar", callback_data="adminlarroyxati"))
+    markup.insert(InlineKeyboardButton(text="Buyurtmalar", callback_data="baribuyurtmalar"))
+    markup.insert(InlineKeyboardButton(text="Ban qilish", callback_data="banqilish"))
+    markup.insert(InlineKeyboardButton(text="Bandan chiqarish", callback_data="bandanchiqarish"))
+    markup.insert(InlineKeyboardButton(text="Tariflar", callback_data='barchatariflar'))
+    markup.insert(InlineKeyboardButton(text="Balans to'ldirish", callback_data="Balanstoldirish"))
+    markup.insert(InlineKeyboardButton(text="Balans ayirish", callback_data="Balansayrish"))
+    await call.message.answer(reply_markup=markup, text="Admin bo'lim")
+    await state.finish()
+@dp.callback_query_handler(text="byphonesearch",state=SearchOrderState.how)
+async def search_by_id(call:CallbackQuery,state:FSMContext):
+    await call.message.answer("Telefon raqamingizni kiriting : ",reply_markup=phone_number)
+    await SearchOrderState.phone.set()
+
+@dp.message_handler(content_types=['contact', 'text'],state=SearchOrderState.phone)
+async def search_by_phone(message:Message,state:FSMContext):
+    phone = ""
+    if message.contact:
+        phone= message.contact.phone_number
+    else:
+        phone= message.text
+    orders = await db.select_all_orders()
+    for order in orders:
+        if order[-1]==phone:
+            if order[2] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         3] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         3] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                 3] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+                else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
+                    await message.answer(
+                        order[3] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",
+                        reply_markup=markup)
+                    await state.finish()
+
+            if order[8] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         9] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         9] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                 9] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+                else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
+                    await message.answer(
+                        order[9] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}")
+                    await state.finish()
+
+            if order[10] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         11] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         11] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                 11] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+
+                else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
+                    await message.answer(
+                        order[11] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",
+                        reply_markup=markup)
+                    await state.finish()
+
+            if order[12] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         13] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         13] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                 13] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+
+                else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
+                    await message.answer(
+                        order[13] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",
+                        reply_markup=markup)
+                    await state.finish()
+
+            if order[14] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         15] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         15] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                 15] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+
+                else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
+                    await message.answer(
+                        order[15] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",
+                        reply_markup=markup)
+                    await state.finish()
+
+            if order[16] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         17] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         17] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                 17] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+
+                else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
+                    await message.answer(
+                        order[17] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",
+                        reply_markup=markup)
+                    await state.finish()
+
+            if order[18] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         19] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         19] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                 19] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+
+
+                else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
+                    await message.answer(
+                        order[19] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",
+                        reply_markup=markup)
+                    await state.finish()
+
+            if order[20] != None:
+                if order[30] != None:
+                    if order[23] == False:
+                        if order[24] == True:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         21] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishildi</b>")
+                                await state.finish()
+
+                        else:
+                            if order[27] == True:
+                                await message.answer(order[
+                                                         21] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma rad etildi</b>")
+                                await state.finish()
+
+                    else:
+                        await message.answer(order[
+                                                 21] + f"\nQabul qildi : \n{order[30]}\nBuyurtma berilgan sana: \n{order[31]}\n<b>Buyurtma kelishilmoqda</b>")
+                        await state.finish()
+                else:
+                    markup = InlineKeyboardMarkup()
+                    markup.insert(
+                        InlineKeyboardButton(text="Buyurtmani o'chirish", callback_data=f"buyurtmani_ochir_{order[0]}"))
+                    await message.answer(
+                        order[21] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",
+                        reply_markup=markup)
+                    await state.finish()
+        else:
+            await message.answer("Bunday buyurtma mavjud emas !")
+            await state.finish()
+
+@dp.callback_query_handler(text="byidsearch",state=SearchOrderState.how)
+async def search_by_id(call:CallbackQuery,state:FSMContext):
+    await call.message.answer("Buyurtma ID sini kiriting")
+    await SearchOrderState.id.set()
+
+
 @dp.message_handler(state=SearchOrderState.id)
 async def idiruv_id(message:types.Message,state:FSMContext):
     if message.text.isdigit():
@@ -310,6 +591,9 @@ async def idiruv_id(message:types.Message,state:FSMContext):
                     await message.answer(
                         order[21] + f"\nQabul qildi : Hech kim\nBuyurtma berilgan sana: \n{order[31]}",reply_markup=markup)
                     await state.finish()
+        else:
+            await message.answer("Bunday buyurtma mavjud emas !")
+            await state.finish()
     await message.delete()
 
 

@@ -1132,8 +1132,11 @@ async def bazaas(call: CallbackQuery, state: FSMContext):
         end_time = datetime.datetime(year, oy, kuni, soat, 0, 0)
         time_difference = end_time - start_time
         time_difference_seconds = time_difference.total_seconds()
+        phone = data.get('phone')
+
         if time_difference_seconds > 0:
             await db.add_order_tayyor_taxi(
+                phone=phone,
                 tayyor_taxi=None,
                 tayyor_taxi_full=None,
                 tayyor_yolovchi=None,
@@ -4239,8 +4242,11 @@ async def oxirgi(call: CallbackQuery, state: FSMContext):
     end_time = datetime.datetime(year, oy, kuni, soat, 0, 0)
     time_difference = end_time - start_time
     time_difference_seconds = time_difference.total_seconds()
+    phone = data.get('phone')
+
     if time_difference_seconds > 0:
         await db.add_order_tayyor_taxi(
+            phone=phone,
             tayyor_taxi=None,
             tayyor_taxi_full=None,
             tayyor_yolovchi=None,

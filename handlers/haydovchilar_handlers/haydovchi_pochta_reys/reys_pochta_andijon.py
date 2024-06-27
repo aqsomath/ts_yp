@@ -938,6 +938,7 @@ async def sqsdsx(call: CallbackQuery, state: FSMContext):
         end_time = datetime.datetime(year, oy, kuni, soat, 0, 0)
         time_difference = end_time - start_time
         time_difference_seconds = time_difference.total_seconds()
+        phone = data.get('phone')
         if time_difference_seconds > 0:
             await db.add_order_tayyor_taxi(
                 tayyor_taxi=None,
@@ -963,7 +964,8 @@ async def sqsdsx(call: CallbackQuery, state: FSMContext):
                 tayyor_sayohatchi_full_mashina=None,
                 event_time=end_time,
                 kim_tomonidan_qabul_qilindi=None,
-                 sana=f"{datetime.date.today()}"
+                 sana=f"{datetime.date.today()}",
+                phone=phone
 
 
 
@@ -4034,6 +4036,8 @@ async def oxirgi(call: CallbackQuery, state: FSMContext):
         end_time = datetime.datetime(year, oy, kuni, soat, 0, 0)
         time_difference = end_time - start_time
         time_difference_seconds = time_difference.total_seconds()
+        phone = data.get('phone')
+
         if time_difference_seconds > 0:
             await db.add_order_tayyor_taxi(
                 tayyor_taxi=None,
@@ -4059,8 +4063,8 @@ async def oxirgi(call: CallbackQuery, state: FSMContext):
                 tayyor_sayohatchi_full_mashina=None,
                 event_time=end_time,
                 kim_tomonidan_qabul_qilindi=None,
-                 sana=f"{datetime.date.today()}"
-
+                 sana=f"{datetime.date.today()}",
+                phone=phone
 
 
             )

@@ -146,9 +146,8 @@ class Database:
         event_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         bormaydi2 BOOLEAN NOT NULL DEFAULT FALSE,
         kim_tomonidan_qabul_qilindi TEXT NULL,
-        sana TEXT NULL
-
-        
+        sana TEXT NULL,
+        phone TEXT
         
         );
         """
@@ -178,7 +177,7 @@ class Database:
                                     tayyor_sayohatchi_full_mashina,
                                     event_time,
                                     kim_tomonidan_qabul_qilindi,
-                                    sana):
+                                    sana,phone):
         sql = "INSERT INTO orders (" \
               "tayyor_taxi," \
               "tayyor_taxi_full, " \
@@ -203,9 +202,9 @@ class Database:
               "tayyor_sayohatchi_full_mashina," \
               "event_time," \
               "kim_tomonidan_qabul_qilindi,"\
-              "sana"\
+              "sana,phone"\
               ") VALUES(" \
-              "$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12 , $13, $14, $15, $16, $17, $18, $19, $20, $21,$22,$23,$24" \
+              "$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12 , $13, $14, $15, $16, $17, $18, $19, $20, $21,$22,$23,$24,$25" \
               ") " \
               "returning *"
         return await self.execute(
@@ -232,7 +231,7 @@ class Database:
             tayyor_sayohatchi_full_mashina,
             event_time,
             kim_tomonidan_qabul_qilindi,
-            sana,
+            sana,phone,
             fetchrow=True
         )
 
