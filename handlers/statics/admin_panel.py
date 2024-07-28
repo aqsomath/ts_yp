@@ -62,6 +62,8 @@ async def admin_panel_commands(message:Message,state:FSMContext):
         markup.insert(InlineKeyboardButton(text="Tariflar",callback_data='barchatariflar'))
         markup.insert(InlineKeyboardButton(text="Balans to'ldirish",callback_data="Balanstoldirish"))
         markup.insert(InlineKeyboardButton(text="Balans ayirish",callback_data="Balansayrish"))
+        button = InlineKeyboardButton(text="Foydalanuvchilarga xabar jo'natish",callback_data="foydalanuvchilargaxabarjonatish")
+        markup.add(button)
         await message.answer(reply_markup=markup,text="Admin bo'lim")
 
 @dp.callback_query_handler(text="Balanstoldirish")
