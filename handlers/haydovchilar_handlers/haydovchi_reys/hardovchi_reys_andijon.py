@@ -608,14 +608,14 @@ async def oy_taxi(call: CallbackQuery, state: FSMContext):
         await state.update_data({"oyi": oyi})
         await state.update_data({"kuni": today})
     if call.data == 'Ertaga':
-        today = datetime.date.today() + datetime.timedelta(days=1)
+        today = datetime.datetime.today() + datetime.timedelta(days=1)
         await state.update_data({"kuni": today.day})
-        oyi = datetime.date.today().month
+        oyi = today.month
         await state.update_data({"oyi": oyi})
     if call.data == 'Indinga':
-        today = datetime.date.today() + datetime.timedelta(days=2)
+        today = datetime.datetime.today() + datetime.timedelta(days=2)
         await state.update_data({"kuni": today.day})
-        oyi = datetime.date.today().month
+        oyi = today.month
         await state.update_data({"oyi": oyi})
     await call.message.answer("Soat nechchida yo'lga chiqasiz ? ", reply_markup=time)
     await call.message.delete()
@@ -774,11 +774,13 @@ async def taxi_reys_soat(call: CallbackQuery, state: FSMContext):
         oy = int(data.get('oyi'))
         kuni = int(data.get('kuni'))
         soat = int(data.get('soat'))
-        year = datetime.datetime.now().year
+        yil = datetime.datetime.now().year
         start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)
-        end_time = datetime.datetime(year, oy, kuni, soat, 0, 0)
+        end_time = datetime.datetime(yil, oy, kuni, soat, 0, 0)
         time_difference = end_time - start_time
         time_difference_seconds = time_difference.total_seconds()
+        print(time_difference)
+        print(time_difference_seconds)
         if time_difference_seconds > 0:
 
             markup = aiogram.types.InlineKeyboardMarkup(row_width=3, )

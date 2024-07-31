@@ -1,4 +1,7 @@
-list  = []
+import time
+import datetime
 
-list.clear()
-print(list)
+vaqt = datetime.datetime.today()
+print(vaqt+datetime.timedelta(days=1))
+today = datetime.datetime.today() + datetime.timedelta(days=1)
+oyi = datetime.datetime.today().month

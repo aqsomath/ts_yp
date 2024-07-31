@@ -84,6 +84,7 @@ async def haydovchi_text(message:Message,state:FSMContext):
     for foydalanuvchi in foydalanuvchilar:
         if foydalanuvchi[3]!=message.from_user.id:
             await bot.send_message(chat_id=foydalanuvchi[3],text=text)
+    await message.answer("Xabar barcha foydalanuvchilarga yuborildi .")
     await state.finish()
 @dp.callback_query_handler(text="akhjsdkajhdkhskdhjajdhskahdskjahsdkjahdasdha")
 async def hamma_haydovchilarga(call:CallbackQuery):
