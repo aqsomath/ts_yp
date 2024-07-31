@@ -765,7 +765,7 @@ async def my_report(call:CallbackQuery,state:FSMContext):
         markup.insert(InlineKeyboardButton(text="Balansni to'ldirish", callback_data="balansnitoldirish"))
         markup.insert(InlineKeyboardButton(text="Tarifni almashtirish", callback_data="tarifnialmashtirish"))
         markup.insert(InlineKeyboardButton(text="Ortga",callback_data="ortga"))
-        markup.insert(InlineKeyboardButton(text="Bosh menu",callback_data="boshmenu"))
+        markup.insert(InlineKeyboardButton(text="Bosh menu",callback_data="ortga"))
         await call.message.answer(msg,reply_markup=markup)
         await SozlamalarStates.my_info.set()
         await call.message.delete()
@@ -821,7 +821,7 @@ async def birinchiga(call:CallbackQuery,state:FSMContext):
         markup.insert(InlineKeyboardButton(text="Balansni to'ldirish", callback_data="balansnitoldirish"))
         markup.insert(InlineKeyboardButton(text="Tarifni almashtirish", callback_data="tarifnialmashtirish"))
         markup.insert(InlineKeyboardButton(text="Ortga",callback_data="ortga"))
-        markup.insert(InlineKeyboardButton(text="Bosh menu",callback_data="boshmenu"))
+        markup.insert(InlineKeyboardButton(text="Bosh menu",callback_data="ortga"))
         await call.message.answer(msg,reply_markup=markup)
         await SozlamalarStates.my_info.set()
         await call.message.delete()
@@ -829,6 +829,32 @@ async def birinchiga(call:CallbackQuery,state:FSMContext):
         await call.message.answer("Uzr bu bo'lim faqat haydovchilar uchun. Siz haydovchilar ro'yxatida yo'qsiz.")
         await call.message.delete()
         await state.finish()
+
+
+@dp.callback_query_handler(state=SozlamalarStates.my_info,text="ortga",)
+async def ortga_qarab_qoch(call: CallbackQuery,state:FSMContext):
+    driver = {
+        "Haydovchi reys belgilash": 'yolovchikerak',
+        "Tayyor yo'lovchi": 'tayyoryolovchi',
+        "Yuk kerak": 'yukkerak',
+        "Tayyor yuk": "tayyoryuk",
+        "Pochta kerak": 'pochtakerak',
+        "Tayyor pochta": "tayyorpochta",
+        "Sayohatchilar kerak": 'sayohatgayolovchi',
+        "Tayyor sayohatchi": "tayyorsayohatchi",
+        "Mening buyurtmalarim": "meningbuyurtmalarim",
+        "Admin bilan bog'lanish": "adminbilanboglanish",
+        "Sozlamalar": "nastroyki",
+        "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
+
+    }
+    markup = InlineKeyboardMarkup(row_width=2)
+    for key, value in driver.items():
+        markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+    await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+    await call.message.delete()
+    await state.finish()
+
 
 
 @dp.callback_query_handler(text="birinchitarif",state=SozlamalarStates.tarifni_almashtirish)
