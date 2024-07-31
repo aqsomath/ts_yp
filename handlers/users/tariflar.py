@@ -22,7 +22,7 @@ async def change_tarif(call: CallbackQuery, state: FSMContext):
         driver = await db.select_haydovchi(telegram_id=call.from_user.id)
         balans = driver[3]
         if balans >= tarif_first[2]:
-            await db.update_balans(balans=balans - tarif_first[3], telegram_id=call.from_user.id)
+            await db.update_balans(balans=balans - tarif_first[2], telegram_id=call.from_user.id)
             if call.from_user.id in fourth:
                 fourth.remove(call.from_user.id)
             if call.from_user.id in fifth:
@@ -47,7 +47,7 @@ async def change_tarif(call: CallbackQuery, state: FSMContext):
 
         balans = driver[3]
         if balans >= tarif_second[2]:
-            await db.update_balans(balans=balans - tarif_second[3], telegram_id=call.from_user.id)
+            await db.update_balans(balans=balans - tarif_second[2], telegram_id=call.from_user.id)
             if call.from_user.id in fourth:
                 fourth.remove(call.from_user.id)
             if call.from_user.id in fifth:
@@ -72,7 +72,7 @@ async def change_tarif(call: CallbackQuery, state: FSMContext):
 
         balans = driver[3]
         if balans >= tarif_third[2]:
-            await db.update_balans(balans=balans - tarif_third[3], telegram_id=call.from_user.id)
+            await db.update_balans(balans=balans - tarif_third[2], telegram_id=call.from_user.id)
             if call.from_user.id in fourth:
                 fourth.remove(call.from_user.id)
             if call.from_user.id in fifth:

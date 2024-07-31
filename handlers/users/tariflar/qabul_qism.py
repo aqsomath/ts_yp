@@ -195,7 +195,7 @@ async def birinchiga(call:CallbackQuery):
     haydovchi_balansi = haydovchi[7]
     tarif = await db.select_tarif(tarif_name='first')
     if haydovchi_balansi >= tarif[3]:
-        await db.update_balans(balans=haydovchi_balansi - tarif[3], telegram_id=call.from_user.id)
+        await db.update_balans(balans=haydovchi_balansi - tarif[2], telegram_id=call.from_user.id)
         first.append(call.from_user.id)
         await call.message.answer("Siz birinchi tarifga muvaffaqiyatli qo'shildingiz !")
     else:
@@ -208,7 +208,7 @@ async def ikkinchiga(call:CallbackQuery):
     haydovchi_balansi = haydovchi[7]
     tarif = await db.select_tarif(tarif_name='second')
     if haydovchi_balansi >= tarif[3]:
-        await db.update_balans(balans=haydovchi_balansi - tarif[3], telegram_id=call.from_user.id)
+        await db.update_balans(balans=haydovchi_balansi - tarif[2], telegram_id=call.from_user.id)
         second.append(call.from_user.id)
         await call.message.answer("Siz ikkinchi tarifga muvaffaqiyatli qo'shildingiz !")
     else:
@@ -221,7 +221,7 @@ async def tariflar_uchun(call:CallbackQuery,state:FSMContext):
     haydovchi_balansi = haydovchi[7]
     tarif = await db.select_tarif(tarif_name='third')
     if haydovchi_balansi >= tarif[3]:
-        await db.update_balans(balans=haydovchi_balansi - tarif[3], telegram_id=call.from_user.id)
+        await db.update_balans(balans=haydovchi_balansi - tarif[2], telegram_id=call.from_user.id)
         third.append(call.from_user.id)
         await call.message.answer("Siz uchinchi tarifga muvaffaqiyatli qo'shildingiz !")
     else:
