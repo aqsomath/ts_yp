@@ -7,3 +7,4 @@ from . import sirdaryo_edit
 from . import surxondaryo_edit
 from . import toshjent_edit
 from . import sozlamalar
+from . import nima_tashiman

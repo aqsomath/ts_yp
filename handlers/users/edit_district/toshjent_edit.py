@@ -2,7 +2,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 
-from handlers.users.edit_district.sozlamalar import SozlamalarStates
+from handlers.users.edit_district.sozlamalar import SozlamalarStates,EngBirinchiSozlamaState
 from keyboards.inline.yolovchi.callback_data import viloyatlar_callback, toshkent_callback
 from keyboards.inline.yolovchi.kirish import umumiy_menu_1
 from keyboards.inline.yolovchi.toshtuman import toshkent_viloyati_tumanlari
@@ -12,7 +12,8 @@ from loader import dp, db
 
 class ToshkentStatesGroup(StatesGroup):
     toshkent=State()
-@dp.callback_query_handler(viloyatlar_callback.filter(item_name='kentt'),state=SozlamalarStates.viloyat_filter)
+    toshkent_eng_birinchi=State()
+@dp.callback_query_handler(viloyatlar_callback.filter(item_name='kentt'),state=EngBirinchiSozlamaState.viloyat_filter)
 async def toshkenttuman(call:CallbackQuery):
     
 
@@ -124,9 +125,9 @@ async def toshkenttuman(call:CallbackQuery):
                                   "Sziga keraksiz hududlardan chiqib keting.\n\n"
                                   "❌ - chiqqan holat\n\n✅- kirgan holat ", reply_markup=shaxsiy_toshkent)
 
-        await ToshkentStatesGroup.toshkent.set()
+        await ToshkentStatesGroup.toshkent_eng_birinchi.set()
         await call.message.delete()
-@dp.callback_query_handler(state=ToshkentStatesGroup.toshkent)
+@dp.callback_query_handler(state=ToshkentStatesGroup.toshkent_eng_birinchi)
 async def toshkent_state(call:CallbackQuery,state:FSMContext):
         if call.data == "hammasiniradetish":
             await db.delete_driver_info(viloyat="Toshkent", tuman="toshkent tuman", telegram_id=call.from_user.id)
@@ -388,8 +389,8 @@ async def toshkent_state(call:CallbackQuery,state:FSMContext):
             await call.message.edit_reply_markup(shaxsiy_toshkent)
 
         if call.data == "qaytish":
-            await call.message.answer("Siz qaysi viloyat haydovchisisiz ?", reply_markup=viloyatlar)
-            await SozlamalarStates.viloyat_filter.set()
+            await call.message.answer("O'zingizga kerakli hududlarni tanlang", reply_markup=viloyatlar)
+            await EngBirinchiSozlamaState.viloyat_filter.set()
             await call.message.delete()
 
         if call.data == "boshmenu":
@@ -511,4 +512,4 @@ async def toshkent_state(call:CallbackQuery,state:FSMContext):
         for key, value in toshkent.items():
             if call.data == value:
                 await call.message.edit_reply_markup(shaxsiy_toshkent)
-                await ToshkentStatesGroup.toshkent.set()
+                await ToshkentStatesGroup.toshkent_eng_birinchi.set()

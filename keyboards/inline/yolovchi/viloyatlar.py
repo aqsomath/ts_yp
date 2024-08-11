@@ -179,3 +179,25 @@ viloyat_e = {
 viloyatlar_yol_e = InlineKeyboardMarkup(row_width=2)
 for key,value in viloyat_e.items():
     viloyatlar_yol_e.insert(InlineKeyboardButton(text=key, callback_data=value))
+
+viloyat_en = {
+    "Andijon":"jonn",
+    "Namangan":"gann",
+    "Farg'ona":"onaa",
+    "Buxoro":"oroo",
+    "Toshkent":"kentt",
+    "Sirdaryo":"ryoo",
+    "Surxondaryo":"xonn",
+    "Qashqadaryo":"qadaryyy",
+    "Xorazm":"azmm",
+    "Navoiy":"voyy",
+    "Jizzax":"zzax",
+    "Samarqand":"marqa",
+    "Toshkent shahar":"kent shahar",
+    "Qoraqalpog'iston":"qoraqalpoq",
+    "Yakunlash":"yakunlash",
+    "Ortga":"nazad",
+}
+viloyatlar_eng_birinchi = InlineKeyboardMarkup(row_width=2)
+for key,value in viloyat_en.items():
+    viloyatlar_eng_birinchi.insert(InlineKeyboardButton(text=key, callback_data=viloyatlar_callback.new(item_name=value)))

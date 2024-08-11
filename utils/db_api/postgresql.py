@@ -409,11 +409,11 @@ class Database:
         sql = """
            CREATE TABLE IF NOT EXISTS Driver (
            id SERIAL PRIMARY KEY,
-           tashiman_odam TEXT NULL,
-           tashiman_yuk TEXT NULL,
-           tashiman_pochta TEXT NULL,
+           tashiman_odam BOOLEAN NOT NULL DEFAULT FALSE,
+           tashiman_yuk BOOLEAN NOT NULL DEFAULT FALSE,
+           tashiman_pochta BOOLEAN NOT NULL DEFAULT FALSE,
            telegram_id BIGINT NULL,
-           sayohatchi_tashiman TEXT NULL,
+           sayohatchi_tashiman BOOLEAN NOT NULL DEFAULT FALSE,
            last_interaction TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
            
           );
@@ -432,6 +432,18 @@ class Database:
     async def add_driver(self, tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id,sayohatchi_tashiman):
         sql = "INSERT INTO driver (tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id,sayohatchi_tashiman) VALUES($1, $2, $3, $4,$5) returning *"
         return await self.execute(sql, tashiman_odam, tashiman_yuk,tashiman_pochta, telegram_id,sayohatchi_tashiman, fetchrow=True)
+    async def update_odam_tashish(self,tashiman_odam,telegram_id):
+        sql="UPDATE Driver SET tashiman_odam = $1 WHERE telegram_id=$2"
+        return await self.execute(sql,tashiman_odam,telegram_id,execute=True)
+    async def update_tashiman_yuk(self,tashiman_yuk,telegram_id):
+        sql="UPDATE Driver SET tashiman_yuk = $1 WHERE telegram_id=$2"
+        return await self.execute(sql,tashiman_yuk,telegram_id,execute=True)
+    async def update_tashiman_pochta(self,tashiman_pochta,telegram_id):
+        sql="UPDATE Driver SET tashiman_pochta = $1 WHERE telegram_id=$2"
+        return await self.execute(sql,tashiman_pochta,telegram_id,execute=True)
+    async def update_odam_sayohat(self,sayohatchi_tashiman,telegram_id):
+        sql="UPDATE Driver SET sayohatchi_tashiman = $1 WHERE telegram_id=$2"
+        return await self.execute(sql,sayohatchi_tashiman,telegram_id,execute=True)
 
     async def select_all_driver(self):
         sql = "SELECT * FROM Driver"

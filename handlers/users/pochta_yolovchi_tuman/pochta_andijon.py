@@ -31,6 +31,7 @@ from utils.misc import show_on_gmaps
 #  1 - ORTGA
 @dp.callback_query_handler(state=Pochta_andijon.asosiy,text="Ortga")
 async def haydovchi(call:CallbackQuery,state: FSMContext):
+
     user = await db.select_user(telegram_id=call.from_user.id)
     if user is not None:
         if user[5] == True:
@@ -95,77 +96,70 @@ async def haydovchi(call:CallbackQuery,state: FSMContext):
             await state.finish()
 @dp.callback_query_handler(state=Pochta_andijon.asosiy)
 async def andijon(call: CallbackQuery, state: FSMContext):
-        
-            if call.data=='9999':
-                await state.update_data({"viloyat": "Xorazm"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=xorazm_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
-            if call.data=='111':
-                await state.update_data({"viloyat": "Andijon"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=andijon_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
-            if call.data=='222':
-                await state.update_data({"viloyat": "Namangan"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=namangan_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
-            if call.data=='333':
-                await state.update_data({"viloyat": "Farg'ona"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=fargona_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
-            if call.data=='4444':
-                await state.update_data({"viloyat": "Buxoro"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=buxoro_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
-            if call.data=='5555':
-                await state.update_data({"viloyat": "Toshkent"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=toshkent_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
-            if call.data=='6666':
-                await state.update_data({"viloyat": "Sirdaryo"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=sirdaryo_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
-            if call.data=='7777':
-                await state.update_data({"viloyat": "Surxondaryo"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=surxondaryo_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
-            if call.data=='8888':
-                await state.update_data({"viloyat": "Qashqadaryo"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=qashqadaryo_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
-            if call.data=='9999':
-                await state.update_data({"viloyat": "Xorazm"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=xorazm_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
-            if call.data=='101010':
-                await state.update_data({"viloyat": "Navoiy"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=navoiy_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
-            if call.data=='121212':
-                await state.update_data({"viloyat": "Jizzax"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=jizzax_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
-            if call.data=='131313':
-                await state.update_data({"viloyat": "Samarqand"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=samarqand_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
-            if call.data=='qoraqalpoq':
-                await state.update_data({"viloyat": "Qoraqalpog'iston"})
-                await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=qoraqalpogiston_yol)
-                await call.message.delete()
-                await Pochta_andijon.tuman.set()
+    if call.data=='111':
+        await state.update_data({"viloyat": "Andijon"})
+        await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=andijon_yol)
+        await call.message.delete()
+        await Pochta_andijon.tuman.set()
+    if call.data=='222':
+        await state.update_data({"viloyat": "Namangan"})
+        await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=namangan_yol)
+        await call.message.delete()
+        await Pochta_andijon.tuman.set()
+    if call.data=='333':
+        await state.update_data({"viloyat": "Farg'ona"})
+        await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=fargona_yol)
+        await call.message.delete()
+        await Pochta_andijon.tuman.set()
+    if call.data=='4444':
+        await state.update_data({"viloyat": "Buxoro"})
+        await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=buxoro_yol)
+        await call.message.delete()
+        await Pochta_andijon.tuman.set()
+    if call.data=='5555':
+        await state.update_data({"viloyat": "Toshkent"})
+        await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=toshkent_yol)
+        await call.message.delete()
+        await Pochta_andijon.tuman.set()
+    if call.data=='6666':
+        await state.update_data({"viloyat": "Sirdaryo"})
+        await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=sirdaryo_yol)
+        await call.message.delete()
+        await Pochta_andijon.tuman.set()
+    if call.data=='7777':
+        await state.update_data({"viloyat": "Surxondaryo"})
+        await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=surxondaryo_yol)
+        await call.message.delete()
+        await Pochta_andijon.tuman.set()
+    if call.data=='8888':
+        await state.update_data({"viloyat": "Qashqadaryo"})
+        await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=qashqadaryo_yol)
+        await call.message.delete()
+        await Pochta_andijon.tuman.set()
+    if call.data=='9999':
+        await state.update_data({"viloyat": "Xorazm"})
+        await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=xorazm_yol)
+        await Pochta_andijon.tuman.set()
+    if call.data=='101010':
+        await state.update_data({"viloyat": "Navoiy"})
+        await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=navoiy_yol)
+        await call.message.delete()
+        await Pochta_andijon.tuman.set()
+    if call.data=='121212':
+        await state.update_data({"viloyat": "Jizzax"})
+        await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=jizzax_yol)
+        await call.message.delete()
+        await Pochta_andijon.tuman.set()
+    if call.data=='131313':
+        await state.update_data({"viloyat": "Samarqand"})
+        await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=samarqand_yol)
+        await call.message.delete()
+        await Pochta_andijon.tuman.set()
+    if call.data=='qoraqalpoq':
+        await state.update_data({"viloyat": "Qoraqalpog'iston"})
+        await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=qoraqalpogiston_yol)
+        await call.message.delete()
+        await Pochta_andijon.tuman.set()
 
 @dp.callback_query_handler(text='ortga', state=Pochta_andijon.tuman)
 async def andi_jon(call: CallbackQuery, state: FSMContext):
@@ -983,63 +977,57 @@ async def y_n(call: CallbackQuery, state: FSMContext):
     start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)
     end_time = datetime.datetime(year, oy, kuni, soat, 0, 0)
     time_difference = end_time - start_time
-    time_difference_seconds = time_difference.total_seconds()
     phone = data.get('phone')
-
-    if time_difference_seconds > 0:
-        await db.add_order_tayyor_taxi(
-            phone=phone,
-            tayyor_taxi=None,
-            tayyor_taxi_full=None,
-            tayyor_yolovchi=None,
-            tayyor_yolovchi_full=None,
-            viloyat=viloyat,
-            region=tuman,
-            telegram_id=telegram_id,
-            viloyatga=baza,
-            tumanga=tumaniga,
-            tayyor_pochta=m,
-            tayyor_pochta_full=msg,
-            tayyor_yuk=None,
-            tayyor_yuk_full=None,
-            tayyor_yuk_haydovchisi=None,
-            tayyor_yuk_haydovchisi_full=None,
-            tayyor_pochta_mashina=None,
-            tayyor_pochta_mashina_full=None,
-            tayyor_sayohatchi=None,
-            tayyor_sayohatchi_full=None,
-            tayyor_sayohatchi_mashina=None,
-            tayyor_sayohatchi_full_mashina=None,
-            event_time=end_time,
-            kim_tomonidan_qabul_qilindi=None,
-             sana=f"{datetime.date.today()}"
+    await db.add_order_tayyor_taxi(
+        phone=phone,
+        tayyor_taxi=None,
+        tayyor_taxi_full=None,
+        tayyor_yolovchi=None,
+        tayyor_yolovchi_full=None,
+        viloyat=viloyat,
+        region=tuman,
+        telegram_id=telegram_id,
+        viloyatga=baza,
+        tumanga=tumaniga,
+        tayyor_pochta=m,
+        tayyor_pochta_full=msg,
+        tayyor_yuk=None,
+        tayyor_yuk_full=None,
+        tayyor_yuk_haydovchisi=None,
+        tayyor_yuk_haydovchisi_full=None,
+        tayyor_pochta_mashina=None,
+        tayyor_pochta_mashina_full=None,
+        tayyor_sayohatchi=None,
+        tayyor_sayohatchi_full=None,
+        tayyor_sayohatchi_mashina=None,
+        tayyor_sayohatchi_full_mashina=None,
+        event_time=end_time,
+        kim_tomonidan_qabul_qilindi=None,
+         sana=f"{datetime.date.today()}"
 
 
 
-        )
+    )
 
-        await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
-                                  "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
-                                  )
+    await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
+                              "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
+                              )
+    await state.finish()
 
-        offset = -28
-        limit = 28
-        while True:
-            offset += limit
-            drivers = await db.select_all_drivers(limit=limit, offset=offset)
-            await asyncio.sleep(1)
-            for driver in drivers:
-                if driver[3] == 'pochta':
-                    if driver[4]!=call.from_user.id:
-                        async with limiter:
-                            markup = InlineKeyboardMarkup(row_width=2)
-                            markup.insert(InlineKeyboardButton(text="Qabul qilish",callback_data='qabul'))
-                            await bot.send_message(chat_id=driver[4], text=m,reply_markup=markup)
-            await call.message.delete()
-            await state.finish()
-    else:
-        await call.message.answer("Kechirasiz siz o'tib ketgan vaqtni belgiladingiz, vaqt belgilashda xatolikka yo'l qo'yilgan. Tekshirib qaytadan kiriting")
-        await state.finish()
+    offset = -28
+    limit = 28
+    while True:
+        offset += limit
+        drivers = await db.select_all_drivers(limit=limit, offset=offset)
+        await asyncio.sleep(1)
+        for driver in drivers:
+            if driver[3] == 'pochta':
+                if driver[4]!=call.from_user.id:
+                    async with limiter:
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Qabul qilish",callback_data='qabul'))
+                        await bot.send_message(chat_id=driver[4], text=m,reply_markup=markup)
+
 
 @dp.callback_query_handler(text='nott', state=Pochta_andijon.tasdiqlash)
 async def y_n(call: CallbackQuery, state: FSMContext):
@@ -1509,12 +1497,8 @@ async def oxirgi(call:CallbackQuery,state:FSMContext):
         year = datetime.datetime.now().year
         start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)
         end_time = datetime.datetime(year, oy, kuni, soat, 0, 0)
-        time_difference = end_time - start_time
-        time_difference_seconds = time_difference.total_seconds()
         phone = data.get('phone')
-
-        if time_difference_seconds > 0:
-            await db.add_order_tayyor_taxi(
+        await db.add_order_tayyor_taxi(
                 phone=phone,
                 tayyor_taxi=None,
                 tayyor_taxi_full=None,
@@ -1540,34 +1524,26 @@ async def oxirgi(call:CallbackQuery,state:FSMContext):
                 event_time=end_time,
                 kim_tomonidan_qabul_qilindi=None,
                  sana=f"{datetime.date.today()}"
-
-
-
             )
+        await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
+                                  "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
+                                  )
+        await state.finish()
+        offset = -28
+        limit = 28
+        while True:
+            offset += limit
+            drivers = await db.select_all_drivers(limit=limit, offset=offset)
+            await asyncio.sleep(1)
+            for driver in drivers:
+                if driver[3] == 'pochta':
+                    if driver[4] != call.from_user.id:
+                        async with limiter:
+                            markup = InlineKeyboardMarkup(row_width=2)
+                            markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                            await bot.send_message(chat_id=driver[4], text=msg, reply_markup=markup)
+            await call.message.delete()
 
-            await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
-                                      "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
-                                      )
-
-            offset = -28
-            limit = 28
-            while True:
-                offset += limit
-                drivers = await db.select_all_drivers(limit=limit, offset=offset)
-                await asyncio.sleep(1)
-                for driver in drivers:
-                    if driver[3] == 'pochta':
-                        if driver[4] != call.from_user.id:
-                            async with limiter:
-                                markup = InlineKeyboardMarkup(row_width=2)
-                                markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
-                                await bot.send_message(chat_id=driver[4], text=msg, reply_markup=markup)
-                await call.message.delete()
-                await state.finish()
-        else:
-            await call.message.answer(
-                "Kechirasiz siz o'tib ketgan vaqtni belgiladingiz, vaqt belgilashda xatolikka yo'l qo'yilgan. Tekshirib qaytadan kiriting")
-            await state.finish()
 
 
 

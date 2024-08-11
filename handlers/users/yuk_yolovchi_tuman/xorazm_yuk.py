@@ -119,7 +119,6 @@ viloyat = {
 for key,value in viloyat.items():
     @dp.callback_query_handler(state=Yuk_xorazm.asosiy)
     async def andijon(call: CallbackQuery, state: FSMContext):
-        
             if call.data=='9999':
                 await state.update_data({"viloyat": "Xorazm"})
                 await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=xorazm_yol)
@@ -150,7 +149,6 @@ for key,value in viloyat.items():
                 await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=toshkent_yol)
                 await call.message.delete()
                 await Yuk_xorazm.tuman.set()
-
             if call.data=='6666':
                 await state.update_data({"viloyat": "Sirdaryo"})
                 await call.message.answer("Qaysi tumandan yuk yuborasiz ? ", reply_markup=sirdaryo_yol)
@@ -1021,59 +1019,54 @@ async def y_n(call: CallbackQuery, state: FSMContext):
     time_difference_seconds = time_difference.total_seconds()
     phone = data.get('phone')
 
-    if time_difference_seconds > 0:
-        await db.add_order_tayyor_taxi(
-            phone=phone,
-            tayyor_taxi=None,
-            tayyor_taxi_full=None,
-            tayyor_yolovchi=None,
-            tayyor_yolovchi_full=None,
-            viloyat=viloyat,
-            region=tuman,
-            telegram_id=telegram_id,
-            viloyatga=baza,
-            tumanga=tumaniga,
-            tayyor_pochta=None,
-            tayyor_pochta_full=None,
-            tayyor_yuk=m,
-            tayyor_yuk_full=msg,
-            tayyor_yuk_haydovchisi=None,
-            tayyor_yuk_haydovchisi_full=None,
-            tayyor_pochta_mashina=None,
-            tayyor_pochta_mashina_full=None,
-            tayyor_sayohatchi=None,
-            tayyor_sayohatchi_full=None,
-            tayyor_sayohatchi_mashina=None,
-            tayyor_sayohatchi_full_mashina=None,
-            event_time=end_time,
-            kim_tomonidan_qabul_qilindi=None,
-             sana=f"{datetime.date.today()}"
+    await db.add_order_tayyor_taxi(
+        phone=phone,
+        tayyor_taxi=None,
+        tayyor_taxi_full=None,
+        tayyor_yolovchi=None,
+        tayyor_yolovchi_full=None,
+        viloyat=viloyat,
+        region=tuman,
+        telegram_id=telegram_id,
+        viloyatga=baza,
+        tumanga=tumaniga,
+        tayyor_pochta=None,
+        tayyor_pochta_full=None,
+        tayyor_yuk=m,
+        tayyor_yuk_full=msg,
+        tayyor_yuk_haydovchisi=None,
+        tayyor_yuk_haydovchisi_full=None,
+        tayyor_pochta_mashina=None,
+        tayyor_pochta_mashina_full=None,
+        tayyor_sayohatchi=None,
+        tayyor_sayohatchi_full=None,
+        tayyor_sayohatchi_mashina=None,
+        tayyor_sayohatchi_full_mashina=None,
+        event_time=end_time,
+        kim_tomonidan_qabul_qilindi=None,
+         sana=f"{datetime.date.today()}"
 
 
-        )
+    )
 
-        await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
-                                  "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
-                                  )
+    await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
+                              "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
+                              )
+    await state.finish()
 
-        offset = -28
-        limit = 28
-        while True:
-            offset += limit
-            drivers = await db.select_all_drivers(limit=limit, offset=offset)
-            await asyncio.sleep(1)
-            for driver in drivers:
-                if driver[2] == 'yuk':
-                    if driver[4]!=call.from_user.id:
-                        async with limiter:
-                            markup = InlineKeyboardMarkup(row_width=2)
-                            markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
-                            await bot.send_message(chat_id=driver[4], text=m, reply_markup=markup)
-            await call.message.delete()
-            await state.finish()
-    else:
-        await call.message.answer("Kechirasiz siz o'tib ketgan vaqtni belgiladingiz, vaqt belgilashda xatolikka yo'l qo'yilgan. Tekshirib qaytadan kiriting")
-        await state.finish()
+    offset = -28
+    limit = 28
+    while True:
+        offset += limit
+        drivers = await db.select_all_drivers(limit=limit, offset=offset)
+        await asyncio.sleep(1)
+        for driver in drivers:
+            if driver[2] == 'yuk':
+                if driver[4]!=call.from_user.id:
+                    async with limiter:
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                        await bot.send_message(chat_id=driver[4], text=m, reply_markup=markup)
 @dp.callback_query_handler(text='nott', state=Yuk_xorazm.tasdiqlash)
 async def y_n(call: CallbackQuery, state: FSMContext):
     user = await db.select_user(telegram_id=call.from_user.id)

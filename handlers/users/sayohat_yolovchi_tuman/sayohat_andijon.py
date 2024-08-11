@@ -1066,7 +1066,6 @@ async def reys_loc(message: Message, state: FSMContext):
         await message.answer(f"Ma'lumotlar to'g'rimi?\n{msg}", reply_markup=yes_not)
         await message.delete()
         await Sayohat_andijon.tasdiqlash.set()
-        await message.delete()
 
 
 @dp.callback_query_handler(text='ortga', state=Sayohat_andijon.tasdiqlash)
@@ -1106,69 +1105,66 @@ async def y_n(call: CallbackQuery, state: FSMContext):
         time_difference_seconds = time_difference.total_seconds()
         phone = data.get('phone')
 
-        if time_difference_seconds>0:
-            await db.add_order_tayyor_taxi(
-                phone=phone,
-                tayyor_taxi=None,
-                tayyor_taxi_full=None,
-                tayyor_yolovchi=None,
-                tayyor_yolovchi_full=None,
-                viloyat=viloyat,
-                region=tuman,
-                telegram_id=telegram_id,
-                viloyatga=",".join(baza),
-                tumanga=tumaniga,
-                tayyor_pochta=None,
-                tayyor_pochta_full=None,
-                tayyor_yuk=None,
-                tayyor_yuk_full=None,
-                tayyor_yuk_haydovchisi=None,
-                tayyor_yuk_haydovchisi_full=None,
-                tayyor_pochta_mashina=None,
-                tayyor_pochta_mashina_full=None,
-                tayyor_sayohatchi=m,
-                tayyor_sayohatchi_full=msg,
-                tayyor_sayohatchi_mashina=None,
-                tayyor_sayohatchi_full_mashina=None,
-                event_time=end_time,
-                kim_tomonidan_qabul_qilindi=None,
-                 sana=f"{datetime.date.today()}"
+        await db.add_order_tayyor_taxi(
+            phone=phone,
+            tayyor_taxi=None,
+            tayyor_taxi_full=None,
+            tayyor_yolovchi=None,
+            tayyor_yolovchi_full=None,
+            viloyat=viloyat,
+            region=tuman,
+            telegram_id=telegram_id,
+            viloyatga=",".join(baza),
+            tumanga=tumaniga,
+            tayyor_pochta=None,
+            tayyor_pochta_full=None,
+            tayyor_yuk=None,
+            tayyor_yuk_full=None,
+            tayyor_yuk_haydovchisi=None,
+            tayyor_yuk_haydovchisi_full=None,
+            tayyor_pochta_mashina=None,
+            tayyor_pochta_mashina_full=None,
+            tayyor_sayohatchi=m,
+            tayyor_sayohatchi_full=msg,
+            tayyor_sayohatchi_mashina=None,
+            tayyor_sayohatchi_full_mashina=None,
+            event_time=end_time,
+            kim_tomonidan_qabul_qilindi=None,
+             sana=f"{datetime.date.today()}"
 
 
 
-            )
+        )
 
 
 
-            await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
-                                  "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
-                                  )
-            list_1 = []
-            viloyat_jami = await db.select_all_sayohat_info()
-            for i in viloyat_jami:
-                if i[2] == call.from_user.id:
-                    list_1.append(i[1])
-            for b in list_1:
-                await db.delete_sayohat_info(telegram_id=call.from_user.id, viloyat=b)
-            offset = -28
-            limit = 28
-            while True:
-                offset += limit
-                drivers = await db.select_all_drivers(limit=limit, offset=offset)
-                await asyncio.sleep(1)
-                for driver in drivers:
-                    if driver[5] == 'sayohat':
-                        if driver[4] != call.from_user.id:
-                            async with limiter:
-                                markup = InlineKeyboardMarkup(row_width=2)
-                                markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
-                                await bot.send_message(chat_id=driver[4], text=m, reply_markup=markup)
-                await call.message.delete()
-                await state.finish()
-        else:
-            await call.message.answer(
-                "Kechirasiz siz o'tib ketgan vaqtni belgiladingiz, vaqt belgilashda xatolikka yo'l qo'yilgan. Tekshirib qaytadan kiriting")
-            await state.finish()
+        await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
+                              "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
+                              )
+        await state.finish()
+
+        list_1 = []
+        viloyat_jami = await db.select_all_sayohat_info()
+        for i in viloyat_jami:
+            if i[2] == call.from_user.id:
+                list_1.append(i[1])
+        for b in list_1:
+            await db.delete_sayohat_info(telegram_id=call.from_user.id, viloyat=b)
+        offset = -28
+        limit = 28
+        while True:
+            offset += limit
+            drivers = await db.select_all_drivers(limit=limit, offset=offset)
+            await asyncio.sleep(1)
+            for driver in drivers:
+                if driver[5] == 'sayohat':
+                    if driver[4] != call.from_user.id:
+                        async with limiter:
+                            markup = InlineKeyboardMarkup(row_width=2)
+                            markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                            await bot.send_message(chat_id=driver[4], text=m, reply_markup=markup)
+            await call.message.delete()
+
 
 
 @dp.callback_query_handler(text='nott', state=Sayohat_andijon.tasdiqlash)
@@ -2074,75 +2070,67 @@ async def oxirgi(call: CallbackQuery, state: FSMContext):
         msg = data.get("msg_full")
         m = data.get("m")
         telegram_id = call.from_user.id
-        now = datetime.datetime.now()
         oy = int(data.get('oyi'))
         kuni = int(data.get('kuni'))
         soat = int(data.get('soat'))
         year = datetime.datetime.now().year
-        start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)
         end_time = datetime.datetime(year, oy, kuni, soat, 0, 0)
-        time_difference = end_time - start_time
-        time_difference_seconds = time_difference.total_seconds()
-        if time_difference_seconds > 0:
-            await db.add_order_tayyor_taxi(
-                tayyor_taxi=None,
-                tayyor_taxi_full=None,
-                tayyor_yolovchi=None,
-                tayyor_yolovchi_full=None,
-                viloyat=viloyat,
-                region=tuman,
-                telegram_id=telegram_id,
-                viloyatga=baza,
-                tumanga=tumaniga,
-                tayyor_pochta=None,
-                tayyor_pochta_full=None,
-                tayyor_yuk=None,
-                tayyor_yuk_full=None,
-                tayyor_yuk_haydovchisi=None,
-                tayyor_yuk_haydovchisi_full=None,
-                tayyor_pochta_mashina=None,
-                tayyor_pochta_mashina_full=None,
-                tayyor_sayohatchi=m,
-                tayyor_sayohatchi_full=msg,
-                tayyor_sayohatchi_mashina=None,
-                tayyor_sayohatchi_full_mashina=None,
-                event_time=end_time,
-                kim_tomonidan_qabul_qilindi=None,
-                 sana=f"{datetime.date.today()}"
+        await db.add_order_tayyor_taxi(
+            tayyor_taxi=None,
+            tayyor_taxi_full=None,
+            tayyor_yolovchi=None,
+            tayyor_yolovchi_full=None,
+            viloyat=viloyat,
+            region=tuman,
+            telegram_id=telegram_id,
+            viloyatga=baza,
+            tumanga=tumaniga,
+            tayyor_pochta=None,
+            tayyor_pochta_full=None,
+            tayyor_yuk=None,
+            tayyor_yuk_full=None,
+            tayyor_yuk_haydovchisi=None,
+            tayyor_yuk_haydovchisi_full=None,
+            tayyor_pochta_mashina=None,
+            tayyor_pochta_mashina_full=None,
+            tayyor_sayohatchi=m,
+            tayyor_sayohatchi_full=msg,
+            tayyor_sayohatchi_mashina=None,
+            tayyor_sayohatchi_full_mashina=None,
+            event_time=end_time,
+            kim_tomonidan_qabul_qilindi=None,
+             sana=f"{datetime.date.today()}"
 
 
 
-            )
+        )
 
-            await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
-                                      "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
-                                      )
-            list_1 = []
-            viloyat_jami = await db.select_all_sayohat_info()
-            for i in viloyat_jami:
-                if i[2] == call.from_user.id:
-                    list_1.append(i[1])
-            for b in list_1:
-                await db.delete_sayohat_info(telegram_id=call.from_user.id, viloyat=b)
-            offset = -28
-            limit = 28
-            while True:
-                offset += limit
-                drivers = await db.select_all_drivers(limit=limit, offset=offset)
-                await asyncio.sleep(1)
-                for driver in drivers:
-                    if driver[5] == 'sayohat':
-                        if driver[4] != call.from_user.id:
-                            async with limiter:
-                                markup = InlineKeyboardMarkup(row_width=2)
-                                markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
-                                await bot.send_message(chat_id=driver[4], text=m, reply_markup=markup)
-                await call.message.delete()
-                await state.finish()
-        else:
-            await call.message.answer(
-                "Kechirasiz siz o'tib ketgan vaqtni belgiladingiz, vaqt belgilashda xatolikka yo'l qo'yilgan. Tekshirib qaytadan kiriting")
-            await state.finish()
+        await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
+                                  "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
+                                  )
+        await state.finish()
+        list_1 = []
+        viloyat_jami = await db.select_all_sayohat_info()
+        for i in viloyat_jami:
+            if i[2] == call.from_user.id:
+                list_1.append(i[1])
+        for b in list_1:
+            await db.delete_sayohat_info(telegram_id=call.from_user.id, viloyat=b)
+        offset = -28
+        limit = 28
+        while True:
+            offset += limit
+            drivers = await db.select_all_drivers(limit=limit, offset=offset)
+            await asyncio.sleep(1)
+            for driver in drivers:
+                if driver[5] == 'sayohat':
+                    if driver[4] != call.from_user.id:
+                        async with limiter:
+                            markup = InlineKeyboardMarkup(row_width=2)
+                            markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                            await bot.send_message(chat_id=driver[4], text=m, reply_markup=markup)
+            await call.message.delete()
+
 
 
 

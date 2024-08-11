@@ -13,7 +13,7 @@ async def pochta(call:CallbackQuery):
         for order in last_get_orders:
                 if order[1] == call.from_user.id:
                         count.append(call.from_user.id)
-        if len(count) > 3:
+        if len(count) > 5:
                 await call.message.answer("Kechirasiz bugungi limitingiz tugadi !")
         else:
                 await call.message.answer("Qaysi viloyatdan pochta yubormoqchisiz ? ",reply_markup=pochta_viloyatlar)

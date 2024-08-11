@@ -4,11 +4,19 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 
 from handlers.users.tariflar.asosiy import first, second, third
 from keyboards.inline.yolovchi.callback_data import kirish_callback, viloyatlar_callback,menu_callback
-from keyboards.inline.yolovchi.viloyatlar import viloyatlar
+from keyboards.inline.yolovchi.kirish import kirish
+from keyboards.inline.yolovchi.viloyatlar import viloyatlar, viloyatlar_eng_birinchi
 from loader import dp,db
 
 
 class SozlamalarStates(StatesGroup):
+    kirish=State()
+    viloyat_filter=State()
+    haydovchi_tur=State()
+    my_info=State()
+    tarifni_almashtirish=State()
+    tarifni_tanlash=State()
+class EngBirinchiSozlamaState(StatesGroup):
     kirish=State()
     viloyat_filter=State()
     haydovchi_tur=State()
@@ -24,8 +32,8 @@ async def haydovchif(call:CallbackQuery):
         await db.yolovchi_set(yolovchi=False, telegram_id=call.from_user.id)
         await db.add_haydovchi(username=call.from_user.username, telegram_id=call.from_user.id, balans=0)
 
-        await db.add_driver(tashiman_odam="odam", tashiman_pochta='pochta', tashiman_yuk='yuk',
-                            sayohatchi_tashiman='sayohat',
+        await db.add_driver(tashiman_odam=True, tashiman_pochta=True, tashiman_yuk=True,
+                            sayohatchi_tashiman=True,
                             telegram_id=call.from_user.id)
         #QORAQALPOQ
         await db.add_driver_info(viloyat="Qoraqalpog'iston", tuman="Nukus shahar", telegram_id=call.from_user.id)
@@ -248,13 +256,8 @@ async def haydovchif(call:CallbackQuery):
         await db.add_driver_info(viloyat="Buxoro", tuman="romitan tuman", telegram_id=call.from_user.id)
         await db.add_driver_info(viloyat="Buxoro", tuman="shofirkon tuman", telegram_id=call.from_user.id)
         await db.add_driver_info(viloyat="Buxoro", tuman="vobkent tuman", telegram_id=call.from_user.id)
-        marrk = InlineKeyboardMarkup(row_width=2)
-        marrk.insert(InlineKeyboardButton(text='Filtrlash', callback_data='filtrlash'))
-        marrk.insert(InlineKeyboardButton(text="Mening ma'lumotlarim", callback_data='meningmalumotlarim'))
-        marrk.insert(InlineKeyboardButton(text='Ortga ', callback_data='headmenu'))
-        marrk.insert(InlineKeyboardButton(text='Bosh menu ', callback_data='headmenu'))
-        await call.message.answer("Filtrlash tusgmasini bosing va o'zingizga moslab sozlang", reply_markup=marrk)
-        await call.message.delete()
+        await call.message.answer("O'zingiz faoliyat qiladigan hududingizni va belgilang", reply_markup=viloyatlar_eng_birinchi)
+        await EngBirinchiSozlamaState.viloyat_filter.set()
 
 
 @dp.callback_query_handler(menu_callback.filter(item_name='nastroyki'))
@@ -344,395 +347,182 @@ async def ortga(call: CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(text="haydovchifilter",state=SozlamalarStates.kirish)
 async def haydovchi_filter(call:CallbackQuery,state:FSMContext):
     
-
+        driver = await db.select_driver(telegram_id=call.from_user.id)
         tur={}
-        odam=[]
-        yuk=[]
-        pochta=[]
-        sayohat=[]
-        drivers=await db.select_all_driver()
-        for i in drivers:
-            if i[4]==call.from_user.id:
-                odam.append(i[1])
-                yuk.append(i[2])
-                pochta.append(i[3])
-                sayohat.append(i[5])
-        if "odam" in odam:
-            tur["✅Odam tashiman"]="odam"
+        if driver[1] == True:
+            tur["✅Odam tashiman"] = "odam"
         else:
             tur["Odam tashiman"] = "odam"
-        if "yuk" in yuk:
+        if driver[2] == True:
             tur["✅Yuk tashiman"] = "yuk"
         else:
             tur["Yuk tashiman"] = "yuk"
-        if "pochta" in pochta:
+        if driver[3] == True:
             tur["✅Pochta tashiman"] = "pochta"
         else:
             tur["Pochta tashiman"] = "pochta"
-        if "sayohat" in sayohat:
+        if driver[5] == True:
             tur["✅Sayohatchi tashiman"] = "sayohat"
         else:
             tur["Sayohatchi tashiman"] = "sayohat"
-        tur["Ortga"]='ortga'
-        tur["Bosh menu"]='boshmenu'
+        tur["Ortga"] = 'ortga'
+        tur["Bosh menu"] = 'boshmenu'
         haydovchi_tur=InlineKeyboardMarkup(row_width=2)
         for key,value in tur.items():
             haydovchi_tur.insert(InlineKeyboardButton(text=key,callback_data=value))
-        print(drivers)
         await call.message.answer("Siz aynan nima tashisiz ?\n✅ - tanlangan\n❌- tanlanmagan",reply_markup=haydovchi_tur)
         await SozlamalarStates.haydovchi_tur.set()
         await call.message.delete()
 
 @dp.callback_query_handler(state=SozlamalarStates.haydovchi_tur)
-async def nimatashiman(call:CallbackQuery,state:FSMContext):
-    
+async def nimatashiman(call: CallbackQuery, state: FSMContext):
+    driver = await db.select_driver(telegram_id=call.from_user.id)
 
-        if call.data=="odam":
-            await db.add_driver(tashiman_odam="odam",tashiman_pochta=None,tashiman_yuk=None,sayohatchi_tashiman=None,telegram_id=call.from_user.id)
-            tur = {}
-            odam = []
-            yuk = []
-            pochta = []
-            sayohat = []
-            drivers = await db.select_all_driver()
-            for i in drivers:
-                if i[4] == call.from_user.id:
-                    odam.append(i[1])
-                    yuk.append(i[2])
-                    pochta.append(i[3])
-                    sayohat.append(i[5])
-            if "odam" in odam:
-                tur["✅Odam tashiman"] = "fdadfas"
-            else:
-                tur["Odam tashiman"] = "odam"
-            if "yuk" in yuk:
-                tur["✅Yuk tashiman"] = "eredsdcasdasd"
-            else:
-                tur["Yuk tashiman"] = "yuk"
-            if "pochta" in pochta:
-                tur["✅Pochta tashiman"] = "pferfsasdadedwocht"
-            else:
-                tur["Pochta tashiman"] = "pochta"
-            if "sayohat" in sayohat:
-                tur["✅Sayohatchi tashiman"] = "brgtbgfdfverfsdcsd"
-            else:
-                tur["Sayohatchi tashiman"] = "sayohat"
-            tur["Ortga"] = 'ortga'
-            tur["Bosh menu"] = 'boshmenu'
-            haydovchi_tur = InlineKeyboardMarkup(row_width=2)
-            for key, value in tur.items():
-                haydovchi_tur.insert(InlineKeyboardButton(text=key, callback_data=value))
-            print(drivers)
-            await call.message.edit_reply_markup(haydovchi_tur)
-            await SozlamalarStates.haydovchi_tur.set()
+    if call.data == "odam":
+        tur = {}
+        if driver[1] == True:
+            await db.update_odam_tashish(tashiman_odam=False,telegram_id=call.from_user.id)
+            tur["Odam tashiman"] = "odam"
+        else:
+            await db.update_odam_tashish(tashiman_odam=True,telegram_id=call.from_user.id)
+            tur["✅Odam tashiman"] = "odam"
+        if driver[2] == True:
+            tur["✅Yuk tashiman"] = "yuk"
+        else:
+            tur["Yuk tashiman"] = "yuk"
+        if driver[3] == True:
+            tur["✅Pochta tashiman"] = "pochta"
+        else:
+            tur["Pochta tashiman"] = "pochta"
+        if driver[5] == True:
+            tur["✅Sayohatchi tashiman"] = "sayohat"
+        else:
+            tur["Sayohatchi tashiman"] = "sayohat"
+        tur["Ortga"] = 'ortga'
+        tur["Bosh menu"] = 'boshmenu'
 
-        if call.data=="yuk":
-                await db.add_driver(tashiman_odam=None,tashiman_pochta=None,tashiman_yuk="yuk",sayohatchi_tashiman=None,telegram_id=call.from_user.id)
-                tur = {}
-                odam = []
-                yuk = []
-                pochta = []
-                sayohat = []
-                drivers = await db.select_all_driver()
-                for i in drivers:
-                    if i[4] == call.from_user.id:
-                        odam.append(i[1])
-                        yuk.append(i[2])
-                        pochta.append(i[3])
-                        sayohat.append(i[5])
-                if "odam" in odam:
-                    tur["✅Odam tashiman"] = "fdadfas"
-                else:
-                    tur["Odam tashiman"] = "odam"
-                if "yuk" in yuk:
-                    tur["✅Yuk tashiman"] = "eredsdcasdasd"
-                else:
-                    tur["Yuk tashiman"] = "yuk"
-                if "pochta" in pochta:
-                    tur["✅Pochta tashiman"] = "pferfsasdadedwocht"
-                else:
-                    tur["Pochta tashiman"] = "pochta"
-                if "sayohat" in sayohat:
-                    tur["✅Sayohatchi tashiman"] = "brgtbgfdfverfsdcsd"
-                else:
-                    tur["Sayohatchi tashiman"] = "sayohat"
-                tur["Ortga"] = 'ortga'
-                tur["Bosh menu"] = 'boshmenu'
-                haydovchi_tur = InlineKeyboardMarkup(row_width=2)
-                for key, value in tur.items():
-                    haydovchi_tur.insert(InlineKeyboardButton(text=key, callback_data=value))
-                print(drivers)
-                await call.message.edit_reply_markup(haydovchi_tur)
-                await SozlamalarStates.haydovchi_tur.set()
+        haydovchi_tur = InlineKeyboardMarkup(row_width=2)
+        for key, value in tur.items():
+            haydovchi_tur.insert(InlineKeyboardButton(text=key, callback_data=value))
+        await call.message.edit_reply_markup(haydovchi_tur)
+        await SozlamalarStates.haydovchi_tur.set()
 
-        if call.data=="pochta":
-                await db.add_driver(tashiman_odam=None,tashiman_pochta='pochta',tashiman_yuk=None,sayohatchi_tashiman=None,telegram_id=call.from_user.id)
-                tur = {}
-                odam = []
-                yuk = []
-                pochta = []
-                sayohat = []
-                drivers = await db.select_all_driver()
-                for i in drivers:
-                    if i[4] == call.from_user.id:
-                        odam.append(i[1])
-                        yuk.append(i[2])
-                        pochta.append(i[3])
-                        sayohat.append(i[5])
-                if "odam" in odam:
-                    tur["✅Odam tashiman"] = "fdadfas"
-                else:
-                    tur["Odam tashiman"] = "odam"
-                if "yuk" in yuk:
-                    tur["✅Yuk tashiman"] = "eredsdcasdasd"
-                else:
-                    tur["Yuk tashiman"] = "yuk"
-                if "pochta" in pochta:
-                    tur["✅Pochta tashiman"] = "pferfsasdadedwocht"
-                else:
-                    tur["Pochta tashiman"] = "pochta"
-                if "sayohat" in sayohat:
-                    tur["✅Sayohatchi tashiman"] = "brgtbgfdfverfsdcsd"
-                else:
-                    tur["Sayohatchi tashiman"] = "sayohat"
-                tur["Ortga"] = 'ortga'
-                tur["Bosh menu"] = 'boshmenu'
-                haydovchi_tur = InlineKeyboardMarkup(row_width=2)
-                for key, value in tur.items():
-                    haydovchi_tur.insert(InlineKeyboardButton(text=key, callback_data=value))
-                print(drivers)
-                await call.message.edit_reply_markup(haydovchi_tur)
-                await SozlamalarStates.haydovchi_tur.set()
-        if call.data=="sayohat":
-                await db.add_driver(tashiman_odam=None,tashiman_pochta=None,tashiman_yuk=None,sayohatchi_tashiman='sayohat',telegram_id=call.from_user.id)
-                tur = {}
-                odam = []
-                yuk = []
-                pochta = []
-                sayohat = []
-                drivers = await db.select_all_driver()
-                for i in drivers:
-                    if i[4] == call.from_user.id:
-                        odam.append(i[1])
-                        yuk.append(i[2])
-                        pochta.append(i[3])
-                        sayohat.append(i[5])
-                if "odam" in odam:
-                    tur["✅Odam tashiman"] = "fdadfas"
-                else:
-                    tur["Odam tashiman"] = "odam"
-                if "yuk" in yuk:
-                    tur["✅Yuk tashiman"] = "eredsdcasdasd"
-                else:
-                    tur["Yuk tashiman"] = "yuk"
-                if "pochta" in pochta:
-                    tur["✅Pochta tashiman"] = "pferfsasdadedwocht"
-                else:
-                    tur["Pochta tashiman"] = "pochta"
-                if "sayohat" in sayohat:
-                    tur["✅Sayohatchi tashiman"] = "brgtbgfdfverfsdcsd"
-                else:
-                    tur["Sayohatchi tashiman"] = "sayohat"
-                tur["Ortga"] = 'ortga'
-                tur["Bosh menu"] = 'boshmenu'
-                haydovchi_tur = InlineKeyboardMarkup(row_width=2)
-                for key, value in tur.items():
-                    haydovchi_tur.insert(InlineKeyboardButton(text=key, callback_data=value))
-                print(drivers)
-                await call.message.edit_reply_markup(haydovchi_tur)
-                await SozlamalarStates.haydovchi_tur.set()
+    if call.data == "yuk":
+        tur = {}
+        if driver[1] == True:
+            tur["✅Odam tashiman"] = "odam"
+        else:
+            tur["Odam tashiman"] = "odam"
+        if driver[2] == True:
+            await db.update_tashiman_yuk(tashiman_yuk=False,telegram_id=call.from_user.id)
+            tur["Yuk tashiman"] = "yuk"
+        else:
+            await db.update_tashiman_yuk(tashiman_yuk=True, telegram_id=call.from_user.id)
+            tur["✅Yuk tashiman"] = "yuk"
+        if driver[3] == True:
+            tur["✅Pochta tashiman"] = "pochta"
+        else:
+            tur["Pochta tashiman"] = "pochta"
+        if driver[5] == True:
+            tur["✅Sayohatchi tashiman"] = "sayohat"
+        else:
+            tur["Sayohatchi tashiman"] = "sayohat"
+        tur["Ortga"] = 'ortga'
+        tur["Bosh menu"] = 'boshmenu'
+        haydovchi_tur = InlineKeyboardMarkup(row_width=2)
+        for key, value in tur.items():
+            haydovchi_tur.insert(InlineKeyboardButton(text=key, callback_data=value))
+        await call.message.edit_reply_markup(haydovchi_tur)
+        await SozlamalarStates.haydovchi_tur.set()
+
+    if call.data == "pochta":
+
+        tur = {}
+        if driver[1] == True:
+            tur["✅Odam tashiman"] = "odam"
+        else:
+            tur["Odam tashiman"] = "odam"
+        if driver[2] == True:
+            tur["✅Yuk tashiman"] = "yuk"
+        else:
+            tur["Yuk tashiman"] = "yuk"
+        if driver[3] == True:
+            await db.update_tashiman_pochta(tashiman_pochta=False, telegram_id=call.from_user.id)
+            tur["Pochta tashiman"] = "pochta"
+        else:
+            await db.update_tashiman_pochta(tashiman_pochta=True, telegram_id=call.from_user.id)
+            tur["✅Pochta tashiman"] = "pochta"
+        if driver[5] == True:
+            tur["✅Sayohatchi tashiman"] = "sayohat"
+        else:
+            tur["Sayohatchi tashiman"] = "sayohat"
+        tur["Ortga"] = 'ortga'
+        tur["Bosh menu"] = 'boshmenu'
+        haydovchi_tur = InlineKeyboardMarkup(row_width=2)
+        for key, value in tur.items():
+            haydovchi_tur.insert(InlineKeyboardButton(text=key, callback_data=value))
+        await call.message.edit_reply_markup(haydovchi_tur)
+        await SozlamalarStates.haydovchi_tur.set()
+    if call.data == "sayohat":
+        tur = {}
+        if driver[1] == True:
+            tur["✅Odam tashiman"] = "odam"
+        else:
+            tur["Odam tashiman"] = "odam"
+        if driver[2] == True:
+            tur["✅Yuk tashiman"] = "yuk"
+        else:
+            tur["Yuk tashiman"] = "yuk"
+        if driver[3] == True:
+            tur["✅Pochta tashiman"] = "pochta"
+        else:
+            tur["Pochta tashiman"] = "pochta"
+        if driver[5] == True:
+            await db.update_odam_sayohat(sayohatchi_tashiman=False, telegram_id=call.from_user.id)
+            tur["Sayohatchi tashiman"] = "sayohat"
+        else:
+            await db.update_odam_sayohat(sayohatchi_tashiman=True, telegram_id=call.from_user.id)
+            tur["✅Sayohatchi tashiman"] = "sayohat"
+        tur["Ortga"] = 'ortga'
+        tur["Bosh menu"] = 'boshmenu'
+        haydovchi_tur = InlineKeyboardMarkup(row_width=2)
+        for key, value in tur.items():
+            haydovchi_tur.insert(InlineKeyboardButton(text=key, callback_data=value))
+        await call.message.edit_reply_markup(haydovchi_tur)
+        await SozlamalarStates.haydovchi_tur.set()
 
 
+    if call.data == "boshmenu":
+        driver = {
+            "Haydovchi reys belgilash": 'yolovchikerak',
+            "Tayyor yo'lovchi": 'tayyoryolovchi',
+            "Yuk kerak": 'yukkerak',
+            "Tayyor yuk": "tayyoryuk",
+            "Pochta kerak": 'pochtakerak',
+            "Tayyor pochta": "tayyorpochta",
+            "Sayohatchilar kerak": 'sayohatgayolovchi',
+            "Tayyor sayohatchi": "tayyorsayohatchi",
+            "Mening buyurtmalarim": "meningbuyurtmalarim",
+            "Admin bilan bog'lanish": "adminbilanboglanish",
+            "Sozlamalar": "nastroyki",
+            "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
 
-
-
-
-
-        if call.data=="fdadfas":
-            await db.delete_driver(tashiman_odam="odam",telegram_id=call.from_user.id)
-            tur = {}
-            odam = []
-            yuk = []
-            pochta = []
-            sayohat = []
-            drivers = await db.select_all_driver()
-            for i in drivers:
-                if i[4] == call.from_user.id:
-                    odam.append(i[1])
-                    yuk.append(i[2])
-                    pochta.append(i[3])
-                    sayohat.append(i[5])
-            if "odam" in odam:
-                tur["✅Odam tashiman"] = "fdadfas"
-            else:
-                tur["Odam tashiman"] = "odam"
-            if "yuk" in yuk:
-                tur["✅Yuk tashiman"] = "eredsdcasdasd"
-            else:
-                tur["Yuk tashiman"] = "yuk"
-            if "pochta" in pochta:
-                tur["✅Pochta tashiman"] = "pferfsasdadedwocht"
-            else:
-                tur["Pochta tashiman"] = "pochta"
-            if "sayohat" in sayohat:
-                tur["✅Sayohatchi tashiman"] = "brgtbgfdfverfsdcsd"
-            else:
-                tur["Sayohatchi tashiman"] = "sayohat"
-            tur["Ortga"] = 'ortga'
-            tur["Bosh menu"] = 'boshmenu'
-            haydovchi_tur = InlineKeyboardMarkup(row_width=2)
-            for key, value in tur.items():
-                haydovchi_tur.insert(InlineKeyboardButton(text=key, callback_data=value))
-            print(drivers)
-            await call.message.edit_reply_markup(haydovchi_tur)
-            await SozlamalarStates.haydovchi_tur.set()
-
-        if call.data=="eredsdcasdasd":
-                await db.delete_driver(tashiman_yuk="yuk",telegram_id=call.from_user.id)
-                tur = {}
-                odam = []
-                yuk = []
-                pochta = []
-                sayohat = []
-                drivers = await db.select_all_driver()
-                for i in drivers:
-                    if i[4] == call.from_user.id:
-                        odam.append(i[1])
-                        yuk.append(i[2])
-                        pochta.append(i[3])
-                        sayohat.append(i[5])
-                if "odam" in odam:
-                    tur["✅Odam tashiman"] = "fdadfas"
-                else:
-                    tur["Odam tashiman"] = "odam"
-                if "yuk" in yuk:
-                    tur["✅Yuk tashiman"] = "eredsdcasdasd"
-                else:
-                    tur["Yuk tashiman"] = "yuk"
-                if "pochta" in pochta:
-                    tur["✅Pochta tashiman"] = "pferfsasdadedwocht"
-                else:
-                    tur["Pochta tashiman"] = "pochta"
-                if "sayohat" in sayohat:
-                    tur["✅Sayohatchi tashiman"] = "brgtbgfdfverfsdcsd"
-                else:
-                    tur["Sayohatchi tashiman"] = "sayohat"
-                tur["Ortga"] = 'ortga'
-                tur["Bosh menu"] = 'boshmenu'
-                haydovchi_tur = InlineKeyboardMarkup(row_width=2)
-                for key, value in tur.items():
-                    haydovchi_tur.insert(InlineKeyboardButton(text=key, callback_data=value))
-                print(drivers)
-                await call.message.edit_reply_markup(haydovchi_tur)
-                await SozlamalarStates.haydovchi_tur.set()
-
-        if call.data=="pferfsasdadedwocht":
-                await db.delete_driver(tashiman_pochta='pochta',telegram_id=call.from_user.id)
-                tur = {}
-                odam = []
-                yuk = []
-                pochta = []
-                sayohat = []
-                drivers = await db.select_all_driver()
-                for i in drivers:
-                    if i[4] == call.from_user.id:
-                        odam.append(i[1])
-                        yuk.append(i[2])
-                        pochta.append(i[3])
-                        sayohat.append(i[5])
-                if "odam" in odam:
-                    tur["✅Odam tashiman"] = "fdadfas"
-                else:
-                    tur["Odam tashiman"] = "odam"
-                if "yuk" in yuk:
-                    tur["✅Yuk tashiman"] = "eredsdcasdasd"
-                else:
-                    tur["Yuk tashiman"] = "yuk"
-                if "pochta" in pochta:
-                    tur["✅Pochta tashiman"] = "pferfsasdadedwocht"
-                else:
-                    tur["Pochta tashiman"] = "pochta"
-                if "sayohat" in sayohat:
-                    tur["✅Sayohatchi tashiman"] = "brgtbgfdfverfsdcsd"
-                else:
-                    tur["Sayohatchi tashiman"] = "sayohat"
-                tur["Ortga"] = 'ortga'
-                tur["Bosh menu"] = 'boshmenu'
-                haydovchi_tur = InlineKeyboardMarkup(row_width=2)
-                for key, value in tur.items():
-                    haydovchi_tur.insert(InlineKeyboardButton(text=key, callback_data=value))
-                print(drivers)
-                await call.message.edit_reply_markup(haydovchi_tur)
-                await SozlamalarStates.haydovchi_tur.set()
-        if call.data=="brgtbgfdfverfsdcsd":
-                await db.delete_driver(sayohatchi_tashiman='sayohat',telegram_id=call.from_user.id)
-                tur = {}
-                odam = []
-                yuk = []
-                pochta = []
-                sayohat = []
-                drivers = await db.select_all_driver()
-                for i in drivers:
-                    if i[4] == call.from_user.id:
-                        odam.append(i[1])
-                        yuk.append(i[2])
-                        pochta.append(i[3])
-                        sayohat.append(i[5])
-                if "odam" in odam:
-                    tur["✅Odam tashiman"] = "fdadfas"
-                else:
-                    tur["Odam tashiman"] = "odam"
-                if "yuk" in yuk:
-                    tur["✅Yuk tashiman"] = "eredsdcasdasd"
-                else:
-                    tur["Yuk tashiman"] = "yuk"
-                if "pochta" in pochta:
-                    tur["✅Pochta tashiman"] = "pferfsasdadedwocht"
-                else:
-                    tur["Pochta tashiman"] = "pochta"
-                if "sayohat" in sayohat:
-                    tur["✅Sayohatchi tashiman"] = "brgtbgfdfverfsdcsd"
-                else:
-                    tur["Sayohatchi tashiman"] = "sayohat"
-                tur["Ortga"] = 'ortga'
-                tur["Bosh menu"] = 'boshmenu'
-                haydovchi_tur = InlineKeyboardMarkup(row_width=2)
-                for key, value in tur.items():
-                    haydovchi_tur.insert(InlineKeyboardButton(text=key, callback_data=value))
-                print(drivers)
-                await call.message.edit_reply_markup(haydovchi_tur)
-                await SozlamalarStates.haydovchi_tur.set()
-        if call.data=="boshmenu":
-            driver = {
-                "Haydovchi reys belgilash": 'yolovchikerak',
-                "Tayyor yo'lovchi": 'tayyoryolovchi',
-                "Yuk kerak": 'yukkerak',
-                "Tayyor yuk": "tayyoryuk",
-                "Pochta kerak": 'pochtakerak',
-                "Tayyor pochta": "tayyorpochta",
-                "Sayohatchilar kerak": 'sayohatgayolovchi',
-                "Tayyor sayohatchi": "tayyorsayohatchi",
-                "Mening buyurtmalarim": "meningbuyurtmalarim",
-                "Admin bilan bog'lanish": "adminbilanboglanish",
-                "Sozlamalar": "nastroyki",
-                "Yo'lovchi bo'lib davom etish": "yolovchibolibdavometish"
-
-            }
-            markup = InlineKeyboardMarkup(row_width=2)
-            for key, value in driver.items():
-                markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
-            await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
-            await call.message.delete()
-            await state.finish()
-        if call.data=="ortga":
-                mark = InlineKeyboardMarkup(row_width=2)
-                mark.insert(InlineKeyboardButton(text="Haydovchi filter", callback_data="haydovchifilter"))
-                mark.insert(InlineKeyboardButton(text="Viloyat filter", callback_data="viloyatfilter"))
-                mark.insert(InlineKeyboardButton(text=" Ortga", callback_data="ortga"))
-                mark.insert(InlineKeyboardButton(text="Bosh menu", callback_data="boshmenu"))
-                await call.message.answer("O'zingizga mos qilib sozlang.", reply_markup=mark)
-                await SozlamalarStates.kirish.set()
-                await call.message.delete()
+        }
+        markup = InlineKeyboardMarkup(row_width=2)
+        for key, value in driver.items():
+            markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
+        await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
+        await call.message.delete()
+        await state.finish()
+    if call.data == "ortga":
+        mark = InlineKeyboardMarkup(row_width=2)
+        mark.insert(InlineKeyboardButton(text="Haydovchi filter", callback_data="haydovchifilter"))
+        mark.insert(InlineKeyboardButton(text="Viloyat filter", callback_data="viloyatfilter"))
+        mark.insert(InlineKeyboardButton(text=" Ortga", callback_data="ortga"))
+        mark.insert(InlineKeyboardButton(text="Bosh menu", callback_data="headmenu"))
+        await call.message.answer("O'zingizga mos qilib sozlang.", reply_markup=mark)
+        await SozlamalarStates.kirish.set()
+        await call.message.delete()
 @dp.callback_query_handler(text="viloyatfilter",state=SozlamalarStates.kirish)
 async def viloyat_filter(call:CallbackQuery,state:FSMContext):
     
@@ -764,7 +554,7 @@ async def my_report(call:CallbackQuery,state:FSMContext):
         markup=InlineKeyboardMarkup(row_width=2)
         markup.insert(InlineKeyboardButton(text="Balansni to'ldirish", callback_data="balansnitoldirish"))
         markup.insert(InlineKeyboardButton(text="Tarifni almashtirish", callback_data="tarifnialmashtirish"))
-        markup.insert(InlineKeyboardButton(text="Ortga",callback_data="ortga"))
+        markup.insert(InlineKeyboardButton(text="Ortga",callback_data="ortgadasdasda"))
         markup.insert(InlineKeyboardButton(text="Bosh menu",callback_data="ortga"))
         await call.message.answer(msg,reply_markup=markup)
         await SozlamalarStates.my_info.set()
@@ -772,7 +562,16 @@ async def my_report(call:CallbackQuery,state:FSMContext):
     except TypeError:
         await call.message.answer("Uzr bu bo'lim faqat haydovchilar uchun. Siz haydovchilar ro'yxatida yo'qsiz.")
         await call.message.delete()
-        await state.finish()
+@dp.callback_query_handler(state=SozlamalarStates.my_info,text="ortgadasdasda")
+async def mening_malumotlarimga_qaytish(call:CallbackQuery,state:FSMContext):
+    marrk = InlineKeyboardMarkup(row_width=2)
+    marrk.insert(InlineKeyboardButton(text='Filtrlash', callback_data='filtrlash'))
+    marrk.insert(InlineKeyboardButton(text="Mening ma'lumotlarim", callback_data='meningmalumotlarim'))
+    marrk.insert(InlineKeyboardButton(text='Ortga ', callback_data='headmenu'))
+    marrk.insert(InlineKeyboardButton(text='Bosh menu ', callback_data='headmenu'))
+    await call.message.answer("Sozlamalar bo'limi ", reply_markup=marrk)
+    await call.message.delete()
+    await state.finish()
 @dp.callback_query_handler(text="balansnitoldirish",state=SozlamalarStates.my_info)
 async def balans_toldirish(call:CallbackQuery,state:FSMContext):
     await call.message.answer(f"Admin bilan bog'lanib balansingizni to'ldiring :\n"

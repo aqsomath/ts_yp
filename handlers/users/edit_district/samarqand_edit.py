@@ -1,7 +1,7 @@
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup,State
 
-from handlers.users.edit_district.sozlamalar import SozlamalarStates
+from handlers.users.edit_district.sozlamalar import SozlamalarStates,EngBirinchiSozlamaState
 from keyboards.inline.yolovchi.kirish import umumiy_menu_1
 from keyboards.inline.yolovchi.viloyatlar import viloyatlar
 from loader import dp, db
@@ -11,7 +11,8 @@ from keyboards.inline.yolovchi.callback_data import viloyatlar_callback
 
 class SamarqandStatesGroup(StatesGroup):
     samarqand=State()
-@dp.callback_query_handler(viloyatlar_callback.filter(item_name='marqa'),state=SozlamalarStates.viloyat_filter)
+    samarqand_eng_birinchi=State()
+@dp.callback_query_handler(viloyatlar_callback.filter(item_name='marqa'),state=EngBirinchiSozlamaState.viloyat_filter)
 async def jizzax_edit(call: CallbackQuery):
 
 
@@ -90,10 +91,10 @@ async def jizzax_edit(call: CallbackQuery):
         await call.message.answer("Hurmatli haydovchi siz Samarqandning barcha tumanlaridan mijozlarni qabul qilasiz.\n"
                                   "Sziga keraksiz hududlardan chiqib keting.\n\n"
                                   "❌ - chiqqan holat\n\n✅- kirgan holat ", reply_markup=shaxsiy_samarqand)
-        await SamarqandStatesGroup.samarqand.set()
+        await SamarqandStatesGroup.samarqand_eng_birinchi.set()
         await call.message.delete()
 
-@dp.callback_query_handler(state=SamarqandStatesGroup.samarqand)
+@dp.callback_query_handler(state=SamarqandStatesGroup.samarqand_eng_birinchi)
 async def samarqand_state(call:CallbackQuery,state:FSMContext):
     if call.data == "hammasiniradetish":
         await db.delete_driver_info(viloyat="Samarqand", tuman="bulungur tumani", telegram_id=call.from_user.id)
@@ -275,8 +276,8 @@ async def samarqand_state(call:CallbackQuery,state:FSMContext):
         await call.message.edit_reply_markup(shaxsiy_samarqand)
 
     if call.data == "qaytish":
-        await call.message.answer("Siz qaysi viloyat haydovchisisiz ?", reply_markup=viloyatlar)
-        await SozlamalarStates.viloyat_filter.set()
+        await call.message.answer("O'zingizga kerakli hududlarni tanlang", reply_markup=viloyatlar)
+        await EngBirinchiSozlamaState.viloyat_filter.set()
         await call.message.delete()
 
     if call.data == "boshmenu":
@@ -367,5 +368,5 @@ async def samarqand_state(call:CallbackQuery,state:FSMContext):
     for key, value in samarqand.items():
         if call.data == value:
             await call.message.edit_reply_markup(shaxsiy_samarqand)
-            await SamarqandStatesGroup.samarqand.set()
+            await SamarqandStatesGroup.samarqand_eng_birinchi.set()
 

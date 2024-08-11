@@ -364,7 +364,6 @@ async def reys_viloyatga(call: CallbackQuery, state: FSMContext):
     dt = await state.get_data()
     viloyatiga = dt.get("viloyatiga")
     await state.update_data({"baza": viloyatiga})
-    await call.message.delete()
     await Yolovchi_andijon.tumaniga.set()
 
 
@@ -1010,11 +1009,10 @@ async def y_n(call: CallbackQuery, state: FSMContext):
 
 
         )
-
         await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
                                   "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
                                   )
-
+        await state.finish()
         order = await db.select_order(tayyor_yolovchi_full=msg)
         offset = -28
         limit = 28
@@ -1030,10 +1028,6 @@ async def y_n(call: CallbackQuery, state: FSMContext):
                             markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data=f'qabul_flkk_{order[0]}'))
                             await bot.send_message(chat_id=driver[4], text=m, reply_markup=markup,parse_mode="HTML")
             await state.update_data({"msg":msg})
-            await state.finish()
-    else:
-        await call.message.answer("Kechirasiz siz o'tib ketgan vaqtni belgiladingiz, vaqt belgilashda xatolikka yo'l qo'yilgan. Tekshirib qaytadan kiriting")
-        await state.finish()
 
 
 @dp.callback_query_handler(text='nott', state=Yolovchi_andijon.tasdiqlash)
@@ -1819,74 +1813,65 @@ async def oxirgi(call: CallbackQuery, state: FSMContext):
     msg = data.get("msg_full")
     m_full = data.get("m_full")
     telegram_id = call.from_user.id
-    now = datetime.datetime.now()
     oy = int(data.get('oyi'))
     kuni = int(data.get('kuni'))
     soat = int(data.get('soat'))
     year = datetime.datetime.now().year
-    start_time = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute, now.second)
     end_time = datetime.datetime(year, oy, kuni, soat, 0, 0)
-    time_difference = end_time - start_time
-    time_difference_seconds = time_difference.total_seconds()
     phone = data.get('phone')
 
-    if time_difference_seconds > 0:
-        await db.add_order_tayyor_taxi(
-            phone=phone,
-            tayyor_taxi=None,
-            tayyor_taxi_full=None,
-            tayyor_yolovchi=m_full,
-            tayyor_yolovchi_full=msg,
-            viloyat=viloyat,
-            region=tuman,
-            telegram_id=telegram_id,
-            viloyatga=baza,
-            tumanga=tumaniga,
-            tayyor_pochta=None,
-            tayyor_pochta_full=None,
-            tayyor_yuk=None,
-            tayyor_yuk_full=None,
-            tayyor_yuk_haydovchisi=None,
-            tayyor_yuk_haydovchisi_full=None,
-            tayyor_pochta_mashina=None,
-            tayyor_pochta_mashina_full=None,
-            tayyor_sayohatchi=None,
-            tayyor_sayohatchi_full=None,
-            tayyor_sayohatchi_mashina=None,
-            tayyor_sayohatchi_full_mashina=None,
-            event_time=end_time,
-            kim_tomonidan_qabul_qilindi=None,
-             sana=f"{datetime.date.today()}"
+    await db.add_order_tayyor_taxi(
+        phone=phone,
+        tayyor_taxi=None,
+        tayyor_taxi_full=None,
+        tayyor_yolovchi=m_full,
+        tayyor_yolovchi_full=msg,
+        viloyat=viloyat,
+        region=tuman,
+        telegram_id=telegram_id,
+        viloyatga=baza,
+        tumanga=tumaniga,
+        tayyor_pochta=None,
+        tayyor_pochta_full=None,
+        tayyor_yuk=None,
+        tayyor_yuk_full=None,
+        tayyor_yuk_haydovchisi=None,
+        tayyor_yuk_haydovchisi_full=None,
+        tayyor_pochta_mashina=None,
+        tayyor_pochta_mashina_full=None,
+        tayyor_sayohatchi=None,
+        tayyor_sayohatchi_full=None,
+        tayyor_sayohatchi_mashina=None,
+        tayyor_sayohatchi_full_mashina=None,
+        event_time=end_time,
+        kim_tomonidan_qabul_qilindi=None,
+         sana=f"{datetime.date.today()}"
 
 
 
-        )
+    )
 
-        await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
-                                  "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
-                                  )
+    await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
+                              "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
+                              )
+    await state.finish()
+    order = await db.select_order(tayyor_yolovchi_full=msg)
+    offset = -28
+    limit = 28
+    while True:
+        offset += limit
+        drivers = await db.select_all_drivers(limit=limit, offset=offset)
+        await asyncio.sleep(1)
+        for driver in drivers:
+            if driver[1] == 'odam':
+                if driver[4]!=call.from_user.id:
+                    async with limiter:
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data=f'qabul_flkk_{order[0]}'))
+                        await bot.send_message(chat_id=driver[4], text=m_full, reply_markup=markup, parse_mode="HTML")
+        await state.update_data({"msg": msg})
+        await call.message.delete()
 
-        order = await db.select_order(tayyor_yolovchi_full=msg)
-        offset = -28
-        limit = 28
-        while True:
-            offset += limit
-            drivers = await db.select_all_drivers(limit=limit, offset=offset)
-            await asyncio.sleep(1)
-            for driver in drivers:
-                if driver[1] == 'odam':
-                    if driver[4]!=call.from_user.id:
-                        async with limiter:
-                            markup = InlineKeyboardMarkup(row_width=2)
-                            markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data=f'qabul_flkk_{order[0]}'))
-                            await bot.send_message(chat_id=driver[4], text=m_full, reply_markup=markup, parse_mode="HTML")
-            await state.update_data({"msg": msg})
-            await call.message.delete()
-            await state.finish()
-    else:
-        await call.message.answer(
-            "Kechirasiz siz o'tib ketgan vaqtni belgiladingiz, vaqt belgilashda xatolikka yo'l qo'yilgan. Tekshirib qaytadan kiriting")
-        await state.finish()
 
 
 @dp.callback_query_handler(text='UnConfirm', state=Yolovchi_andijon.end)
