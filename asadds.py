@@ -3,6 +3,6 @@ import datetime
 
 
 
+toplam = {*()}
 
-s  = "qabul_flkk_5"
-print(s.split("_"))
+print(type(toplam))

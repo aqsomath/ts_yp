@@ -409,11 +409,11 @@ class Database:
         sql = """
            CREATE TABLE IF NOT EXISTS Driver (
            id SERIAL PRIMARY KEY,
-           tashiman_odam BOOLEAN NOT NULL DEFAULT FALSE,
-           tashiman_yuk BOOLEAN NOT NULL DEFAULT FALSE,
-           tashiman_pochta BOOLEAN NOT NULL DEFAULT FALSE,
+           tashiman_odam BOOLEAN  DEFAULT FALSE,
+           tashiman_yuk BOOLEAN  DEFAULT FALSE,
+           tashiman_pochta BOOLEAN  DEFAULT FALSE,
            telegram_id BIGINT NULL,
-           sayohatchi_tashiman BOOLEAN NOT NULL DEFAULT FALSE,
+           sayohatchi_tashiman BOOLEAN  DEFAULT FALSE,
            last_interaction TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
            
           );

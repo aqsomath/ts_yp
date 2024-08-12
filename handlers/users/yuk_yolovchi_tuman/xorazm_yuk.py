@@ -1054,19 +1054,26 @@ async def y_n(call: CallbackQuery, state: FSMContext):
                               )
     await state.finish()
 
+    toplam = {*()}
+    hududlar = []
     offset = -28
     limit = 28
-    while True:
-        offset += limit
-        drivers = await db.select_all_drivers(limit=limit, offset=offset)
-        await asyncio.sleep(1)
-        for driver in drivers:
-            if driver[2] == 'yuk':
-                if driver[4]!=call.from_user.id:
-                    async with limiter:
-                        markup = InlineKeyboardMarkup(row_width=2)
-                        markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
-                        await bot.send_message(chat_id=driver[4], text=m, reply_markup=markup)
+    offset += limit
+    drivers = await db.select_all_drivers(limit=limit, offset=offset)
+    drivers_info = await db.select_all_driver_info()
+    await asyncio.sleep(1)
+    for driver in drivers:
+        for driver_info in drivers_info:
+            if driver_info[3] == driver[4]:
+                hududlar.append(driver_info[1])
+                if driver[2] == True:
+                    toplam.add(driver[4])
+    for i in toplam:
+        if baza and viloyat in hududlar:
+            async with limiter:
+                markup = InlineKeyboardMarkup(row_width=2)
+                markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                await bot.send_message(chat_id=i, text=m, reply_markup=markup)
 @dp.callback_query_handler(text='nott', state=Yuk_xorazm.tasdiqlash)
 async def y_n(call: CallbackQuery, state: FSMContext):
     user = await db.select_user(telegram_id=call.from_user.id)
@@ -1616,26 +1623,27 @@ async def oxirgi(call:CallbackQuery,state:FSMContext):
             await call.message.answer("Sizning buyurtmangiz tumaningiz yo'lovchilariga yuborildi.\n"
                                       "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
                                       )
-
+            await state.finish()
+            toplam = {*()}
+            hududlar = []
             offset = -28
             limit = 28
-            while True:
-                offset += limit
-                drivers = await db.select_all_drivers(limit=limit, offset=offset)
-                await asyncio.sleep(1)
-                for driver in drivers:
-                    if driver[2] == 'yuk':
-                        if driver[4] != call.from_user.id:
-                            async with limiter:
-                                markup = InlineKeyboardMarkup(row_width=2)
-                                markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
-                                await bot.send_message(chat_id=driver[4], text=msg, reply_markup=markup)
-                await call.message.delete()
-                await state.finish()
-        else:
-            await call.message.answer(
-                "Kechirasiz siz o'tib ketgan vaqtni belgiladingiz, vaqt belgilashda xatolikka yo'l qo'yilgan. Tekshirib qaytadan kiriting")
-            await state.finish()
+            offset += limit
+            drivers = await db.select_all_drivers(limit=limit, offset=offset)
+            drivers_info = await db.select_all_driver_info()
+            await asyncio.sleep(1)
+            for driver in drivers:
+                for driver_info in drivers_info:
+                    if driver_info[3] == driver[4]:
+                        hududlar.append(driver_info[1])
+                        if driver[2] == True:
+                            toplam.add(driver[4])
+            for i in toplam:
+                if baza and viloyat in hududlar:
+                    async with limiter:
+                        markup = InlineKeyboardMarkup(row_width=2)
+                        markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                        await bot.send_message(chat_id=i, text=m, reply_markup=markup)
 
 @dp.callback_query_handler(text='UnConfirm', state=Yuk_xorazm.end)
 async def y_n(call:CallbackQuery, state:FSMContext):

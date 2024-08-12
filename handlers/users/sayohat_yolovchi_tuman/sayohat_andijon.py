@@ -1143,27 +1143,26 @@ async def y_n(call: CallbackQuery, state: FSMContext):
                               )
         await state.finish()
 
-        list_1 = []
-        viloyat_jami = await db.select_all_sayohat_info()
-        for i in viloyat_jami:
-            if i[2] == call.from_user.id:
-                list_1.append(i[1])
-        for b in list_1:
-            await db.delete_sayohat_info(telegram_id=call.from_user.id, viloyat=b)
+        toplam = {*()}
+        hududlar = []
         offset = -28
         limit = 28
-        while True:
-            offset += limit
-            drivers = await db.select_all_drivers(limit=limit, offset=offset)
-            await asyncio.sleep(1)
-            for driver in drivers:
-                if driver[5] == 'sayohat':
-                    if driver[4] != call.from_user.id:
-                        async with limiter:
-                            markup = InlineKeyboardMarkup(row_width=2)
-                            markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
-                            await bot.send_message(chat_id=driver[4], text=m, reply_markup=markup)
-            await call.message.delete()
+        offset += limit
+        drivers = await db.select_all_drivers(limit=limit, offset=offset)
+        drivers_info = await db.select_all_driver_info()
+        await asyncio.sleep(1)
+        for driver in drivers:
+            for driver_info in drivers_info:
+                if driver_info[3] == driver[4]:
+                    hududlar.append(driver_info[1])
+                    if driver[5] == True:
+                        toplam.add(driver[4])
+        for i in toplam:
+            if baza and viloyat in hududlar:
+                async with limiter:
+                    markup = InlineKeyboardMarkup(row_width=2)
+                    markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                    await bot.send_message(chat_id=i, text=m, reply_markup=markup)
 
 
 
@@ -2109,27 +2108,26 @@ async def oxirgi(call: CallbackQuery, state: FSMContext):
                                   "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
                                   )
         await state.finish()
-        list_1 = []
-        viloyat_jami = await db.select_all_sayohat_info()
-        for i in viloyat_jami:
-            if i[2] == call.from_user.id:
-                list_1.append(i[1])
-        for b in list_1:
-            await db.delete_sayohat_info(telegram_id=call.from_user.id, viloyat=b)
+        toplam = {*()}
+        hududlar = []
         offset = -28
         limit = 28
-        while True:
-            offset += limit
-            drivers = await db.select_all_drivers(limit=limit, offset=offset)
-            await asyncio.sleep(1)
-            for driver in drivers:
-                if driver[5] == 'sayohat':
-                    if driver[4] != call.from_user.id:
-                        async with limiter:
-                            markup = InlineKeyboardMarkup(row_width=2)
-                            markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
-                            await bot.send_message(chat_id=driver[4], text=m, reply_markup=markup)
-            await call.message.delete()
+        offset += limit
+        drivers = await db.select_all_drivers(limit=limit, offset=offset)
+        drivers_info = await db.select_all_driver_info()
+        await asyncio.sleep(1)
+        for driver in drivers:
+            for driver_info in drivers_info:
+                if driver_info[3] == driver[4]:
+                    hududlar.append(driver_info[1])
+                    if driver[5] == True:
+                        toplam.add(driver[4])
+        for i in toplam:
+            if baza and viloyat in hududlar:
+                async with limiter:
+                    markup = InlineKeyboardMarkup(row_width=2)
+                    markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                    await bot.send_message(chat_id=i, text=m, reply_markup=markup)
 
 
 

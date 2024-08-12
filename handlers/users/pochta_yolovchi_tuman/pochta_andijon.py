@@ -37,6 +37,7 @@ async def haydovchi(call:CallbackQuery,state: FSMContext):
         if user[5] == True:
             await call.message.answer("Salom yo'lovchi\nSizga kerakli hizmat turini belgilang ?", reply_markup=umumiy_menu)
             await call.message.delete()
+            await state.finish()
 
         elif user[6] == True:
             driver = {
@@ -58,8 +59,10 @@ async def haydovchi(call:CallbackQuery,state: FSMContext):
                 markup.insert(InlineKeyboardButton(text=key, callback_data=menu_callback.new(item_name=value)))
             await call.message.answer("Salom haydovchi\nSizga kerakli xizmat turini tanlang !", reply_markup=markup)
             await call.message.delete()
+            await state.finish()
         else:
             await call.message.answer(f"Salom, {call.from_user.full_name}!", reply_markup=kirish)
+            await state.finish()
 
 
 @dp.callback_query_handler(state=Pochta_andijon.asosiy,text="Bosh menu")
@@ -1013,20 +1016,26 @@ async def y_n(call: CallbackQuery, state: FSMContext):
                               "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
                               )
     await state.finish()
-
+    toplam = {*()}
+    hududlar = []
     offset = -28
     limit = 28
-    while True:
-        offset += limit
-        drivers = await db.select_all_drivers(limit=limit, offset=offset)
-        await asyncio.sleep(1)
-        for driver in drivers:
-            if driver[3] == 'pochta':
-                if driver[4]!=call.from_user.id:
-                    async with limiter:
-                        markup = InlineKeyboardMarkup(row_width=2)
-                        markup.insert(InlineKeyboardButton(text="Qabul qilish",callback_data='qabul'))
-                        await bot.send_message(chat_id=driver[4], text=m,reply_markup=markup)
+    offset += limit
+    drivers = await db.select_all_drivers(limit=limit, offset=offset)
+    drivers_info = await db.select_all_driver_info()
+    await asyncio.sleep(1)
+    for driver in drivers:
+        for driver_info in drivers_info:
+            if driver_info[3]==driver[4]:
+                hududlar.append(driver_info[1])
+                if driver[3]==True:
+                    toplam.add(driver[4])
+    for i in toplam:
+        if baza and viloyat in hududlar:
+            async with limiter:
+                    markup = InlineKeyboardMarkup(row_width=2)
+                    markup.insert(InlineKeyboardButton(text="Qabul qilish",callback_data='qabul'))
+                    await bot.send_message(chat_id=i, text=m,reply_markup=markup)
 
 
 @dp.callback_query_handler(text='nott', state=Pochta_andijon.tasdiqlash)
@@ -1529,20 +1538,26 @@ async def oxirgi(call:CallbackQuery,state:FSMContext):
                                   "Ularning bog'lanishini kuting !\n", reply_markup=umumiy_menu
                                   )
         await state.finish()
+        toplam = {*()}
+        hududlar = []
         offset = -28
         limit = 28
-        while True:
-            offset += limit
-            drivers = await db.select_all_drivers(limit=limit, offset=offset)
-            await asyncio.sleep(1)
-            for driver in drivers:
-                if driver[3] == 'pochta':
-                    if driver[4] != call.from_user.id:
-                        async with limiter:
-                            markup = InlineKeyboardMarkup(row_width=2)
-                            markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
-                            await bot.send_message(chat_id=driver[4], text=msg, reply_markup=markup)
-            await call.message.delete()
+        offset += limit
+        drivers = await db.select_all_drivers(limit=limit, offset=offset)
+        drivers_info = await db.select_all_driver_info()
+        await asyncio.sleep(1)
+        for driver in drivers:
+            for driver_info in drivers_info:
+                if driver_info[3] == driver[4]:
+                    hududlar.append(driver_info[1])
+                    if driver[3] == True:
+                        toplam.add(driver[4])
+        for i in toplam:
+            if baza and viloyat in hududlar:
+                async with limiter:
+                    markup = InlineKeyboardMarkup(row_width=2)
+                    markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                    await bot.send_message(chat_id=i, text=m, reply_markup=markup)
 
 
 
