@@ -331,8 +331,6 @@ async def jizzax_state(call:CallbackQuery,state:FSMContext):
         if call.data == value:
             await call.message.edit_reply_markup(shaxsiy_jizzax)
             await JizzaxStates.jizzax.set()
-
-
 @dp.callback_query_handler(viloyatlar_callback.filter(item_name='zzax'),state=EngBirinchiSozlamaState.viloyat_filter)
 async def jizzax_edit(call: CallbackQuery):
         jamii = await db.select_all_driver_info()

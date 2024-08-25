@@ -393,7 +393,7 @@ async def fargona_edit(call: CallbackQuery):
         "Sziga keraksiz hududlardan chiqib keting.\n\n"
         "❌ - chiqqan holat\n\n✅- kirgan holat ", reply_markup=shaxsiy_tosh_shahar)
 
-    await Toshkent_shaharStatesGroup.shahar.set()
+    await Toshkent_shaharStatesGroup.shahar_en.set()
     await call.message.delete()
 
 

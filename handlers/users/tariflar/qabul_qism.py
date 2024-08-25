@@ -12,7 +12,6 @@ from loader import dp, db, bot
 
 @dp.callback_query_handler(lambda c: c.data.startswith("qabul_flkk_"))
 async def first_qabul(call:CallbackQuery,state:FSMContext):
-    print(call.data)
     if call.from_user.id not in user_of_banned:
         if call.from_user.id in hammaga_bepul:
             if call.data.startswith("qabul_flkk_"):

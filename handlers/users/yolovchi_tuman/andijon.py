@@ -1021,6 +1021,7 @@ async def y_n(call: CallbackQuery, state: FSMContext):
         drivers = await db.select_all_drivers(limit=limit, offset=offset)
         drivers_info = await db.select_all_driver_info()
         await asyncio.sleep(1)
+        order = await db.select_order(tayyor_yolovchi=m)
         for driver in drivers:
             for driver_info in drivers_info:
                 if driver_info[3] == driver[4]:
@@ -1031,7 +1032,7 @@ async def y_n(call: CallbackQuery, state: FSMContext):
             if baza and viloyat in hududlar:
                 async with limiter:
                     markup = InlineKeyboardMarkup(row_width=2)
-                    markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                    markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data=f'qabul_flkk_{order[0]}'))
                     await bot.send_message(chat_id=i, text=m, reply_markup=markup)
 
 
@@ -1867,7 +1868,7 @@ async def oxirgi(call: CallbackQuery, state: FSMContext):
     offset += limit
     drivers = await db.select_all_drivers(limit=limit, offset=offset)
     drivers_info = await db.select_all_driver_info()
-    await asyncio.sleep(1)
+    order = await db.select_order(tayyor_yolovchi=m_full)
     for driver in drivers:
         for driver_info in drivers_info:
             if driver_info[3] == driver[4]:
@@ -1878,7 +1879,7 @@ async def oxirgi(call: CallbackQuery, state: FSMContext):
         if baza and viloyat in hududlar:
             async with limiter:
                 markup = InlineKeyboardMarkup(row_width=2)
-                markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data='qabul'))
+                markup.insert(InlineKeyboardButton(text="Qabul qilish", callback_data=f'qabul_flkk_{order[0]}'))
                 await bot.send_message(chat_id=i, text=m_full, reply_markup=markup)
 
 

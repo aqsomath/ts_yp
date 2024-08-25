@@ -474,7 +474,10 @@ class Database:
           );
            """
         await self.execute(sql, execute=True)
-
+    async def select_driver_info(self, **kwargs):
+        sql = "SELECT * FROM Info WHERE "
+        sql, parameters = self.format_args(sql, parameters=kwargs)
+        return await self.execute(sql, *parameters, fetchrow=True)
     async def add_driver_info(self, viloyat, tuman, telegram_id):
         sql = "INSERT INTO info (viloyat, tuman, telegram_id) VALUES($1, $2, $3) returning *"
         return await self.execute(sql, viloyat, tuman, telegram_id, fetchrow=True)
